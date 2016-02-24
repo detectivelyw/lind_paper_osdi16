@@ -1,0 +1,26 @@
+\section{Conclusion}
+\label{sec.conclusion}
+
+%The idea of isolating untrusted user applications from the underlying privileged code
+%to avoid its exploitation by bugs has been realized in different implementations,
+%but there is no standard method for creating this isolation.
+%In addition, experience suggests that isolation by itself does not guarantee the security of a system.
+%
+In this paper, we proposed a new metric based on quantitative measures derived from
+the execution of kernel code when running user applications.
+We verified the hypothesis that commonly used kernel paths contain fewer bugs.
+%Using our metric, we generated findings that suggest the hypothesis is reasonable,
+% and it become the key principle behind a new design for building secure systems,
+Our metric was used to implement a new virtualized security system called Lind. Designed with a minimized
+TCB and interacting with the kernel in only commonly used paths, Lind addresses the need to 
+support risky system calls by securely reconstructing complex, yet essential OS functionality inside a sandbox.
+%
+Evaluation results have shown that Lind is the least likely to trigger zero-day Linux kernel bugs,
+when compared to seven other virtualization systems, such as VirtualBox, VMWare Workstation, Docker, LXC, 
+QEMU, KVM and Graphene.
+%This suggests that systems using our design are likely to be more secure.
+
+All of the data and source code for this paper is available at the Lind website~\cite{Lind}. 
+%For further information and questions, please contact the authors. 
+%For access to the kernel exploit code created in this study, please contact the
+%authors.
