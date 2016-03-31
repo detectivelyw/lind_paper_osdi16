@@ -1,29 +1,37 @@
 \section{Related Work}
 \label{sec.related_work}
-This section summarizes other kernel security approaches, such as virtualization
- or other isolation mechanisms
+
+A substantial amount of effort has gone into building secure systems. 
+This section summarizes these security approaches 
+%such as virtualization or other isolation mechanisms
 that aim to ensure the safety of privileged code in user space and kernel space.
+These approaches include designing safety metrics to quantify the risk in an 
+OS kernel, various virtualization techniques, etc.
 %\lois{Justin and Yanyan: In reviewing this section, consider re-organizing this
 %literature around how these sources relate to the function of Lind rather than
 %just techniques used.}
 
 %\lois{Do all of your subtopics fall into this one category? If not,
 
-\textbf{Safety Metrics.}
-Earlier research metrics have suggested a number
-of approaches to quantifying risk in the OS kernel.
-Palix found that \texttt{drivers} contains the
-most faults in the Linux kernel, in addition to HAL and \texttt{fs}~\cite{palix2011faults}.
-In~\cite{engler2001bugs} Engler analyzed system code by static analysis
-to look for contradictions, such as acquired locks that are
+\textbf{Safety metrics for kernel risks.}
+Early research has suggested a number of approaches to quantifying risk 
+in the OS kernel. The first is the studies about the correlation between certain 
+\textit{kernel directories} and kernel faults. For example, 
+Palix found that the \texttt{drivers} directory in the Linux kernel contains the
+most faults, in addition to HAL and \texttt{fs}~\cite{palix2011faults}.
+
+Much work has been done in analyzing system faults using techniques in 
+software engineering. For example, 
+in~\cite{engler2001bugs} Engler analyzed system code by static analysis
+to look for \textit{contradictions}, such as acquired locks that are
 not released.
-
-
-%Studies have also been conducted based on the number of functions and/or the number of executable lines of code in the function~\cite{Mining-Metrics}.
-%\lois[Isn' this a bit repetitious]
-
-Coverage-based fault localization assumes that execution events that occur mostly in failing
-test cases, but rarely in passing test cases, are more \textit{suspect}
+%
+%
+%%Studies have also been conducted based on the number of functions and/or the number of executable lines of code in the function~\cite{Mining-Metrics}.
+%%\lois[Isn' this a bit repetitious]
+%
+\textit{Coverage-based} fault localization assumes that execution events that occur mostly in failing
+test cases, but rarely in passing test cases, are more {suspect}
 of being the fault~\cite{jones2002visualization}. Further research in the field lead to measuring the set
 difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical}.
 Further research shows that statistical likelihood test case with a predicate that evaluates to True
