@@ -32,10 +32,10 @@ not released.
 %
 \textit{Coverage-based} fault localization assumes that execution events that occur mostly in failing
 test cases, but rarely in passing test cases, are more {suspect}
-of being the fault~\cite{jones2002visualization}. Further research in the field lead to measuring the set
-difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical}.
-Further research shows that statistical likelihood test case with a predicate that evaluates to True
-is correlated with failure~\cite{liblit2005scalable}.
+of being the fault~\cite{jones2002visualization}. Further research lead to measuring the set
+difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}.
+%Further research shows that statistical likelihood test case with a predicate that evaluates to True
+%is correlated with failure~\cite{liblit2005scalable}.
 %\lois{This sentence is somehow incomplete}
 
 %While these metrics can give insight on the possible places where bugs have been located in software systems, they have limitations.
@@ -47,21 +47,23 @@ is correlated with failure~\cite{liblit2005scalable}.
 %\cappos{Are you going to show that this is true?  Can you explain more about why these do not work?}
 %\cappos{Do existing metrics work on a LOC level?  }
 
-Prior work has also looked at the evolution of safety defects. For example, 
-Ozment et al.~\cite{ozment2006milk} and Li et al.~\cite{li2006have} have 
+Prior work has also examined the evolution of safety defects. For example, 
+Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have 
 both studied how the numbers of defects and security issues evolved over 
 time. Ozment reported a decrease in the rate at which new vulnerabilities 
 are reported by studying the age of vulnerabilities in OpenBSD. Li 
 reported an increase in security bugs by studying the number and relative 
 percentage of bugs. However, neither of these two approaches allowed 
 an investigation on how vulnerabilities are distributed. 
+\yanyan{need to compare all these with Lind.}
 %Our work is motivated by Schroter et al.~\cite{schroter2006predicting} and 
 %Neuhaus et al.~\cite{neuhaus2007predicting}. 
-Schroter et al.~\cite{schroter2006predicting} observed that bugs and
-failures are correlated in code. Neuhaus et al.~\cite{neuhaus2007predicting} 
-discovered that in Mozilla's code base
-some domains are more risky than others, and being associated with a 
-particular domain increases the risk of having a vulnerability. 
+%Schroter~\cite{schroter2006predicting} observed that bugs and
+%failures are correlated in code via \texttt{import} and function calls. 
+%Neuhaus~\cite{neuhaus2007predicting} 
+%discovered that in Mozilla's code base
+%some domains are more risky than others, and being associated with a 
+%particular domain increases the risk of having a vulnerability. 
 %In this work, we apply similar observation to OS kernel design.
 
 \textbf{Virtualization.}
@@ -99,18 +101,17 @@ still pose a threat~\cite{JavaBugs, Java-Lessons}.
 Any bug or failure in a programming language virtual
 machine is usually fatal. In contrast, Lind with a very small TCB
 enhances security of privileged code compared to the above due to fewer LOC which in turn reduces the number of potential bugs or weaknesses. %\lois{why?}
-%\lois{OK, what does the TCB have to do with these languages?}
+\lois{OK, what does the TCB have to do with these languages?}
 
 %because of the POSIX implementation with Repy to build the sandbox.
 
-\textit{OS virtualization.}
-OS virtualization techniques can be divided into two categories:
+\textit{OS virtualization}
+techniques can be divided into two categories:
 %Type-I or Type-II virtualization. Examples of Type-I virtualization
 bare-metal hardware virtualization, such as VMware ESX Server, Xen,
 LXC~\cite{LXC}, BSD's jail, Solaris zones, and Hyper-V, and
 hosted hypervisor virtualization such as VMware
-Workstation, VMware Server, VirtualPC and the open-source counterpart
-VirtualBox.
+Workstation, VMware Server, VirtualPC and VirtualBox.
 %
 Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec} is a feature of OS virtualization that
 provides safe executing environments through containment for multiple
@@ -129,8 +130,8 @@ vulnerabilities of software and configuration risk. Lind avoids such restriction
 %\lois{what is the connection between the above sentences and Lind?}
 %Lind deals with these concerns by using a much smaller and safer TCB.
 
-\textit{Library OS.}
-Library OSes allow applications to efficiently
+\textit{Library OSes}
+allow applications to efficiently
 obtain the benefits of virtual machines,
 including security isolation, host platform compatibility, and
 migration. 
@@ -142,9 +143,9 @@ migration.
 %Libra utilizes a hypervisor instead of the exokernel to deliver efficient
 %portability and performance. \lois{Ok..so what is the connection}
 %
-Drawbridge \cite{Drawbridge-11} is an example of a library OS that uses picoprocesses
- (lightweight containers) security monitor (to enforce rules)
-and a library OS to present a Windows persona for a wide variety of
+Drawbridge \cite{Drawbridge-11} is a library OS that uses picoprocesses
+(lightweight containers), a security monitor (to enforce rules),
+and a library OS to present a Windows persona for %a wide variety of
 Windows applications. Similar to Lind,
 it restricts access from usermode to host OS through a number
 of operations that pass through the security monitor.
@@ -156,7 +157,7 @@ of operations that pass through the security monitor.
 Bascule \cite{Bascule}, an architecture for library OS extensions
 based on Drawbridge, allows application behavior to be customized by
 extensions loaded at runtime.
-Graphene \cite{Graphene-14} is a recent library OS system that
+Graphene \cite{Graphene-14} is a library OS system that
 seamlessly and efficiently executes both single and
 multi-process applications, with low memory and performance overheads.
 %It broadens the library OS paradigm to support secure, multi-process
@@ -174,8 +175,7 @@ While the library OS technique relies extensively on
 the underlying kernels to perform system functions, 
 Lind reimplements complex OS functions through memory-safe Repy 
 code, relying on only a limited set of system functions from the Repy 
-sandbox kernel. 
-Unlike Lind, Drawbridge, Bascule 
+sandbox. Unlike Lind, Drawbridge, Bascule 
 or Haven do not have the sandbox environment that properly contains 
 buggy or malicious behavior, and therefore could allow attackers 
 to trigger zero-day vulnerabilities in the underlying kernel. 
