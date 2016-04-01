@@ -1,32 +1,26 @@
 \section{Implementation of Lind}
 \label{sec.implementation}
 
-Based on the design in Section \ref{sec.design},
-we implemented a secure sandbox system, Lind,
-for running untrusted user programs in vulnerable OS kernels.
-Lind adopts two basic technologies as its building blocks\textendash
-%Google's Native Client (NaCl), and Seattle's Repy.
-%
-%As described in Figure \ref{fig:design} and Section 4.2, our design has
-%two main components\textendash a computation module that isolates the
-%application and a library OS module that isolates the complex
-%portions of POSIX, a standard OS interface Lind provides. We choose
-Google's Native Client (NaCl)~\cite{NaCl-09} as the computation
-module for efficient execution of legacy code in the
-form of x86 and ARM binaries, and
-Seattle's Repy~\cite{Repy-10} as the library OS.
-%(Figure \ref{fig:architecture}), since it is a restricted subset of Python,
-%that works as a sandbox to provide a safer environment to run untrusted code.
+To test the feasibility of our Lock-in-Pop design scheme described in
+Section \ref{sec.design}, we used it to implement a secure virtual machine
+dubbed Lind. An old English word for a shield constructed from two layers of
+linden wood, providing strength in a lightweight form, the name is appropriate for
+a virtual machine that adapts two technologies—\textendash
+%Google's Native Client (NaCl) and Seattle's Repy, and that is lightweight in terms of
+LOC, yet still protects vulnerable OS kernel code from exploitation by
+untrusted user programs. The dual-sandbox design also minimizes overall overhead
+because the sandbox only incurs these cost when there is a system call. Lastly,
+Lind uses a native interface for execution, allowing CPU-and-memory-intensive
+applications to run at speeds that are equivalent to NaCl and near native speed.
 
-%\begin{figure}%[h]
-%\centering
-%	\includegraphics[width=1.0\columnwidth]{diagram/lind_architecture_new.png}
-%	\caption{Architecture of Lind including various components such as NaCl, NaCl glibc, and Repy Sandbox.
-%	User level applications will issue system calls that are dispatched through the Repy OS connector that bridges the Lind system to the OS Kernel.}
-%\label{fig:architecture}
-%\end{figure}
-
-\textbf{Native Client.}
+As explained in Section \ref{sec.design}, the Lock-in-Pop design utilizes both a
+computational module and a Library OS module. In Lind, NaCl serves as the former,
+while Repy, and the POSIX interface built into it, perform the tasks of the latter.
+Below we present a brief description of these components and how they were integrated
+into Lind, followed by a brief example of how the system works.
+\lois{I am not sure how to format it, but insert a subhead here 5.1 Primary
+Components}
+textbf{Native Client.}
 We use NaCl to isolate the computation of the user application
 from the kernel. NaCl allows Lind to work on most types of legacy code.
 It compiles the programs to produce a binary with software fault isolation.
@@ -36,7 +30,7 @@ or executing arbitrary instructions.
 To perform a system call, the application will call into a small privileged
 part of the NaCl TCB that forwards system calls, usually to the OS for
 processing. To build Lind, we changed the NaCl TCP to
-forward these calls to our library OS that we call SafePOSIX (details below)
+forward these calls to the library OS that we call SafePOSIX (details below)
 for processing.
 % the following doesn't say anything new
 %The NaCl glibc module contains stubs that reject operations
@@ -58,7 +52,7 @@ for processing.
 
 \textbf{Seattle's Repy.}
 To build an API to access the safe parts of the underlying kernel, we need
-two things.  First, we need a restricted sandbox that isolates computation
+two things. First, we need a restricted sandbox that isolates computation
 and only allows access to commonly used kernel paths.  We used
 Seattle's Repy~\cite{Repy-10} sandbox to perform this task.
 Second, we need to build a POSIX implementation to run within that sandbox.
@@ -69,10 +63,8 @@ Second, we need to build a POSIX implementation to run within that sandbox.
 %we use Repy code to safely reimplement complex system functions.
 
 \textit{The Repy Sandbox Kernel.}
-A natural concern with any sandbox design is that bugs will simply be pushed into
-another part of the trusted code base.  As it is the only piece of code added
-to the system call paths of the TCB, the sandbox kernel's security is of
-paramount concern.
+As the only piece of code in contact with the system call paths of the TCB,
+the sandbox kernel's security is of paramount concern.
 %The sandbox kernel needs to be secure and bug-free.
 %Because it is the TCB of the system, any bugs in it could cause fatal problems.
 %and allow attackers to access the OS kernel and gain kernel privilege.
@@ -88,6 +80,106 @@ written using style guidelines designed to ease security auditing
  of the code~\cite{style}. Most of these functions are simple and
 regularly used system calls that access the commonly used kernel paths.
 
+The Repy kernel code provides a solid foundation for our secure virtual
+machine. It has been audited by a professional penetration tester and, since 2010,
+there has also been a bug bounty program for security flaws in the sandbox.
+The code is deployed in daily use across thousands of devices,
+including on the Seattle testbed \cite{seattle}, and has been examined by
+hundreds of parties. To date no security flaws have been found in the sandbox
+kernel. Having a small, easily auditable piece of code thus helps to reduce the
+risk of such occurrence.
+
+However, Lind's security does not rely solely on Repy's
+safety record. A reconfigured POSIX interface, and the isolation of
+the NaCL module within the dual sandbox design enhance the protection it can
+provide.
+%Developers have reported
+%XXX issues for problems in other parts of the systems. However,
+%This does not provide any strong guarantees that bugs do not exist, and if
+%they do, the security of the system could be compromised.
+%However,
+
+\lois{I am not sure how to format it, but insert a subhead here "5.2 Enhanced
+Safety in Call Handling}
+The kernel interface is extremely rich and hard to protect.
+The dual sandbox Lock-in-Pop design used to build Lind provides enhanced
+safety protection through both isolation and a POSIX interface that
+reformulates risky system calls to
+provide sufficient API for legacy applications, with minimal impact on the kernel.
+
+In Lind, a system call issued from user code are
+received by NaCl, and then redirected to our system API module, which
+includes a POSIX API to serve those requests. A POSIX API is a set of standard
+operating system interfaces that provide
+necessary operating functionality. A standard POSIX API is large and complex
+enough to make it difficult to ensure its implementation is secure and bug-free.
+Lind takes advantage of the fact that Repy is a programming language sandbox to
+construct a variation on the POSIX API. Following the
+"Lock-in-Pop" design, to service a system call in NaCl, a server routine in
+Lind marshals its arguments into a text string, and sends the call and the arguments
+to the Repy sandbox, where the "reimplemented" system call, marshals the result and
+returns it back to NaCl. Eventually, the result is returned as the appropriate
+native type to the calling program.
+
+In the Lock-in-pop design scheme, the file system API only need
+to provide functionality of writing data to storage.% \yanyan{where is the example?}
+It eliminates the need of having a direct abstraction, the
+concept of file permissions, links, or even the concept of multiple files.
+\lois{I moved this copy from Section 4. Please check that it makes sense where placed.
+ Also, as Yanyan notes, there should be an actual example here.}
+The system API safe reimplementation is a set of more complicated system calls
+derived from functions in the sandbox kernel.
+We reimplement those system calls because we do not want this potentially risky user code
+to have direct access to the underlying OS kernel.
+Instead, our reimplementation layer serves as a mediator between the user code
+and the OS kernel. The reimplementation is safe
+because the reconstructed calls are isolated in a sandbox, and the code for the
+reimplementation is written in a memory-safe programming language.
+
+Here is an example of how this reimplementation would work with the symbolic link function.
+If there is a bug in this function, rather than rely on the kernel code paths
+for symbolic links, Lind will implement the incorrect behavior.
+This denies the code the privileged access to the system the OS kernel does.
+As a result, instead of creating a security issue, the application will just fail.
+
+Our design could include more than two sandboxes, e.g., by sandboxing the sandbox
+kernel. However, in a secure system,
+the lowest level sandbox eventually must have some fundamental,
+even if limited, access to system resources, such as memory, and storage, threads.
+Even if we were to sandbox the sandbox kernel and have additional sandboxes,
+the one at the bottom level will still access the OS kernel in a similar way.
+Thus, having multiple sandboxes does not provide any extra security benefits.
+
+%Untrusted programs are run in NaCl,
+%but access to all system resources is diverted to a Repy program.\yanyan{SafePOSIX?}
+%This program is responsible for accessing the system on behalf of the Lind library
+% OS. A NaCl sandbox is built on top of the Repy sandbox.
+%
+
+%
+%Our choice to use Repy helped us solve this architectural security problem.
+
+%
+%As described in Figure \ref{fig:design} and Section 4.2, our design has
+%two main components\textendash a computation module that isolates the
+%application and a library OS module that isolates the complex
+%portions of POSIX, a standard OS interface Lind provides. We choose
+Google's Native Client (NaCl)~\cite{NaCl-09}
+Seattle's Repy~\cite{Repy-10} as the library OS.
+%(Figure \ref{fig:architecture}), since it is a restricted subset of Python,
+%that works as a sandbox to provide a safer environment to run untrusted code.
+
+%\begin{figure}%[h]
+%\centering
+%	\includegraphics[width=1.0\columnwidth]{diagram/lind_architecture_new.png}
+%	\caption{Architecture of Lind including various components such as NaCl, NaCl glibc, and Repy Sandbox.
+%	User level applications will issue system calls that are dispatched through the Repy OS connector that bridges the Lind system to the OS Kernel.}
+%\label{fig:architecture}
+%\end{figure}
+
+
+
+\
 %\begin{table}
 %\centering
 %\caption {Repy sandbox kernel capabilities that supports NaCl functions, such as networking, file I/O operations and threading.}
@@ -196,52 +288,6 @@ regularly used system calls that access the commonly used kernel paths.
 %\end{table}
 
 
-The Repy kernel code has been
-audited by a professional penetration tester.  Since 2010, there has also been
-a bug bounty program for security flaws in the sandbox.
-The code is deployed in daily use across thousands of devices,
-including on the Seattle testbed \cite{seattle}, and has been examined by
-hundreds of parties.
-%Developers have reported
-%XXX issues for problems in other parts of the systems. However,
-To date no security flaws have been found in the sandbox kernel.
-%This does not provide any strong guarantees that bugs do not exist, and if
-%they do, the security of the system could be compromised.
-%However,
-Having a small, easily auditable piece of code thus helps to reduce the
-risk of such occurrence.
-
-\textit{The SafePOSIX Reimplementation.}
-The key responsibility of our system API module is to serve system call requests from user code.
-In Lind, those system call requests are issued from the user code,
-received by NaCl, and then redirected to our system API module.
-The API module includes a POSIX API to serve those requests.
-
-A POSIX API is a set of standard operating system interfaces that provide operating system functions
-to the user code. However, the POSIX API is large and complex enough that it is
-very hard to ensure that its implementation is secure and bug-free.
-%
-%Our choice to use Repy helped us solve this architectural security problem.
-Since Repy is a programming language sandbox, it can provide the ideal isolation
-needed to construct our POSIX API. In Lind,
-complex system functions are reimplemented using Repy code,
-based on the ``safe-reimplement'' principle from our design in Section~{\ref{sec.design}}.
-
-\textbf{Dual-Sandbox Design.}
-The kernel interface is extremely rich and hard to protect.
-In order to have minimal impact on the kernel, as well as provide sufficient API for legacy applications,
-we need to have one sandbox focusing on protecting the kernel and providing POSIX API.
-Lind combines the NaCl and Repy sandboxing techniques to provide native computation and
-safe access to the system.
-%Untrusted programs are run in NaCl,
-%but access to all system resources is diverted to a Repy program.\yanyan{SafePOSIX?}
-%This program is responsible for accessing the system on behalf of the Lind library
-% OS. A NaCl sandbox is built on top of the Repy sandbox.
-%
-To service a system call in NaCl, a server routine in Lind marshals its arguments into a text string,
-and sends the call and the arguments to the Repy sandbox.
-The library OS then executes the appropriate system call, marshals the result and
-returns it back to NaCl. Eventually, the result is returned as the appropriate native type to the calling program.
 
 %Lind is designed to minimize the need to modify either sandbox. This is possible
 %because the TCB of both were extremely small, and because the Lind code is run
@@ -265,17 +311,3 @@ returns it back to NaCl. Eventually, the result is returned as the appropriate n
 %Programs running inside Lind are using a standard POSIX glibc interface,
 %and, since the Lind runtime is strictly user-level, it can work on many different platforms
 %including Linux, Mac OS X and Windows.
-Our design could include more than two sandboxes, e.g., by sandboxing the sandbox
-kernel. However, in a secure system,
-the lowest level sandbox eventually must have some fundamental,
-even if limited, access to system resources, such as memory, and storage, threads.
-Even if we were to sandbox the sandbox kernel and have additional sandboxes,
-the one at the bottom level will still access the OS kernel in a similar way.
-Thus, having multiple sandboxes does not provide any extra security benefits.
-
-The lightweight and minimized overhead is another feature of the dual-sandbox design. Because the sandbox only
- incurs overhead when there is a system call, overall overhead for Lind is low.
- Yet, it does not sacrifice performance for cost.
-Lind uses a native interface for execution,
-allowing CPU-and-memory-intensive applications to run at speeds that are equivalent
- to NaCl and near native speed.
