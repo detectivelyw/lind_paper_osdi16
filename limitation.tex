@@ -1,39 +1,66 @@
-\section{Limitations and Future Work}
+\section{Discussion}
 \label{sec.limitation}
 
-Lind shows potential as an effective method for protecting privileged code. However, 
-further investigation is needed to address the issues that were not included in our
-initial study.
-%We discuss the limitations of Lind in this section.
-First, our metric 
-%relies on identifying lines of code in the kernel 
-%executed when running applications in secure systems. Currently we 
-focuses on OS kernel protection, while the area of hypervisor-based
-VMs is worth further investigation.
-%It is not clear if
-%existing hypervisors are small and compact enough to consider all the
-%identified paths traversing off executing applications as common paths.
-%\yanyan{what does this last sentence mean?}
-%or whether there is still substantial benefit from our metric.
-%In %our
-%future work we will %explore
-%investigate if the bug metric works well for %operating system virtual machines with a hypervisor.
-%hypervisor-based VMs.
+One of our challenges in conducting this study was deciding where to place the
+limits of its scope. The literature documents a variety of strategies that, over
+the years, have been used to secure the OS kernel. To explore any one strategy
+in depth, we felt it was necessary to intentionally exclude consideration of
+other valid approaches. In this section, we acknowledge some of the alternative
+approaches that we chose not to investigate, as well as a few issues that we plan
+to address in the future.
 
-A second limitation stems from our criteria for determining if a kernel trace is
-safe or risky. In our study, the criteria involved checking the trace against a list
-of historical kernel bugs.
- %However, not all bugs can be accurately checked in this manner.
+\subsection{Exclusions}
+In designing our study, we intentionally decided that we would not include any
+discussion of native or “bare-metal” hypervisors that run directly on server
+hardware. Though these devices, also called Type I hypervisors, have been used
+for decades, we chose to exclude them because our initial emphasis in designing
+Lind was to come up with something small and light that did not require any
+alterations to the kernel. As we continue to develop our Lind prototype, we may
+choose to study current examples of these native hypervisors to either directly
+compare security and performance attributes, or to see if our design metric could
+be adapted to these machines.
+
+A second exclusion stems from our criteria for locating bugs. At the beginning
+of our study, we identified a set of common but seriously dangerous zero day bugs
+and then went looking for them within our obtained kernel traces. By looking only
+for a specific subset of bugs, we acknowledged that we might be limiting our
+ability to find a broader spectrum of kernel vulnerabilities. For example, bugs
+caused by a race condition, or that involve defects in the internal kernel data
+structures, or that require complex triggering conditions across multiple kernel
+paths, may not be immediately found using our metric. As we continue to refine
+our metric, we will look to also evolve our evaluation
+criteria to allow us to find and protect against more complex brands of bugs.
+In the meantime, we feel that avoiding the triggering of this initial set of bugs
+through the use of our "Lock-in-Pop" design scheme can still address the security
+needs for a significant segment of users.
+
+\subsection{Future Work}
+
+While our experiments were limited to the Linux kernel 3.14.1, our future work
+will include testing its applicability to other operating systems, such as
+Windows and Mac OS. Since the Lock-in-Pop design scheme is not dependent on the use of any
+specific hardware, we believe it has the flexibility to be adapted to these other
+widely-used systems.
+
+The other challenge facing wide-scale adoption of Lind is improving its
+performance in terms of bandwidth and other overhead factors. As addressed in
+Section 6.4, Lind does incur some performance overhead. Since our initial tests
+were focused on security issues, we did not take any steps to optimize
+its performance before running these tests. Future work will focus on identifying
+the factors that contribute to this overhead, and the best ways to make Lock-in-Pop
+a cost-effective alternative to other virtual machine designs.
+
+%However, not all bugs can be accurately checked in this manner.
 Due to the nature of bugs, our proposed metric cannot assure whether a portion of code
 is an absolute safe or risky area in kernel.
-%So we are just trying to reduce the chances of triggering underlying kernel bugs, but can 
+%So we are just trying to reduce the chances of triggering underlying kernel bugs, but can
 %not promise to avoid all bugs.
 For example, bugs that are caused
 by a race condition cannot be identified by directly checking if certain lines of
 code have been executed. For complicated bugs that involve defects in the internal
 kernel data structures, or require complex triggering conditions across multiple
-kernel paths, our metric will not be accurate. 
-%determine whether or not those bugs have been triggered. 
+kernel paths, our metric will not be accurate.
+%determine whether or not those bugs have been triggered.
 In these cases, more complex metrics might be needed.
 
 %While Lind executes programs like Apache and Tor, it does not
@@ -49,7 +76,7 @@ In these cases, more complex metrics might be needed.
 %themselves.
 %\cappos{move to motivation / threat model.}
 
-Lind has not been optimized for performance. 
+Lind has not been optimized for performance.
 %so the results we present here should be taken as a baseline.
 %of what is possible.
 We would like to explore what existing OS VM optimizations can be safely applied
@@ -59,6 +86,6 @@ We would like to test our metric in other operating systems, such as Windows and
 Our experiments were limited to Linux kernel 3.14.1 and some of the typical virtualization systems that existed in Linux.
 It would be interesting
 %and beneficial to the advance of secure systems
-if similar tests could be run in other widely-used operating systems. 
+if similar tests could be run in other widely-used operating systems.
 %In particular, it would be interesting to see if
 %having the host and guest VM run different operating systems would produce different security impacts.
