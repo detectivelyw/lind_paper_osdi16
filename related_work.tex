@@ -19,6 +19,8 @@ in the OS kernel. The first is the studies about the correlation between certain
 \textit{kernel directories} and kernel faults. For example, 
 Palix found that the \texttt{drivers} directory in the Linux kernel contains the
 most faults, in addition to HAL and \texttt{fs}~\cite{palix2011faults}.
+However, such directory level information is \yanyan{xxx (less accurate or 
+something) compared to Lind.}
 
 Much work has been done in analyzing system faults using techniques in 
 software engineering. For example, 
@@ -34,6 +36,7 @@ not released.
 test cases, but rarely in passing test cases, are more {suspect}
 of being the fault~\cite{jones2002visualization}. Further research lead to measuring the set
 difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}.
+The downside of these techniques is that \yanyan{please fill in.}
 %Further research shows that statistical likelihood test case with a predicate that evaluates to True
 %is correlated with failure~\cite{liblit2005scalable}.
 %\lois{This sentence is somehow incomplete}
@@ -47,15 +50,15 @@ difference of the statements covered by passing and failing test scenarios with 
 %\cappos{Are you going to show that this is true?  Can you explain more about why these do not work?}
 %\cappos{Do existing metrics work on a LOC level?  }
 
-Prior work has also examined the evolution of safety defects. For example, 
+Prior work has also examined the evolution of kernel defects. For example, 
 Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have 
-both studied how the numbers of defects and security issues evolved over 
-time. Ozment reported a decrease in the rate at which new vulnerabilities 
+both studied how the \textit{numbers} of security issues evolved over 
+\textit{time}. Ozment reported a decrease in the rate at which new vulnerabilities 
 are reported by studying the age of vulnerabilities in OpenBSD. Li 
 reported an increase in security bugs by studying the number and relative 
 percentage of bugs. However, neither of these two approaches allowed 
 an investigation on how vulnerabilities are distributed. 
-\yanyan{need to compare all these with Lind.}
+\yanyan{In contrast, Lind...(and related to the new results).}
 %Our work is motivated by Schroter et al.~\cite{schroter2006predicting} and 
 %Neuhaus et al.~\cite{neuhaus2007predicting}. 
 %Schroter~\cite{schroter2006predicting} observed that bugs and
@@ -71,8 +74,9 @@ an investigation on how vulnerabilities are distributed.
 Programming languages that provide safety through virtualization like
 Java, JavaScript, Lua~\cite{Lua}, and
 Silverlight~\cite{Silverlight} are commonly used in application-level
-sandboxing. These languages provide virtualized environments to
-check code safety by a monitor process. 
+sandboxing. 
+%These languages provide virtualized environments to
+%check code safety by a monitor process. 
 %They combine untrusted application code with an interpreter and
 %standard libraries that consolidate routines to perform I/O, network
 %communication, and other sensitive functions.
@@ -82,16 +86,16 @@ check code safety by a monitor process.
 %performing safety checks for avoiding unauthorized branching in
 %memory.
 %
-There are also sandboxing solutions based on type-safety of programming
-languages, e.g., validating through a type checker \cite{JS-Sandboxing}
-or enforcing security policies on an untrusted system through a
-reference monitor \cite{JS-Sandboxing1}. %Compared to these approaches,
+%There are also sandboxing solutions based on type-safety of programming
+%languages, e.g., validating through a type checker \cite{JS-Sandboxing}
+%or enforcing security policies on an untrusted system through a
+%reference monitor \cite{JS-Sandboxing1}. %Compared to these approaches,
 %the Lind protection model ensures stronger security than just executing the code in a browser's sandbox to isolate untrusted programs.
-
+%
 %Lind enforces strict policies and
 %rules to validate all segments of a code before executing it through a
 %dual-layer protection.
-
+%
 Though many sandboxes implement the bulk of standard libraries in
 memory-safe languages like Java or C\#, flaws in this code can
 still pose a threat~\cite{JavaBugs, Java-Lessons}. 
@@ -100,7 +104,8 @@ still pose a threat~\cite{JavaBugs, Java-Lessons}.
 %discovered many severe bugs in Java \cite{Java-Lessons}.
 Any bug or failure in a programming language virtual
 machine is usually fatal. In contrast, Lind with a very small TCB
-enhances security of privileged code compared to the above due to fewer LOC which in turn reduces the number of potential bugs or weaknesses. %\lois{why?}
+enhances security of privileged code due to fewer LOC, which in 
+turn reduces the number of potential bugs or weaknesses. %\lois{why?}
 \lois{OK, what does the TCB have to do with these languages?}
 
 %because of the POSIX implementation with Repy to build the sandbox.
@@ -113,11 +118,13 @@ LXC~\cite{LXC}, BSD's jail, Solaris zones, and Hyper-V, and
 hosted hypervisor virtualization such as VMware
 Workstation, VMware Server, VirtualPC and VirtualBox.
 %
-Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec} is a feature of OS virtualization that
+Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec} 
+%is a feature of OS virtualization that
 provides safe executing environments through containment for multiple
-user-level virtual environments sharing the same hardware. This
-approach relies on the VMM to confine untrusted applications within
-guest OSes. However, there are limitations due to
+user-level virtual environments sharing the same hardware. 
+%This approach relies on the VMM to confine untrusted applications within
+%guest OSes. 
+However, there are limitations of this approach due to
 the large attack vectors against the hypervisors, including
 vulnerabilities of software and configuration risk. Lind avoids such restrictions due to a smaller TCB.
 %For example, the
@@ -132,9 +139,9 @@ vulnerabilities of software and configuration risk. Lind avoids such restriction
 
 \textit{Library OSes}
 allow applications to efficiently
-obtain the benefits of virtual machines,
-including security isolation, host platform compatibility, and
-migration. 
+obtain the benefits of virtual machines.
+%including security isolation, host platform compatibility, and
+%migration. 
 %Libra \cite {Libra} is an example of a library OS that allows
 %applications to customize their OSs within VMs.
 %This solution is similar to the exokernel approach where a small trusted kernel
@@ -150,16 +157,16 @@ Windows applications. Similar to Lind,
 it restricts access from usermode to host OS through a number
 of operations that pass through the security monitor.
 %\lois{How does this fit with Lind?}
-
+%
 %This approach brings many of the benefits of VM based temporal,
 %spatial and fault isolation properties to a per-process level.
-
+%
 Bascule \cite{Bascule}, an architecture for library OS extensions
 based on Drawbridge, allows application behavior to be customized by
 extensions loaded at runtime.
 Graphene \cite{Graphene-14} is a library OS system that
-seamlessly and efficiently executes both single and
-multi-process applications, with low memory and performance overheads.
+executes both single and
+multi-process applications with low performance overheads.
 %It broadens the library OS paradigm to support secure, multi-process
 %APIs, such as copy-on-write fork, signals, and System V IPC.
 Haven \cite{Haven} uses a library OS to implement
@@ -171,6 +178,7 @@ in an untrusted cloud host.
 %addresses the dual challenges of
 %executing unmodified legacy binaries and protecting them from a
 %malicious host.
+
 While the library OS technique relies extensively on
 the underlying kernels to perform system functions, 
 Lind reimplements complex OS functions through memory-safe Repy 
@@ -211,7 +219,7 @@ In addition, system calls that are denied can cause inconsistencies~\cite{Proble
 %Jitk provides a formal verification tool that ensure the
 %correct translation of the userspace submitted code, e.g. 
 %the  the BSD packet filter and INET-DIAG.
-
+%
 %The kernel module enforces policy, denies direct access to restricted
 %resources, and delegates certain calls to an emulation library.
 %which sends transformed system calls to the agents.
@@ -221,17 +229,19 @@ In addition, system calls that are denied can cause inconsistencies~\cite{Proble
 %Nevertheless, this technique is very useful and has inspired many new techniques, such as library OSes.
 %The concepts behind system call interposition have evolved into other modern techniques and has benefited many security systems, including Lind.
 %
-The SCI approach is very similar to the Lind isolation mechanism but a key difference is the actual execution
+SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
 of a system call through the Lind's reimplementation to ensure safe POSIX API for the userspace applications.
 
-\textbf{Software Fault Isolation} (SFI) is an alternative to hardware memory
-protection when running two applications in one address space. SFI provides sandboxing in which native
+\textbf{Software Fault Isolation} (SFI) 
+%is an alternative to hardware memory
+%protection when running two applications in one address space. SFI 
+provides sandboxing in which native
 instructions can only be executed if they do not violate the sandbox's
 constraints \cite{SFI:93}, and security policies are enforced through machine-level
-code analysis. In this approach, memory
+code analysis. In SFI, memory
 writes are protected and code jumps cannot access predefined memory of
 other programs to execute their code.
-
+%
 %The preliminary design of SFI was build on RISC
 %architectures. The authors of PittSFIeld \cite{PittSFIeld} optimized and
 %extended the original SFI to support CISC architectures.
@@ -263,7 +273,7 @@ other programs to execute their code.
 %operating system to track resource usage and verify data that is
 %passed into and out of the kernel. Object tracking to allow OS for
 %resource consumption is another feature of wrappers in Nooks.
-
+%
 %To enforce the safety constraints, programs demand a specific compiler
 %in advance to validate and load the programs. For example, in
 %Another SFI system called Byte
@@ -281,15 +291,16 @@ other programs to execute their code.
 %%virtual memory and domain permissions.
 %A major issue of BGI is that it
 %does not solve the vulnerabilities at kernel-levels.
-
-Google provided Native Client (NaCl) \cite{NaCl-09} as an SFI system for
-Chrome browser to allow native executable code to be run directly in a
+%
+Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
+Chrome browser that allows native executable code to run directly in a
 browser. NaCl prevents suspicious code
 from memory corruption or direct access to the underlying system
-resources. For this purpose NaCl loads untrusted modules from the
-trusted modules into two different address spaces, where in most SFI
-approaches both untrusted and trusted codes are loaded into a common
-address space.
+resources. 
+%For this purpose NaCl loads untrusted modules from the
+%trusted modules into two different address spaces, where in most SFI
+%approaches both untrusted and trusted codes are loaded into a common
+%address space.
 
 %Mao et al. \cite{LXFI} study the shortcomings of XFI \cite{XFI} and
 %BGI \cite{Castro-BGI} kernel module isolation mechanisms that separate
