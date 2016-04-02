@@ -1,52 +1,60 @@
 \section{Goals and Threat Model}
 \label{sec.motivation-and-background}
 
-Our goal in this work is to design and build secure virtualization systems, that allow untrusted programs to run 
+\textbf{Goals.}
+Our goal is to design and build secure virtualization systems, that allow untrusted programs to run 
 on an unpatched and vulnerable host OS (Linux OS in this study), without causing damages to other parts of the system. 
-We focus on providing a solution on situations where there is a host OS that contains vulnerabilities
-that an attacker could exploit. To combat this, untrusted programs are executed in a security virtualization system, 
-such as a guest OS VM, system call interposition module, or library OS. We are trying to design such a security virtualization system 
-that could protect the underlying host OS as well as all the programs that are running on the host OS, in the face of malicious attackers. 
+\yanyan{what are the other parts of the system?}
+We focus on providing a solution when a host OS contains vulnerabilities
+that an attacker could exploit. To combat this, untrusted programs are executed in a secure virtualization system, 
+such as a guest OS VM, a system call interposition module, or a library OS. We are trying to design such a secure virtualization system 
+that could protect the underlying host OS and all the programs running in the host OS, when facing malicious attackers. 
 
-We now define the level of security that we intend to enforce, and the possible attacks that we desire to protect against with our solution. 
-In our study, we assume that the attacker is able to run an attack program in our security virtualization system with the goal of 
-exploiting an unpatched vulnerability in the host OS. Our desired security goal is to prevent the attack program from successfully 
-triggering an vulnerability in the host OS. 
-To trigger and exploit an vulnerability, an attacker could potentially take two approaches. 
+In the following, we define the level of security that we intend to enforce, and the possible attacks that we desire to protect against. 
+We assume that an attacker is able to run an attack program in our secure virtualization system, attempting to
+exploit an unpatched vulnerability in the host OS. Our goal is to prevent the attack program from  
+triggering a vulnerability in the host OS. 
+To trigger a vulnerability, the attacker could have two approaches. 
 First, the attack program could exploit a flaw in the host OS by 
-performing an action in the security virtualization system that triggers a flaw in
-the host OS. Effectively, the attacker is taking advantage of the security 
-system utilizing paths in the host OS kernel which have vulnerabilities.
-Second, the attack program could exploit a flaw in the security virtualization system to 
-escape its containment. Once the attacker has exploited this type of flaws, the
+performing an action in the secure virtualization system that triggers a flaw in
+the host OS. Effectively, the attacker is taking advantage of the secure 
+system utilizing paths in the host OS kernel that have a vulnerability.
+Second, the attack program could exploit a flaw in the secure virtualization system to 
+escape its containment. \yanyan{maybe explain what is to escape its containment?} 
+Once the attacker has exploited this type of flaws, the
 attack program will be able to run arbitrary code, and therefore 
 can make system calls in the host OS directly, which allows
-the attacker to trigger a known exploit. We try to prevent both of these attacking 
-strategies in this work. 
+the attacker to trigger a known exploit. We try to prevent both attacks.
 
 It should be noted that several solutions exist for building a virtualization system for running untrusted programs. 
-But the following ones are out of scope of this work because they have different hardware and software requirements.  
+However, the following techniques are out of scope as they have different hardware and software requirements.  
 We do not compare with solutions that do not run on a full-fledged 
 privileged operating system, such as virtualization system that uses a 
 bare-metal hypervisor~\cite{Xen-03} or hardware-based virtualization 
-solution~\cite{IntelVT}. Those solutions have substantial dependency on the underlying hardware, which is essentially 
-a different approach than our proposal. In addition, they do not interact with a privileged OS kernel, which makes it very difficult 
-to conduct direct comparison with our solution that accesses and relies on the OS kernel. 
+solution~\cite{IntelVT}. These solutions have substantial dependency on the underlying hardware, which is  
+different from our goal. In addition, they do not interact with a privileged OS kernel, which makes it very difficult 
+to directly compare with our solution that accesses and relies on the OS kernel. 
+\yanyan{I feel this make it sound like "accesses and relies on the OS kernel"
+constrains our method.}
 
+\noindent\textbf{Threat model.}
 To summarize, our threat model makes the following assumptions.
 
 \begin{itemize}\setlength\itemsep{0em}
 
 \item The attacker possesses knowledge about one or more unpatched vulnerabilities in the host OS.
 
-\item The attacker is permitted to execute any code in the security virtualization system.
+\item The attacker is permitted to execute any code in the secure virtualization system.
 
 \item If the attack program can trigger a vulnerability in any privileged code,
-whether in the host OS or the security virtualization system, the attacker is considered successful in 
-compromising the system.
+whether in the host OS or the secure virtualization system, the attacker is then able to 
+compromise the system.
 
 \end{itemize}
 
-Based on our threat model, to achieve our goals, we need to have better understanding about how vulnerabilities can be accessed 
-and triggered by attack programs. The question of where bugs are located in the OS kernel then becomes critical to our solution, 
-which leads us to discover our security metric. We present and discuss about it in the following section. 
+%Based on our threat model, 
+To achieve our goals, we need to have a better understanding about how vulnerabilities are
+triggered by attack programs. It is therefore critical to know where vulnerabilities are located in 
+an OS kernel. Hence, we design a security metric that measures how bugs and vulnerabilities
+are distributed in the kernel. 
+%We present and discuss about it in the following section. 
