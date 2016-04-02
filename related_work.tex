@@ -16,44 +16,29 @@ OS kernel, various virtualization techniques, etc.
 \textbf{Safety metrics for kernel risks.}
 Early research has suggested a number of approaches to quantifying risk 
 in the OS kernel. The first is the studies about the correlation between certain 
-\textit{kernel directories} and kernel faults. For example, 
+kernel directories or modules and kernel faults. For example, 
 Palix found that the \texttt{drivers} directory in the Linux kernel contains the
-most faults, in addition to HAL and \texttt{fs}~\cite{palix2011faults}.
-However, such directory level information is \yanyan{xxx (less accurate or 
+most faults, in addition to HAL and \texttt{fs}~\cite{palix2011faults}. Similarly, 
+Chou~\cite{PittSFIeld} showed that device drivers have
+much higher error rates than other parts of the kernel, and thus more vulnerable.
+However, this level of information is \yanyan{xxx (less accurate or 
 something) compared to Lind.}
 
-Much work has been done in analyzing system faults using techniques in 
-software engineering. For example, 
-in~\cite{engler2001bugs} Engler analyzed system code by static analysis
-to look for \textit{contradictions}, such as acquired locks that are
-not released.
-%
-%
-%%Studies have also been conducted based on the number of functions and/or the number of executable lines of code in the function~\cite{Mining-Metrics}.
-%%\lois[Isn' this a bit repetitious]
-%
-\textit{Coverage-based} fault localization assumes that execution events that occur mostly in failing
-test cases, but rarely in passing test cases, are more {suspect}
-of being the fault~\cite{jones2002visualization}. Further research lead to measuring the set
-difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}.
-The downside of these techniques is that \yanyan{please fill in.}
-%Further research shows that statistical likelihood test case with a predicate that evaluates to True
-%is correlated with failure~\cite{liblit2005scalable}.
-%\lois{This sentence is somehow incomplete}
-
-%While these metrics can give insight on the possible places where bugs have been located in software systems, they have limitations.
-%Firstly, the metrics mentioned above are not specifically designed for studying bugs in OS kernels.
-%\cappos{Why does this matter?}
-
-%Therefore, they do not take into account the way system calls are invoked by user applications.
-%Moreover, these metrics can not provide information about the accurate location of the bugs within the kernel, which is important to our study.
-%\cappos{Are you going to show that this is true?  Can you explain more about why these do not work?}
-%\cappos{Do existing metrics work on a LOC level?  }
+Alhazmi~\cite{alhazmi2008application} used metrics like defect density and 
+fault exposure ratio, etc., to describe the vulnerability discovery process. 
+In~\cite{zimmermann2010searching}, Zimmermann descibed metrics like 
+code complexity, code churn (the total added/modified/deleted lines of 
+code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
+the correlation between shared code size and shared vulnerabilities in 
+successive versions of a software system. While 
+these metrics can be useful for determining readiness for release, and 
+evaluating the risk of vulnerability exploitation, 
+they do not provide insights for secure system design. 
 
 Prior work has also examined the evolution of kernel defects. For example, 
 Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have 
-both studied how the \textit{numbers} of security issues evolved over 
-\textit{time}. Ozment reported a decrease in the rate at which new vulnerabilities 
+both studied how the {numbers} of security issues evolved over 
+{time}. Ozment reported a decrease in the rate at which new vulnerabilities 
 are reported by studying the age of vulnerabilities in OpenBSD. Li 
 reported an increase in security bugs by studying the number and relative 
 percentage of bugs. However, neither of these two approaches allowed 
@@ -69,12 +54,42 @@ an investigation on how vulnerabilities are distributed.
 %particular domain increases the risk of having a vulnerability. 
 %In this work, we apply similar observation to OS kernel design.
 
+Much work has been done in analyzing system faults using techniques in 
+software engineering. For example, 
+in~\cite{engler2001bugs} Engler analyzed system code by static analysis
+to look for contradictions, such as acquired locks that are
+not released.
+%
+%
+%%Studies have also been conducted based on the number of functions and/or the number of executable lines of code in the function~\cite{Mining-Metrics}.
+%%\lois[Isn' this a bit repetitious]
+%
+Coverage-based fault localization assumes that execution events that occur mostly in failing
+test cases, but rarely in passing test cases, are more \textit{suspect}
+of being the fault~\cite{jones2002visualization}. Further research lead to measuring the set
+difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}. Ostrand in \cite{ostrand2005predicting}
+predicted the number of faults in a system based on fault and modification history from previous releases.
+\yanyan{While safety may be the eventual end goal, the authors of these SE papers 
+are more interested in understanding the code than using it as a security tool. I wonder 
+if this paragraph should be cut.}
+%Further research shows that statistical likelihood test case with a predicate that evaluates to True
+%is correlated with failure~\cite{liblit2005scalable}.
+%\lois{This sentence is somehow incomplete}
+
+%While these metrics can give insight on the possible places where bugs have been located in software systems, they have limitations.
+%Firstly, the metrics mentioned above are not specifically designed for studying bugs in OS kernels.
+%\cappos{Why does this matter?}
+
+%Therefore, they do not take into account the way system calls are invoked by user applications.
+%Moreover, these metrics can not provide information about the accurate location of the bugs within the kernel, which is important to our study.
+%\cappos{Are you going to show that this is true?  Can you explain more about why these do not work?}
+%\cappos{Do existing metrics work on a LOC level?  }
+
 \textbf{Virtualization.}
 \textit{Language-based virtualization.}
-Programming languages that provide safety through virtualization like
-Java, JavaScript, Lua~\cite{Lua}, and
-Silverlight~\cite{Silverlight} are commonly used in application-level
-sandboxing. 
+Programming languages can provide safety through virtualization like
+Java, JavaScript, Lua~\cite{Lua}, and Silverlight~\cite{Silverlight}. 
+%are commonly used in application-level sandboxing. 
 %These languages provide virtualized environments to
 %check code safety by a monitor process. 
 %They combine untrusted application code with an interpreter and
@@ -111,7 +126,8 @@ turn reduces the number of potential bugs or weaknesses. %\lois{why?}
 %because of the POSIX implementation with Repy to build the sandbox.
 
 \textit{OS virtualization}
-techniques can be divided into two categories:
+techniques include
+%can be divided into two categories:
 %Type-I or Type-II virtualization. Examples of Type-I virtualization
 bare-metal hardware virtualization, such as VMware ESX Server, Xen,
 LXC~\cite{LXC}, BSD's jail, Solaris zones, and Hyper-V, and
