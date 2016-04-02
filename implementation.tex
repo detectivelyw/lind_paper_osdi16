@@ -1,26 +1,29 @@
 \section{Implementation of Lind}
 \label{sec.implementation}
 
-To test the feasibility of our Lock-in-Pop design scheme described in
+To test the feasibility of our Lock-in-Pop design in
 Section \ref{sec.design}, we used it to implement a secure virtual machine
-dubbed Lind. An old English word for a shield constructed from two layers of
+called Lind\footnote{\scriptsize An old English word for a shield constructed from two layers of
 linden wood, providing strength in a lightweight form, the name is appropriate for
 a virtual machine that adapts two technologies—\textendash
 %Google's Native Client (NaCl) and Seattle's Repy, and that is lightweight in terms of
-LOC, yet still protects vulnerable OS kernel code from exploitation by
-untrusted user programs. The dual-sandbox design also minimizes overall overhead
-because the sandbox only incurs these cost when there is a system call. Lastly,
-Lind uses a native interface for execution, allowing CPU-and-memory-intensive
-applications to run at speeds that are equivalent to NaCl and near native speed.
-
-As explained in Section \ref{sec.design}, the Lock-in-Pop design utilizes both a
-computational module and a Library OS module. In Lind, NaCl serves as the former,
-while Repy, and the POSIX interface built into it, perform the tasks of the latter.
+%LOC, 
+yet still protects vulnerable OS kernel code from exploitation by
+untrusted user programs.}. 
+%The dual-sandbox design also minimizes overall overhead
+%because the sandbox only incurs these cost when there is a system call. Lastly,
+%Lind uses a native interface for execution, allowing CPU-and-memory-intensive
+%applications to run at speeds that are equivalent to NaCl and near native speed.
+%
+As in Section \ref{sec.design}, the Lock-in-Pop design utilizes both a
+computational module and a library OS module. In Lind, Native Client (NaCl) serves as the former,
+while Restricted Python (Repy), and a POSIX interface built into it, perform the task of the latter.
 Below we present a brief description of these components and how they were integrated
 into Lind, followed by a brief example of how the system works.
 \lois{I am not sure how to format it, but insert a subhead here 5.1 Primary
 Components}
-textbf{Native Client.}
+
+\textbf{Native Client.}
 We use NaCl to isolate the computation of the user application
 from the kernel. NaCl allows Lind to work on most types of legacy code.
 It compiles the programs to produce a binary with software fault isolation.
@@ -56,7 +59,7 @@ two things. First, we need a restricted sandbox that isolates computation
 and only allows access to commonly used kernel paths.  We used
 Seattle's Repy~\cite{Repy-10} sandbox to perform this task.
 Second, we need to build a POSIX implementation to run within that sandbox.
-
+\yanyan{why have to be POSIX?}
 %pplications. For Lind, we used Repy to build our system API module.
 %To be more specific, our system API module has a very small sandbox kernel
 %as TCB,  written with Python. On top of the sandbox kernel,
@@ -91,7 +94,7 @@ risk of such occurrence.
 
 However, Lind's security does not rely solely on Repy's
 safety record. A reconfigured POSIX interface, and the isolation of
-the NaCL module within the dual sandbox design enhance the protection it can
+the NaCl module within the dual sandbox design enhance the protection it can
 provide.
 %Developers have reported
 %XXX issues for problems in other parts of the systems. However,
@@ -107,6 +110,7 @@ safety protection through both isolation and a POSIX interface that
 reformulates risky system calls to
 provide sufficient API for legacy applications, with minimal impact on the kernel.
 
+\textbf{An example system call execution.}
 In Lind, a system call issued from user code are
 received by NaCl, and then redirected to our system API module, which
 includes a POSIX API to serve those requests. A POSIX API is a set of standard
@@ -115,14 +119,15 @@ necessary operating functionality. A standard POSIX API is large and complex
 enough to make it difficult to ensure its implementation is secure and bug-free.
 Lind takes advantage of the fact that Repy is a programming language sandbox to
 construct a variation on the POSIX API. Following the
-"Lock-in-Pop" design, to service a system call in NaCl, a server routine in
+Lock-in-Pop design, to service a system call in NaCl, a server routine in
 Lind marshals its arguments into a text string, and sends the call and the arguments
 to the Repy sandbox, where the "reimplemented" system call, marshals the result and
 returns it back to NaCl. Eventually, the result is returned as the appropriate
 native type to the calling program.
 
-In the Lock-in-pop design scheme, the file system API only need
-to provide functionality of writing data to storage.% \yanyan{where is the example?}
+In the Lock-in-pop scheme, the file system API only need
+to provide functionality of writing data to storage. \yanyan{why only discuss file system?
+how about network, threading, etc?}
 It eliminates the need of having a direct abstraction, the
 concept of file permissions, links, or even the concept of multiple files.
 \lois{I moved this copy from Section 4. Please check that it makes sense where placed.
@@ -138,9 +143,10 @@ reimplementation is written in a memory-safe programming language.
 
 Here is an example of how this reimplementation would work with the symbolic link function.
 If there is a bug in this function, rather than rely on the kernel code paths
-for symbolic links, Lind will implement the incorrect behavior.
+for symbolic links, Lind will implement the incorrect behavior. \yanyan{what is the incorrect behavior?}
 This denies the code the privileged access to the system the OS kernel does.
-As a result, instead of creating a security issue, the application will just fail.
+As a result, instead of creating a security issue, the application be denied access
+to the file system.
 
 Our design could include more than two sandboxes, e.g., by sandboxing the sandbox
 kernel. However, in a secure system,
@@ -164,8 +170,8 @@ Thus, having multiple sandboxes does not provide any extra security benefits.
 %two main components\textendash a computation module that isolates the
 %application and a library OS module that isolates the complex
 %portions of POSIX, a standard OS interface Lind provides. We choose
-Google's Native Client (NaCl)~\cite{NaCl-09}
-Seattle's Repy~\cite{Repy-10} as the library OS.
+%Google's Native Client (NaCl)~\cite{NaCl-09}
+%Seattle's Repy~\cite{Repy-10} as the library OS.
 %(Figure \ref{fig:architecture}), since it is a restricted subset of Python,
 %that works as a sandbox to provide a safer environment to run untrusted code.
 
