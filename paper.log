@@ -1,0 +1,998 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  4 APR 2016 17:45
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**paper.tex
+(./paper.tex
+LaTeX2e <2015/01/01>
+Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (./usenix.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/mathptmx.sty
+Package: mathptmx 2005/04/12 PSNFSS-v9.2a Times w/ Math, improved (SPQR, WaS) 
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 28.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/ztmcm/m/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ztmcm/m/n on input line 28.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 29.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/ztmcm/m/it on input line 29.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/ztmcm/m/it on input line 29.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 30.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/ztmcm/m/n on input line 30.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/ztmcm/m/n on input line 30.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 31.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/ztmcm/m/n on input line 31.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/ztmcm/m/n on input line 31.
+\symbold=\mathgroup4
+\symitalic=\mathgroup5
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/ptm/bx/n on input line 34.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/ptm/m/it on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/ptm/m/it on input line 35.
+LaTeX Info: Redefining \hbar on input line 50.
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 94.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/endnotes/endnotes.sty
+\c@endnote=\count88
+\endnotesep=\dimen107
+\@enotes=\write3
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen108
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2005/04/14 v1.61803 publication quality tables
+\heavyrulewidth=\dimen109
+\lightrulewidth=\dimen110
+\cmidrulewidth=\dimen111
+\belowrulesep=\dimen112
+\belowbottomsep=\dimen113
+\aboverulesep=\dimen114
+\abovetopsep=\dimen115
+\cmidrulesep=\dimen116
+\cmidrulekern=\dimen117
+\defaultaddspace=\dimen118
+\@cmidla=\count89
+\@cmidlb=\count90
+\@aboverulesep=\dimen119
+\@belowrulesep=\dimen120
+\@thisruleclass=\count91
+\@lastruleclass=\count92
+\@thisrulewidth=\dimen121
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 142.
+)
+(/usr/local/texlive/2015/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box26
+\UL@hyphenbox=\box27
+\UL@skip=\skip43
+\UL@hook=\toks15
+\UL@height=\dimen122
+\UL@pe=\count93
+\UL@pixel=\dimen123
+\ULC@box=\box28
+Package: ulem 2012/05/18
+\ULdepth=\dimen124
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Package option `usenames' ignored on input line 216.
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+LaTeX Info: Redefining \color on input line 702.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 2014/10/14 v3.0j Driver-dependent file (DPC,SPQR)
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/pifont.sty
+Package: pifont 2005/04/12 PSNFSS-v9.2a Pi font support (SPQR) 
+LaTeX Font Info:    Try loading font information for U+pzd on input line 63.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/upzd.fd
+File: upzd.fd 2001/06/04 font definitions for U/pzd.
+)
+LaTeX Font Info:    Try loading font information for U+psy on input line 64.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/upsy.fd
+File: upsy.fd 2001/06/04 font definitions for U/psy.
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/makecell/makecell.sty
+Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tools/array.sty
+Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen125
+\extrarowheight=\dimen126
+\NC@list=\toks16
+\extratabsurround=\skip44
+\backup@length=\skip45
+)
+\rotheadsize=\dimen127
+\c@nlinenum=\count94
+\TeXr@lab=\toks17
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip46
+\enit@outerparindent=\dimen128
+\enit@toks=\toks18
+\enit@inbox=\box29
+\enitdp@description=\count95
+)
+No file paper.aux.
+\openout1 = `paper.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 66.
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+\big@size=\dimen129
+
+(/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count96
+\scratchdimen=\dimen130
+\scratchbox=\box30
+\nofMPsegments=\count97
+\nofMParguments=\count98
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count99
+\MPscratchDim=\dimen131
+\MPnumerator=\count100
+\makeMPintoPDFobject=\count101
+\everyMPtoPDFconversion=\toks20
+) (/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
+LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 10
+7.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1ztmcm.fd
+File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
+)
+LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 10
+7.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omlztmcm.fd
+File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
+)
+LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 10
+7.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omsztmcm.fd
+File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
+)
+LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 10
+7.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omxztmcm.fd
+File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
+)
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
+
+(./abstract.tex) (./introduction.tex
+Underfull \hbox (badness 2961) in paragraph at lines 26--40
+[]\OT1/ptm/m/n/10 Guided by this met-ric, we pro-pose the safely-
+ []
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 43.
+
+LaTeX Warning: Citation `NaCl-09' on page 1 undefined on input line 43.
+
+
+LaTeX Warning: Citation `Repy-10' on page 1 undefined on input line 46.
+
+[1{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+
+]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 71.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 71.
+
+
+LaTeX Warning: Reference `sec.metric' on page 2 undefined on input line 97.
+
+
+LaTeX Warning: Reference `sec.motivation-and-background' on page 2 undefined on
+ input line 99.
+
+
+LaTeX Warning: Reference `sec.design' on page 2 undefined on input line 103.
+
+
+LaTeX Warning: Reference `sec.implementation' on page 2 undefined on input line
+ 103.
+
+
+LaTeX Warning: Reference `sec.evaluation' on page 2 undefined on input line 104
+.
+
+
+LaTeX Warning: Reference `sec.limitation' on page 2 undefined on input line 106
+.
+
+
+LaTeX Warning: Reference `sec.related_work' on page 2 undefined on input line 1
+08.
+
+
+LaTeX Warning: Reference `sec.conclusion' on page 2 undefined on input line 110
+.
+
+) (./motivation-and-background.tex
+
+LaTeX Warning: Citation `Xen-03' on page 2 undefined on input line 33.
+
+
+LaTeX Warning: Citation `IntelVT' on page 2 undefined on input line 34.
+
+[2]) (./metric.tex
+
+LaTeX Warning: Reference `sec.evaluation' on page 3 undefined on input line 62.
+
+
+
+LaTeX Warning: Citation `gcov' on page 3 undefined on input line 64.
+
+
+LaTeX Warning: Citation `Top-Packages' on page 3 undefined on input line 73.
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 69--85
+[]\OT1/ptm/b/n/10 Commonly-used ker-nel paths. \OT1/ptm/m/n/10 To cap-ture the
+ []
+
+
+LaTeX Warning: Citation `Lind' on page 3 undefined on input line 93.
+
+
+LaTeX Warning: Citation `NVD' on page 3 undefined on input line 123.
+
+
+LaTeX Warning: Citation `Poisson-distribution' on page 3 undefined on input lin
+e 191.
+
+
+LaTeX Warning: Citation `mayer1989probability' on page 3 undefined on input lin
+e 196.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 203.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 203.
+
+LaTeX Warning: Citation `shiue1982experiment' on page 3 undefined on input line
+ 209.
+
+[3]
+
+LaTeX Warning: Citation `ozment2006milk' on page 4 undefined on input line 239.
+
+
+
+LaTeX Warning: Citation `PittSFIeld' on page 4 undefined on input line 249.
+
+
+LaTeX Warning: Citation `Trinity' on page 4 undefined on input line 262.
+
+
+LaTeX Warning: Citation `LTP' on page 4 undefined on input line 264.
+
+
+Underfull \hbox (badness 1466) in paragraph at lines 477--477
+[]\OT1/ptm/b/n/12 Risk Met-rics for Iden-ti-fy-ing Ker-nel
+ []
+
+
+LaTeX Warning: Citation `Bug-Location' on page 4 undefined on input line 502.
+
+
+LaTeX Warning: Citation `brumley2006towards' on page 4 undefined on input line 
+539.
+
+
+LaTeX Warning: Citation `chou2003static' on page 4 undefined on input line 541.
+
+
+<diagram/kernel_coverage.png, id=17, 443.40656pt x 258.9675pt>
+File: diagram/kernel_coverage.png Graphic file (type png)
+
+<use diagram/kernel_coverage.png>
+Package pdftex.def Info: diagram/kernel_coverage.png used on input line 546.
+(pdftex.def)             Requested size: 225.84375pt x 131.9057pt.
+) (./design.tex
+
+LaTeX Warning: Reference `sec.metric' on page 4 undefined on input line 17.
+
+[4]
+
+LaTeX Warning: Citation `Janus0:96' on page 5 undefined on input line 29.
+
+
+LaTeX Warning: Citation `Janus:99' on page 5 undefined on input line 29.
+
+
+LaTeX Warning: Reference `fig:design_system_call_interposition' on page 5 undef
+ined on input line 38.
+
+<diagram/Virtualization_Design_Model_03.png, id=25, 433.62pt x 237.88875pt>
+File: diagram/Virtualization_Design_Model_03.png Graphic file (type png)
+
+<use diagram/Virtualization_Design_Model_03.png>
+Package pdftex.def Info: diagram/Virtualization_Design_Model_03.png used on inp
+ut line 43.
+(pdftex.def)             Requested size: 225.84375pt x 123.9025pt.
+
+
+LaTeX Warning: Citation `Drawbridge-11' on page 5 undefined on input line 81.
+
+
+LaTeX Warning: Citation `Bascule' on page 5 undefined on input line 82.
+
+
+LaTeX Warning: Citation `Graphene-14' on page 5 undefined on input line 82.
+
+
+Underfull \hbox (badness 1275) in paragraph at lines 81--89
+\OT1/ptm/m/n/10 Systems such as Draw-bridge [[]], Bas-cule [[]], and
+ []
+
+
+<diagram/Virtualization_Design_Model_02.png, id=26, 571.13374pt x 424.58624pt>
+File: diagram/Virtualization_Design_Model_02.png Graphic file (type png)
+
+<use diagram/Virtualization_Design_Model_02.png>
+Package pdftex.def Info: diagram/Virtualization_Design_Model_02.png used on inp
+ut line 92.
+(pdftex.def)             Requested size: 225.84375pt x 167.89436pt.
+
+
+LaTeX Warning: Reference `fig:design_functionality_reimplementation' on page 5 
+undefined on input line 99.
+
+
+LaTeX Warning: Citation `Graphene-14' on page 5 undefined on input line 105.
+
+[5 <./diagram/kernel_coverage.png> <./diagram/Virtualization_Design_Model_03.pn
+g>]
+
+LaTeX Warning: Citation `NVD' on page 6 undefined on input line 115.
+
+
+LaTeX Warning: Reference `fig:design_safe_reimplementation' on page 6 undefined
+ on input line 152.
+
+
+LaTeX Warning: Reference `sec.metric' on page 6 undefined on input line 156.
+
+
+LaTeX Warning: Reference `fig:design_safe_reimplementation' on page 6 undefined
+ on input line 167.
+
+<diagram/Virtualization_Design_Model_01.png, id=32, 561.09625pt x 455.7025pt>
+File: diagram/Virtualization_Design_Model_01.png Graphic file (type png)
+
+<use diagram/Virtualization_Design_Model_01.png>
+Package pdftex.def Info: diagram/Virtualization_Design_Model_01.png used on inp
+ut line 197.
+(pdftex.def)             Requested size: 225.84375pt x 183.41812pt.
+ [6 <./diagram/Virtualization_Design_Model_02.png>]) (./implementation.tex
+
+LaTeX Warning: Reference `sec.design' on page 7 undefined on input line 5.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 12.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 12.
+Missing character: There is no ‚ in font ptmr7t!
+Missing character: There is no Ä in font ptmr7t!
+Missing character: There is no î in font ptmr7t!
+
+LaTeX Warning: Reference `sec.design' on page 7 undefined on input line 18.
+
+
+LaTeX Warning: Citation `Repy-10' on page 7 undefined on input line 60.
+
+
+LaTeX Warning: Citation `Repy-10' on page 7 undefined on input line 81.
+
+
+LaTeX Warning: Citation `RepyKernel' on page 7 undefined on input line 81.
+
+
+LaTeX Warning: Citation `style' on page 7 undefined on input line 83.
+
+
+LaTeX Warning: Citation `seattle' on page 7 undefined on input line 90.
+
+[7 <./diagram/Virtualization_Design_Model_01.png>]) (./evaluation.tex
+Underfull \hbox (badness 1354) in paragraph at lines 7--18
+\OT1/ptm/m/n/10 commonly-used de-sign mod-els in dif-fer-ent mar-kets.
+ []
+
+
+LaTeX Warning: Reference `Linux-Kernel-Bug-Test-and-Evaluation' on page 8 undef
+ined on input line 23.
+
+
+LaTeX Warning: Reference `Reachable-Kernel-Trace-Analysis-for-Different-Virtual
+ization-Systems' on page 8 undefined on input line 28.
+
+
+LaTeX Warning: Reference `Reachable-Kernel-Trace-Analysis-for-Repy-Sandbox' on 
+page 8 undefined on input line 37.
+
+
+LaTeX Warning: Citation `CVE-Datasource' on page 8 undefined on input line 80.
+
+
+LaTeX Warning: Citation `Exploit-Database' on page 8 undefined on input line 85
+.
+
+
+LaTeX Warning: Reference `table:trigger_vulnerabilities' on page 8 undefined on
+ input line 111.
+
+[8]
+
+LaTeX Warning: Reference `table:trigger_vulnerabilities' on page 9 undefined on
+ input line 123.
+
+
+Overfull \hbox (7.8801pt too wide) in paragraph at lines 144--144
+[]|\OT1/ptm/b/n/7 VMWare|  
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 145--145
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 146--146
+[]|[]| 
+ []
+
+
+Overfull \hbox (1.4929pt too wide) in paragraph at lines 147--147
+[]|\OT1/ptm/b/n/7 Graphene|  
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 147--148
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 153--153
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 154--154
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 158--158
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 159--159
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 168--168
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 173--173
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 174--174
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 185--185
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 186--186
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 200--200
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 205--205
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 216--216
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 257--257
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 283--283
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 284--284
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 285--286
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 294--294
+[]|[]| 
+ []
+
+
+Overfull \hbox (5.69046pt too wide) in paragraph at lines 300--300
+[]|[]| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--334
+[]|\OT1/ptm/b/n/7 Vulnerabilities
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--335
+[]|\OT1/ptm/b/n/7 11/35
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--335
+[]|\OT1/ptm/b/n/7 8/35
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--335
+[]|\OT1/ptm/b/n/7 12/35
+ []
+
+
+Overfull \hbox (1.14964pt too wide) in paragraph at lines 335--335
+\OT1/ptm/b/n/7 (34.3%)| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--335
+[]|\OT1/ptm/b/n/7 5/35
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--335
+[]|\OT1/ptm/b/n/7 5/35
+ []
+
+
+Overfull \hbox (1.14964pt too wide) in paragraph at lines 335--335
+\OT1/ptm/b/n/7 (14.3%)| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 336--336
+[]|\OT1/ptm/b/n/7 8/35
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 336--337
+[]|\OT1/ptm/b/n/7 1/35
+ []
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 343.
+
+Underfull \hbox (badness 3108) in paragraph at lines 375--400
+[]\OT1/ptm/b/it/10 Only Na-tive Linux vul-ner-a-ble. \OT1/ptm/m/n/10 Rep-re-sen
+-ta-tive
+ []
+
+
+Underfull \hbox (badness 2837) in paragraph at lines 375--400
+\OT1/ptm/m/n/10 trig-gered in-side Na-tive Linux. It re-sides in the
+ []
+
+
+Underfull \vbox (badness 1082) has occurred while \output is active []
+
+ [9]
+Missing character: There is no ‚ in font ptmr7t!
+Missing character: There is no Ä in font ptmr7t!
+Missing character: There is no î in font ptmr7t!
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+LaTeX Warning: Reference `sec.metric' on page 10 undefined on input line 492.
+
+
+LaTeX Warning: Reference `table:trace-systems' on page 10 undefined on input li
+ne 501.
+
+[10]
+
+LaTeX Warning: Reference `Verification-of-Hypothesis' on page 11 undefined on i
+nput line 521.
+
+
+LaTeX Warning: Reference `table:trace-systems' on page 11 undefined on input li
+ne 544.
+
+
+LaTeX Warning: Reference `table:trace-Repy' on page 11 undefined on input line 
+570.
+
+
+Overfull \hbox (3.30553pt too wide) in paragraph at lines 603--603
+[]|\OT1/ptm/b/n/7 Sandbox|  
+ []
+
+
+Overfull \hbox (0.709pt too wide) in paragraph at lines 604--604
+[]|\OT1/ptm/m/n/7 Compared 
+ []
+
+<diagram/lind_osdi16_performance.pdf, id=53, 845.1575pt x 597.23125pt>
+File: diagram/lind_osdi16_performance.pdf Graphic file (type pdf)
+
+<use diagram/lind_osdi16_performance.pdf>
+Package pdftex.def Info: diagram/lind_osdi16_performance.pdf used on input line
+ 621.
+(pdftex.def)             Requested size: 225.84375pt x 159.5869pt.
+ [11 <./diagram/lind_osdi16_performance.pdf>]
+
+LaTeX Warning: Reference `fig:performance_applications' on page 12 undefined on
+ input line 647.
+
+
+LaTeX Warning: Reference `table:performance_tor' on page 12 undefined on input 
+line 666.
+
+
+Overfull \hbox (2.82913pt too wide) in paragraph at lines 697--723
+ [][] 
+ []
+
+) (./limitation.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+Missing character: There is no ‚ in font ptmr7t!
+Missing character: There is no Ä in font ptmr7t!
+Missing character: There is no ú in font ptmr7t!
+Missing character: There is no ‚ in font ptmr7t!
+Missing character: There is no Ä in font ptmr7t!
+Missing character: There is no ù in font ptmr7t!
+ [12])
+(./related_work.tex
+
+LaTeX Warning: Citation `palix2011faults' on page 13 undefined on input line 22
+.
+
+
+LaTeX Warning: Citation `PittSFIeld' on page 13 undefined on input line 23.
+
+
+LaTeX Warning: Citation `alhazmi2008application' on page 13 undefined on input 
+line 28.
+
+
+LaTeX Warning: Citation `zimmermann2010searching' on page 13 undefined on input
+ line 30.
+
+
+LaTeX Warning: Citation `kim2007vulnerability' on page 13 undefined on input li
+ne 32.
+
+
+LaTeX Warning: Citation `ozment2006milk' on page 13 undefined on input line 40.
+
+
+
+LaTeX Warning: Citation `li2006have' on page 13 undefined on input line 40.
+
+
+LaTeX Warning: Citation `engler2001bugs' on page 13 undefined on input line 60.
+
+
+
+LaTeX Warning: Citation `jones2002visualization' on page 13 undefined on input 
+line 70.
+
+
+LaTeX Warning: Citation `agrawal1995fault' on page 13 undefined on input line 7
+1.
+
+
+LaTeX Warning: Citation `jones2005empirical' on page 13 undefined on input line
+ 71.
+
+
+LaTeX Warning: Citation `liblit2005scalable' on page 13 undefined on input line
+ 71.
+
+
+LaTeX Warning: Citation `ostrand2005predicting' on page 13 undefined on input l
+ine 71.
+
+
+LaTeX Warning: Citation `Lua' on page 13 undefined on input line 92.
+
+
+LaTeX Warning: Citation `Silverlight' on page 13 undefined on input line 92.
+
+
+LaTeX Warning: Citation `JavaBugs' on page 13 undefined on input line 117.
+
+
+LaTeX Warning: Citation `Java-Lessons' on page 13 undefined on input line 117.
+
+[13]
+
+LaTeX Warning: Citation `LXC' on page 14 undefined on input line 134.
+
+
+LaTeX Warning: Citation `Qubes' on page 14 undefined on input line 138.
+
+
+LaTeX Warning: Citation `Overshadow' on page 14 undefined on input line 138.
+
+
+LaTeX Warning: Citation `SecureVM' on page 14 undefined on input line 138.
+
+
+LaTeX Warning: Citation `HypSec' on page 14 undefined on input line 138.
+
+
+LaTeX Warning: Citation `Drawbridge-11' on page 14 undefined on input line 170.
+
+
+
+LaTeX Warning: Citation `Bascule' on page 14 undefined on input line 181.
+
+
+LaTeX Warning: Citation `Graphene-14' on page 14 undefined on input line 184.
+
+
+LaTeX Warning: Citation `Haven' on page 14 undefined on input line 189.
+
+
+LaTeX Warning: Citation `SCI-04' on page 14 undefined on input line 216.
+
+
+LaTeX Warning: Citation `Problems-SCI' on page 14 undefined on input line 228.
+
+
+LaTeX Warning: Citation `SFI:93' on page 14 undefined on input line 257.
+
+
+LaTeX Warning: Citation `NaCl-09' on page 14 undefined on input line 312.
+
+) (./conclusion.tex
+
+LaTeX Warning: Citation `Lind' on page 14 undefined on input line 23.
+
+)
+No file paper.bbl.
+[14] (./paper.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ )
+(\end occurred inside a group at level 3)
+
+### simple group (level 3) entered at line 37 ({)
+### simple group (level 2) entered at line 28 ({)
+### simple group (level 1) entered at line 156 ({)
+### bottom level 
+Here is how much of TeX's memory you used:
+ 3171 strings out of 493089
+ 45296 string characters out of 6134842
+ 163371 words of memory out of 5000000
+ 6531 multiletter control sequences out of 15000+600000
+ 48774 words of font info for 96 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 38i,11n,35p,1025b,345s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc
+}</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
+usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
+sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></us
+r/local/texlive/2015/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/tex
+live/2015/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2015/
+texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2015/texmf-dis
+t/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/ty
+pe1/urw/times/utmri8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/z
+apfding/uzdr.pfb>
+Output written on paper.pdf (14 pages, 372943 bytes).
+PDF statistics:
+ 122 PDF objects out of 1000 (max. 8388607)
+ 82 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+

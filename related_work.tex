@@ -1,61 +1,63 @@
 \section{Related Work}
 \label{sec.related_work}
 
-A substantial amount of effort has gone into building secure systems. 
-This section summarizes these security approaches 
+This section summarizes a number of previous security approaches
 %such as virtualization or other isolation mechanisms
 that aim to ensure the safety of privileged code in user space and kernel space.
-These approaches include designing safety metrics to quantify the risk in an 
-OS kernel, various virtualization techniques, etc.
-%\lois{Justin and Yanyan: In reviewing this section, consider re-organizing this
-%literature around how these sources relate to the function of Lind rather than
-%just techniques used.}
+These approaches include past efforts to better define safety metrics and to quantify
+areas of risk in an OS kernel, key studies in the use of various virtualization
+ techniques, as well as background information on technologies incorporated into
+ Lind.
 
-%\lois{Do all of your subtopics fall into this one category? If not,
-
-\textbf{Safety metrics for kernel risks.}
-Early research has suggested a number of approaches to quantifying risk 
-in the OS kernel. The first is the studies about the correlation between certain 
-kernel directories or modules and kernel faults. For example, 
+\textbf{Safety metrics for evaluating kernel code risk.}
+Earlier approaches to quantifying risk
+in the OS kernel focused on identifying a correlation between certain
+kernel directories or modules and the presence of faults. For example,
 Palix found that the \texttt{drivers} directory in the Linux kernel contains the
-most faults, in addition to HAL and \texttt{fs}~\cite{palix2011faults}. Similarly, 
-Chou~\cite{PittSFIeld} showed that device drivers have
-much higher error rates than other parts of the kernel, and thus more vulnerable.
-However, this level of information is \yanyan{xxx (less accurate or 
-something) compared to Lind.}
+most faults, followed by HAL and \texttt{fs}~\cite{palix2011faults}. Similarly,
+Chou~\cite{PittSFIeld} showed that device drivers had
+much higher error rates than other parts of the kernel, and are thus more vulnerable.
+However, this narrower component-focused approach does not necessarily
+provide for the most effective detection and defense against kernel bugs, as our
+test of the Chou metric, described in Section 3, will attest.
 
-Alhazmi~\cite{alhazmi2008application} used metrics like defect density and 
-fault exposure ratio, etc., to describe the vulnerability discovery process. 
-In~\cite{zimmermann2010searching}, Zimmermann descibed metrics like 
-code complexity, code churn (the total added/modified/deleted lines of 
-code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
-the correlation between shared code size and shared vulnerabilities in 
-successive versions of a software system. While 
-these metrics can be useful for determining readiness for release, and 
-evaluating the risk of vulnerability exploitation, 
-they do not provide insights for secure system design. 
+There have been a number of other approaches to identifying kernel vulnerability, some of
+which grew out of efforts in code comprehension.  Alhazmi~\cite{alhazmi2008application}
+used metrics like defect density and fault exposure ratio to describe the
+vulnerability discovery process. In~\cite{zimmermann2010searching}, Zimmermann
+described metrics like code complexity, and code churn (the total added/modified/
+deleted lines of code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
+the correlation between shared code size and shared vulnerabilities in
+successive versions of a software system. While
+these metrics can be useful for determining readiness for release, and
+evaluating the risk of vulnerability exploitation,
+they do not provide insights for secure system design.
 
-Prior work has also examined the evolution of kernel defects. For example, 
-Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have 
-both studied how the {numbers} of security issues evolved over 
-{time}. Ozment reported a decrease in the rate at which new vulnerabilities 
-are reported by studying the age of vulnerabilities in OpenBSD. Li 
-reported an increase in security bugs by studying the number and relative 
-percentage of bugs. However, neither of these two approaches allowed 
-an investigation on how vulnerabilities are distributed. 
-\yanyan{In contrast, Lind...(and related to the new results).}
-%Our work is motivated by Schroter et al.~\cite{schroter2006predicting} and 
-%Neuhaus et al.~\cite{neuhaus2007predicting}. 
+Prior work has also examined the evolution of kernel defects. For example,
+Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have
+both studied how security issues evolve over
+time. Ozment reported a decrease in the rate at which new vulnerabilities
+are reported by studying the age of vulnerabilities in OpenBSD.  Li
+reported an increase in security bugs by studying the number and relative
+percentage of bugs. \lois{this sentence about Li says nothing and reads like
+ nonsense. He reported an increase in the bugs by studying the number of bugs?
+I checked the paper but had no clue what this referred to}
+However, neither of these two approaches provided data
+a on how vulnerabilities are distributed.
+In contrast, guided its design metric, Lind can assess the primary location
+of bugs as being in the less-used paths.
+%Our work is motivated by Schroter et al.~\cite{schroter2006predicting} and
+%Neuhaus et al.~\cite{neuhaus2007predicting}.
 %Schroter~\cite{schroter2006predicting} observed that bugs and
-%failures are correlated in code via \texttt{import} and function calls. 
-%Neuhaus~\cite{neuhaus2007predicting} 
+%failures are correlated in code via \texttt{import} and function calls.
+%Neuhaus~\cite{neuhaus2007predicting}
 %discovered that in Mozilla's code base
-%some domains are more risky than others, and being associated with a 
-%particular domain increases the risk of having a vulnerability. 
+%some domains are more risky than others, and being associated with a
+%particular domain increases the risk of having a vulnerability.
 %In this work, we apply similar observation to OS kernel design.
 
-Much work has been done in analyzing system faults using techniques in 
-software engineering. For example, 
+Much work has been done in analyzing system faults using techniques in
+software engineering. For example,
 in~\cite{engler2001bugs} Engler analyzed system code by static analysis
 to look for contradictions, such as acquired locks that are
 not released.
@@ -64,14 +66,15 @@ not released.
 %%Studies have also been conducted based on the number of functions and/or the number of executable lines of code in the function~\cite{Mining-Metrics}.
 %%\lois[Isn' this a bit repetitious]
 %
-Coverage-based fault localization assumes that execution events that occur mostly in failing
-test cases, but rarely in passing test cases, are more \textit{suspect}
-of being the fault~\cite{jones2002visualization}. Further research lead to measuring the set
-difference of the statements covered by passing and failing test scenarios with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}. Ostrand in \cite{ostrand2005predicting}
-predicted the number of faults in a system based on fault and modification history from previous releases.
-\yanyan{While safety may be the eventual end goal, the authors of these SE papers 
-are more interested in understanding the code than using it as a security tool. I wonder 
-if this paragraph should be cut.}
+Coverage-based fault localization assumes that execution events that occur
+mostly in failing test cases, but rarely in passing test cases, are more likely
+to be the cause~\cite{jones2002visualization}. Further research lead to measuring the set
+difference of the statements covered by passing and failing test scenarios
+with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}.
+Ostrand in \cite{ostrand2005predicting} predicted the number of faults in a system based on fault and modification history from previous releases.
+\yanyan{While safety may be the eventual end goal, the authors of these SE papers
+are more interested in understanding the code than using it as a security tool. I wonder
+if this paragraph should be cut.} \lois{Since we appear to be running short on space, I concur}
 %Further research shows that statistical likelihood test case with a predicate that evaluates to True
 %is correlated with failure~\cite{liblit2005scalable}.
 %\lois{This sentence is somehow incomplete}
@@ -86,12 +89,15 @@ if this paragraph should be cut.}
 %\cappos{Do existing metrics work on a LOC level?  }
 
 \textbf{Virtualization.}
+Lind incorporates a number of virtualization techniques. This section details some
+of the significant work relevant to the development of Lind.
 \textit{Language-based virtualization.}
-Programming languages can provide safety through virtualization like
-Java, JavaScript, Lua~\cite{Lua}, and Silverlight~\cite{Silverlight}. 
-%are commonly used in application-level sandboxing. 
+Programming languages like Java, JavaScript, Lua~\cite{Lua}, and
+Silverlight~\cite{Silverlight} can provide safety in virtual systems by
+"translating" application commands into a native language.
+%are commonly used in application-level sandboxing.
 %These languages provide virtualized environments to
-%check code safety by a monitor process. 
+%check code safety by a monitor process.
 %They combine untrusted application code with an interpreter and
 %standard libraries that consolidate routines to perform I/O, network
 %communication, and other sensitive functions.
@@ -113,15 +119,17 @@ Java, JavaScript, Lua~\cite{Lua}, and Silverlight~\cite{Silverlight}.
 %
 Though many sandboxes implement the bulk of standard libraries in
 memory-safe languages like Java or C\#, flaws in this code can
-still pose a threat~\cite{JavaBugs, Java-Lessons}. 
-%In fact, many security critical bugs can be found in the standard libraries 
+still pose a threat~\cite{JavaBugs, Java-Lessons}.
+%In fact, many security critical bugs can be found in the standard libraries
 %Researchers have also
 %discovered many severe bugs in Java \cite{Java-Lessons}.
 Any bug or failure in a programming language virtual
 machine is usually fatal. In contrast, Lind with a very small TCB
-enhances security of privileged code due to fewer LOC, which in 
+enhances security of privileged code due to fewer LOC, which in
 turn reduces the number of potential bugs or weaknesses. %\lois{why?}
-\lois{OK, what does the TCB have to do with these languages?}
+\lois{OK, what does the TCB have to do with these languages? My
+question still stands. How does the last sentence relate to programming
+languages}
 
 %because of the POSIX implementation with Repy to build the sandbox.
 
@@ -134,12 +142,12 @@ LXC~\cite{LXC}, BSD's jail, Solaris zones, and Hyper-V, and
 hosted hypervisor virtualization such as VMware
 Workstation, VMware Server, VirtualPC and VirtualBox.
 %
-Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec} 
+Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec}
 %is a feature of OS virtualization that
 provides safe executing environments through containment for multiple
-user-level virtual environments sharing the same hardware. 
+user-level virtual environments sharing the same hardware.
 %This approach relies on the VMM to confine untrusted applications within
-%guest OSes. 
+%guest OSes.
 However, there are limitations of this approach due to
 the large attack vectors against the hypervisors, including
 vulnerabilities of software and configuration risk. Lind avoids such restrictions due to a smaller TCB.
@@ -155,9 +163,9 @@ vulnerabilities of software and configuration risk. Lind avoids such restriction
 
 \textit{Library OSes}
 allow applications to efficiently
-obtain the benefits of virtual machines.
+obtain the benefits of virtual machines.\lois{HOW?}
 %including security isolation, host platform compatibility, and
-%migration. 
+%migration.
 %Libra \cite {Libra} is an example of a library OS that allows
 %applications to customize their OSs within VMs.
 %This solution is similar to the exokernel approach where a small trusted kernel
@@ -196,32 +204,32 @@ in an untrusted cloud host.
 %malicious host.
 
 While the library OS technique relies extensively on
-the underlying kernels to perform system functions, 
-Lind reimplements complex OS functions through memory-safe Repy 
-code, relying on only a limited set of system functions from the Repy 
-sandbox. Unlike Lind, Drawbridge, Bascule 
-or Haven do not have the sandbox environment that properly contains 
-buggy or malicious behavior, and therefore could allow attackers 
-to trigger zero-day vulnerabilities in the underlying kernel. 
+the underlying kernels to perform system functions,
+Lind reimplements complex OS functions through memory-safe Repy
+code, relying on only a limited set of system functions from the Repy
+sandbox. Unlike Lind, Drawbridge, Bascule or Haven
+do not have the sandbox environment that properly contains
+buggy or malicious behavior, and therefore could allow attackers
+to trigger zero-day vulnerabilities in the underlying kernel.
 
 %&\yanyan{please add comparison of Drawbridge/Bascule/Haven to Lind.}
 
 \textbf{System Call Interposition} (SCI) provides
 %offers a number of properties that make it attractive to run applications
 secure execution of applications by exposing a minimal kernel surface.
-This approach usually ensures the userspace policies through a monitor process that
+This approach usually enforces the userspace policies through a monitor process that
 interacts with the system call execution engine
 %for building sandboxes, though it can be error prone
 \cite{SCI-04}.
 %Approaches for delegation and filtering have been extensively studied. For example,
 %along with their respective tradeoffs between security and
 %performance.
-%Janus (J2) \cite{Janus0:96, Janus:99} is an SCI solution for confining untrusted 
-%applications that includes system call filtering and sandboxing mechanisms. 
-%Garfinkel et al. in another effort, introduces Ostia \cite{SCI-04}, where system 
-%calls are delegated to agents that enforce the policies. 
+%Janus (J2) \cite{Janus0:96, Janus:99} is an SCI solution for confining untrusted
+%applications that includes system call filtering and sandboxing mechanisms.
+%Garfinkel et al. in another effort, introduces Ostia \cite{SCI-04}, where system
+%calls are delegated to agents that enforce the policies.
 %Ostia resolves the tight dependencies with the underlying OS through process emulation and
-%the agents model at the userspace. 
+%the agents model at the userspace.
 Issues in SCI include the difficulty of appropriately replicating OS semantics,
 multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
 In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
@@ -231,9 +239,9 @@ In addition, system calls that are denied can cause inconsistencies~\cite{Proble
 %security critical applications, including Chrome, OpenSSH and Tor.
 %The authors propose Jitk architecture to avoid the weaknesses in traditional
 %kernelspace system call interceptors that arise from the unforeseen bugs within
-%the interceptors. 
+%the interceptors.
 %Jitk provides a formal verification tool that ensure the
-%correct translation of the userspace submitted code, e.g. 
+%correct translation of the userspace submitted code, e.g.
 %the  the BSD packet filter and INET-DIAG.
 %
 %The kernel module enforces policy, denies direct access to restricted
@@ -248,9 +256,9 @@ In addition, system calls that are denied can cause inconsistencies~\cite{Proble
 SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
 of a system call through the Lind's reimplementation to ensure safe POSIX API for the userspace applications.
 
-\textbf{Software Fault Isolation} (SFI) 
+\textbf{Software Fault Isolation} (SFI)
 %is an alternative to hardware memory
-%protection when running two applications in one address space. SFI 
+%protection when running two applications in one address space. SFI
 provides sandboxing in which native
 instructions can only be executed if they do not violate the sandbox's
 constraints \cite{SFI:93}, and security policies are enforced through machine-level
@@ -274,7 +282,7 @@ other programs to execute their code.
 %
 %Nooks \cite{Nooks:03} is another SFI-based solution that provides
 %a protected environment for running device drivers by isolating kernel
-%modules. 
+%modules.
 %Nooks' runtime environment is located within the
 %kernel and it includes the majority of drivers that needs to be protected
 %from each other.
@@ -312,7 +320,7 @@ Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
 Chrome browser that allows native executable code to run directly in a
 browser. NaCl prevents suspicious code
 from memory corruption or direct access to the underlying system
-resources. 
+resources.
 %For this purpose NaCl loads untrusted modules from the
 %trusted modules into two different address spaces, where in most SFI
 %approaches both untrusted and trusted codes are loaded into a common
