@@ -20,8 +20,8 @@ computational module and a library OS module. In Lind, Native Client (NaCl) serv
 while Restricted Python (Repy), and a POSIX interface built into it, perform the task of the latter.
 Below we present a brief description of these components and how they were integrated
 into Lind, followed by a brief example of how the system works.
-\lois{I am not sure how to format it, but insert a subhead here 5.1 Primary
-Components}
+
+\subsection{Primary Components}
 
 \textbf{Native Client.}
 We use NaCl to isolate the computation of the user application
@@ -58,8 +58,9 @@ To build an API to access the safe parts of the underlying kernel, we need
 two things. First, we need a restricted sandbox that isolates computation
 and only allows access to commonly used kernel paths.  We used
 Seattle's Repy~\cite{Repy-10} sandbox to perform this task.
-Second, we need to build a POSIX implementation to run within that sandbox.
-\yanyan{why have to be POSIX?}
+Second, to serve needs of the user programs, there has to be an operating system interface that 
+provide system functions. We chose the world-wide accepted standard POSIX interface. 
+And to enforce isolation, we need to build our POSIX implementation to run within that sandbox.
 %pplications. For Lind, we used Repy to build our system API module.
 %To be more specific, our system API module has a very small sandbox kernel
 %as TCB,  written with Python. On top of the sandbox kernel,
@@ -102,8 +103,8 @@ provide.
 %they do, the security of the system could be compromised.
 %However,
 
-\lois{I am not sure how to format it, but insert a subhead here "5.2 Enhanced
-Safety in Call Handling}
+\subsection{Enhanced Safety in Call Handling}
+
 The kernel interface is extremely rich and hard to protect.
 The dual sandbox Lock-in-Pop design used to build Lind provides enhanced
 safety protection through both isolation and a POSIX interface that
@@ -130,8 +131,8 @@ to provide functionality of writing data to storage. \yanyan{why only discuss fi
 how about network, threading, etc?}
 It eliminates the need of having a direct abstraction, the
 concept of file permissions, links, or even the concept of multiple files.
-\lois{I moved this copy from Section 4. Please check that it makes sense where placed.
- Also, as Yanyan notes, there should be an actual example here.}
+%\lois{I moved this copy from Section 4. Please check that it makes sense where placed.
+ %Also, as Yanyan notes, there should be an actual example here.}
 The system API safe reimplementation is a set of more complicated system calls
 derived from functions in the sandbox kernel.
 We reimplement those system calls because we do not want this potentially risky user code
@@ -143,7 +144,8 @@ reimplementation is written in a memory-safe programming language.
 
 Here is an example of how this reimplementation would work with the symbolic link function.
 If there is a bug in this function, rather than rely on the kernel code paths
-for symbolic links, Lind will implement the incorrect behavior. \yanyan{what is the incorrect behavior?}
+for symbolic links, Lind will try to implement the incorrect behavior, such as creating a symbolic link 
+with a deleted file. 
 This denies the code the privileged access to the system the OS kernel does.
 As a result, instead of creating a security issue, the application be denied access
 to the file system.
