@@ -13,7 +13,7 @@ To combat this threat, untrusted programs are often executed in a secure
  virtualization system, such as a guest OS VM, a system call interposition
  module, or a library OS. The goal of the study documented in this paper is to
 build such a security virtualization system capable of protecting not only the
-an underlying host OS, but programmings running on it, from both malicious attacks
+an underlying host OS, but also programs running on it, from both malicious attacks
 and accidental triggering from application system calls. However, as we will document
  in Section 3, there have been a number of approaches to designing such a system.
 In this section, we define the scope of our design approach, including some basic
@@ -32,7 +32,7 @@ taking advantage of the secure system by utilizing paths in the host OS kernel
 that have a vulnerability. In the second case, once the attacker has exploited
 this type of flaw, the attack program will be able to run arbitrary code, and
 therefore can make system calls in the host OS directly. The system we will propose
-in Section 4 is designed to prevent both attacks.
+in Section 4 is designed to prevent both types of attacks.
 
 \noindent\textbf{Threat model.}
 To summarize, our threat model makes the following assumptions.
@@ -56,7 +56,9 @@ out of scope, as they have different hardware and software requirements.
 Primarily we chose not to include solutions that do not run on a full-fledged
 privileged operating system, such as a virtualization system that uses a
 bare-metal hypervisor~\cite{Xen-03} or hardware-based virtualization
-solution~\cite{IntelVT}. These solutions have substantial dependency on the
+solution~\cite{IntelVT}. \lois{Previous sentence requires clarification. Should it be
+"solutions that do not run on top of a full-fledged..."} These solutions
+have substantial dependency on the
 underlying hardware, which differs from our proposed model. In addition,
 they do not interact with a privileged OS kernel, which makes them too different
 in structure and function to directly compare.
@@ -64,8 +66,9 @@ in structure and function to directly compare.
 constrains our method.} \lois{See revision}
 
 %Based on our threat model,
-To achieve our goals, we need to have a better understanding about how vulnerabilities are
-triggered by attack programs. It is therefore critical to know where vulnerabilities are located in
-an OS kernel. Hence, we design a security metric that measures how bugs and vulnerabilities
+To achieve our goals, we need to have a better understanding about how
+bugs are triggered by attack programs. It is therefore critical to know where
+vulnerabilities are located in an OS kernel. Our first step is to design
+a security metric that can quantitatively measure how bugs and vulnerabilities
 are distributed in the kernel.
 %We present and discuss about it in the following section.
