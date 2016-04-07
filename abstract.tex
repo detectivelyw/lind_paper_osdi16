@@ -1,10 +1,14 @@
 \subsection*{Abstract}
-System designers and developers want users to be able to 
-run applications -- even untrusted ones -- on open source operating systems 
-without triggering potential security breaches. Yet, a possible compromise of privileged code 
-in the OS kernel is particularly dangerous because bugs or flaws triggered there pose a direct security threat 
-to the system itself and all other programs running in it. A number of security strategies have evolved over the years 
-in response to these concerns, such as system call interposition, operating system virtual machines, and library OSes. 
+%System designers and developers want users to be able to 
+%run applications -- even untrusted ones -- on open source operating systems 
+%without triggering potential security breaches. Yet, a possible compromise of privileged code 
+%in the OS kernel is particularly dangerous because bugs or flaws triggered there pose a direct security threat 
+%to the system itself and all other programs running in it. 
+
+Running untrusted programs on a vulnerable operating system kernel is a big challenge. 
+%A number of security strategies have evolved over the years in response to these concerns, 
+A number of security strategies have evolved over the years, trying to solve this problem, 
+such as system call interposition, operating system virtual machines, and library OSes. 
 However, without a widely applicable quantitative metric to guide efforts, systems for securing privileged code 
 have emerged on almost a ``case-by-case'' basis. To develop more consistently effective security systems, 
 more needs to be known about the location of flaws in kernel code.
@@ -15,8 +19,7 @@ With this knowledge, we devise a security metric called \emph{Lock-in-Pop}, as i
 except that found in paths associated with frequently-used popular programs and is shown to contain fewer vulnerabilities. 
 Using this new design scheme, we build and test  a secure virtual machine called Lind that accesses only 
 the popular code paths through a very small trusted computing base. Complex functionality is addressed 
-by a strategy that uses a memory-safe programming language to recreate riskier system calls within a sandbox. 
-When Lind was tested against seven other virtual machines, the results show that, for the 35 bugs examined in Linux kernel version 3.14.1, 
-it can reduce the threat of an attack to less than 3\%. 
+by using a memory-safe programming language to recreate riskier system calls within a sandbox. 
+Our test results for 35 bugs examined in Linux kernel version 3.14.1, show that Lind can reduce the threat of an attack to less than 3\%. 
 This result is about an order of magnitude better than existing systems like VirtualBox (40\%), VMWare Workstation (31\%), Docker (23\%), 
 LXC (34\%), QEMU (14\%), KVM (14\%), and Graphene (23\%).
