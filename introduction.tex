@@ -17,12 +17,13 @@ somewhat ``hit-or-miss.'' Many people believe that existing virtual machines pro
 execute programs safely. However, vulnerabilities found in those virtual machines suggest that there is still a long way to go. 
 Virtualbox has 40 reported vulnerabilities \cite{Virtualbox-Vulnerabilities}, 
 while more than 100 bugs have been found in VMware Workstation \cite{VMWare-Vulnerabilities}. 
-Other studies have looked to the development of security metrics to pinpoint vulnerable areas. 
-A 2001 study by Chou, et al. \cite{PittSFIeld} provided evidence that more bugs could be found in device drivers than in other parts of the OS kernel. 
-Another study presented evidence that code grew safer with time, so newer code could contain more hidden bugs than older code \cite{ozment2006milk}. 
-Both of these studies, and many others, have also contributed to improved kernel safety technologies by analyzing where vulnerabilities are likely to exist. 
-However, despite all of this research, solutions that respond broadly to security concerns still remain elusive. 
-In other words, we are still lacking reproducible quantitative measures to evaluate the security of kernel code. 
+Other studies have looked to the development of security metrics \cite{PittSFIeld, ozment2006milk} to pinpoint vulnerable areas. 
+%A 2001 study by Chou, et al. \cite{PittSFIeld} provided evidence that more bugs could be found in device drivers than in other parts of the OS kernel. 
+%Another study presented evidence that code grew safer with time, so newer code could contain more hidden bugs than older code \cite{ozment2006milk}. 
+%Both of these studies, and many others, have also contributed to improved kernel safety technologies by analyzing where vulnerabilities are likely to exist. 
+%However, despite all of this research, solutions that respond broadly to security concerns still remain elusive. 
+%In other words, we are still lacking reproducible quantitative measures to evaluate the security of kernel code. 
+However, we are still lacking reproducible quantitative measures to evaluate the security of kernel code. 
 
 In this paper, we move one step closer to that goal by documenting the development and 
 testing of a new design that offers a more reliable foundation for building secure virtual machines. 
@@ -86,6 +87,7 @@ against seven other security systems. We found that Lind triggers only one (2.9\
 making it an order of magnitude more secure than other systems.
 \end{itemize}
 
+\yiwen{Can we lose the last map paragraph? I'd like to remove it and it will save a lot of space.}
 
 The remainder of this paper is organized as follows.
 Section \ref{sec.motivation-and-background} presents the scope of our study and our threat model. 
