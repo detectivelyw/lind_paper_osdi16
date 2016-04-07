@@ -3,73 +3,68 @@
 
 \textbf{Goals.}
 Our goal is to design and build secure virtualization systems that allow
-untrusted programs to run on an unpatched and vulnerable host OS (Linux OS in
- this study), without triggering vulnerabilities that attackers could exploit.
- Developing effective defenses for the host OS is essential as this code
- can provide attackers access that could lead to a system take-over.
-% \yanyan{what are the other parts of the system?}\lois{I just re-wrote the
-% opening. Hope this eliminates the questions.}
+untrusted programs to run on an unpatched and vulnerable host OS (Linux OS in 
+this study), without triggering vulnerabilities that attackers could exploit. 
+Developing effective defenses for the host OS kernel is essential as this privileged code 
+can provide attackers access that could lead to a system take-over.
 
-To combat this threat, untrusted programs are often executed in a secure
- virtualization system, such as a guest OS VM, a system call interposition
- module, or a library OS. Our intent is to
+To combat this threat, untrusted programs are often executed in a secure 
+virtualization system, such as a guest OS virtual machine, a system call interposition 
+module, or a library OS system. Our intent is to
 build such a secure virtualization system capable of protecting not only
 an underlying host OS, but also any programs running in it, from both malicious attacks
-and accidental triggering by applications. However, as we will document
-in Section 3, we are not the first to propose such a system.
+and accidental bugs by applications. However, as we will document
+in Section 4, we are not the first to propose such a system.
 In this section, we define the scope of our approach, including some basic
 assumptions about the level of security that we intend to enforce,
 and the possible attacks that we desire to protect against. We also briefly note
 a few existing design schemes we chose to exclude from this study and why.
 
-In our study, we acknowledge that an attack on the host OS could be staged in our secure
+In our study, we acknowledge that an attack attempt on the host OS could be staged in our secure
 virtualization system. The security goal is to prevent a potential outcome of such
 an attack: the exploitation of an unpatched vulnerability. Furthermore, we
 anticipate that such an exploit could be done directly, by performing an action in the
 virtualization system, or indirectly by causing a vulnerability to escape the
-containment of the virtualization system. \yanyan{maybe explain what is to escape
-its containment?} In the former case, the attacker is
+containment of the virtualization system. In the former case, the attacker is
 taking advantage of the secure system by utilizing paths in the host OS kernel
 that have a vulnerability. In the second case, once the attacker has exploited
 this type of flaw, the attack program will be able to run arbitrary code, and
-therefore can make system calls in the host OS directly. The system we will propose
+therefore can make any system call in the host OS directly. 
+The secure virtualization system we will propose
 in Section 4 is designed to prevent both types of attacks.
 
-\noindent\textbf{Threat model.}
+\noindent
+\textbf{Threat model.}
 To summarize, our threat model makes the following assumptions.
 
 \begin{itemize}\setlength\itemsep{0em}
 
-\item The attacker possesses the knowledge about one or more unpatched vulnerability in the host OS.
+\item The attacker possesses the knowledge about one or more unpatched vulnerabilities in the host OS.
 
 \item The attacker is permitted to execute any code in the secure virtualization system.
 
 \item If the attack program can trigger a vulnerability in any privileged code,
-whether in the host OS or the secure virtualization system, the attacker is then able to
-compromise the system.
+whether in the host OS or the secure virtualization system, the attacker is then considered successful 
+in compromising the system.
 
 \end{itemize}
 
-\textbf{Exclusion}
+\noindent
+\textbf{Exclusion.}
 It should be noted that we intentionally excluded from our study several existing
 solutions for building a virtualization system. These techniques were considered
 out of scope, as they have different hardware and software requirements.
-Primarily we chose not to include solutions that do not run on a full-fledged
+Primarily we chose not to include solutions that do not run on top of on a full-fledged
 privileged operating system, such as a virtualization system that uses a
 bare-metal hypervisor~\cite{Xen-03} or hardware-based virtualization
-solution~\cite{IntelVT}. \lois{Previous sentence requires clarification. Should it be
-"solutions that do not run on top of a full-fledged..."} These solutions
-have substantial dependency on the
+solution~\cite{IntelVT}. 
+These solutions have substantial dependency on the
 underlying hardware, which differs from our proposed model. In addition,
 they do not interact with a privileged OS kernel, which makes them different
-in structure and function. %to directly compare.
-%\yanyan{I feel this make it sound like "accesses and relies on the OS kernel"
-%constrains our method.} \lois{See revision}
+in structure and function. 
 
-%Based on our threat model,
 To achieve our goals, we need to have a better understanding about how
 bugs are triggered by attack programs. It is therefore critical to know where
 vulnerabilities are located in an OS kernel. Our first step is to design
 a security metric that can quantitatively measure how bugs and vulnerabilities
 are distributed in the kernel.
-%We present and discuss about it in the following section.
