@@ -1,77 +1,76 @@
 \section{Developing and Assessing a Quantitative Evaluation Metric for Kernel Security}
 \label{sec.metric}
 
-As previously mentioned, the current kernel
-security systems lack reliable quantitative metrics that
-can accurately identify OS kernel portions that potentially have
-bugs. By understanding how %and when
-lines of code in the kernel are used, %down to the level of lines of code, we
+As previously mentioned, current kernel
+security systems lack reliable quantitative metrics capable of
+ accurately identifying OS kernel portions that potentially have
+bugs. By understanding how lines of code in the kernel are used, we
 we can predict their likelihood to contain security flaws, and thus
 design a solution to prevent any exploitation.
 In this section, we formulate and test
-a quantitative evaluation metric for securing the OS kernel. 
+a quantitative evaluation metric for securing the OS kernel.
 This metric is based on the idea that kernel paths executed by common applications
-during everyday use are less likely to contain security flaws. 
-%The intuition is that 
+during everyday use are less likely to contain security flaws.
+%The intuition is that
 These code paths are well-tested due to their constant use, and
 thus it is much less likely that security bugs will occur in these lines of code.
 Our initial tests yielded promising results, with only one
-bug appearing in these popular paths.  We also compare the effectiveness of our
-metric against two earlier works that offered methods to predict bug
-locations in the OS kernel.
+bug appearing in these popular paths.  We later tested the performance effectiveness
+of our metric against two earlier works offering methods to predict bug
+locations in the OS kernel, and found our results compared favorably.
 
-\subsection{Experiment Setup}\label{sec-setup}
-To test our metric we performed an analysis of two different versions of
-the Linux kernel, 3.13.0 and 3.14.1. 
+\subsection{Experimental Setup}\label{sec-setup}
+To test our metric, we performed an analysis of two different versions of
+the Linux kernel, 3.13.0 and 3.14.1.
 %Since our findings for these versions are quantitatively and qualitatively similar, we report
-%the results for 3.13.0 in this section and use 3.14.1 in Section~\ref{sec.evaluation}. 
-%We used two different versions of Linux kernel, because we want to first establish 
-%the foundation of our new design with one dataset, 
-We test the effectiveness of our metric using Linux kernel version 3.13.0 in this section, 
-and evaluate the prototype system based on this metric with version 3.14.1 in 
+%the results for 3.13.0 in this section and use 3.14.1 in Section~\ref{sec.evaluation}.
+%We used two different versions of Linux kernel, because we want to first establish
+%the foundation of our new design with one dataset,
+We test the effectiveness of our metric using Linux kernel version 3.13.0 in this
+section, and evaluate the prototype system based on this metric with version 3.14.1 in
 Section~\ref{sec.evaluation}. The results from two different datasets both validate
 our idea, and thus ensure that our security metric is unbiased. Furthermore,
-the results from two different kernel versions concur that our design is 
-%not a specifically tailored solution for just one version, but rather 
-a solution that is useful for multiple versions of the Linux kernel. 
+the results from two different kernel versions concur that our design is
+%not a specifically tailored solution for just one version, but rather
+a solution that is useful for multiple versions of the Linux kernel.
 
-To trace the kernel, we used \texttt{gcov}~\cite{gcov}, a standard program profiling tool with
-the GNU compiler collection (GCC) suite that indicates which lines of kernel
-code are executed when an application runs. 
+To trace the kernel, we used \texttt{gcov}~\cite{gcov}, a standard program profiling
+tool in the GNU compiler collection (GCC) suite that indicates which lines of kernel
+code are executed when an application runs.
 
 \textbf{Commonly-used kernel paths.}
 To capture the commonly-used kernel paths, we used two strategies concurrently.
 First, we attempted to capture the normal usage behavior of popular applications.
 To do this, two students used applications in the 50 most popular Debian
-packages~\cite{Top-Packages} (omitting libraries) for Debian 7.0, a widely-used and 
-popular open source project. 
+packages~\cite{Top-Packages} (omitting libraries) for Debian 7.0, a widely-used and
+popular open source project.
 Each student used 25 applications for their designed
-tasks (i.e., writing, spell checking, printing in a text editor, or using 
-%recoloring and adding a caption to a picture in 
+tasks (i.e., writing, spell checking, printing in a text editor, or using
+%recoloring and adding a caption to a picture in
 an image processing software). In instances where there were two applications that performed a
 similar task (i.e., Mozilla Firefox and Google Chrome), both programs were
 used. These tests were completed over 20 hours of
-total use over 5 calendar days. 
+total use over 5 calendar days.
 
 The second strategy was to try to capture the total range of usages for an
 individual computer user. Hence, the students used the workstation as their
-desktop machine for a one week period. They did their homework, developed
-software, communicated with friends and family, etc., using this system.
+desktop machine for a one-week period. They did their homework, developed
+software, communicated with friends and family, and other tasks, using this system.
 Software was installed as needed.
 %
 With the two strategies, we obtained a profile of the lines of
 kernel code (publicly available at~\cite{Lind}) that indicate
-commonly-used kernel paths.
+popular kernel paths.
 
 \textbf{Locating bugs.}
-Having identified the kernel paths used in applications, 
+Having identified the kernel paths used in applications,
 we then investigated how bugs are distributed among these paths. We collected a list of
-severe kernel bugs from the National Vulnerability Database~\cite{NVD}. 
+severe kernel bugs from the National Vulnerability Database~\cite{NVD}.
 For each bug, we found the patch that fixed the problem and identified
 which lines of kernel code were modified to remove it.
 For the purpose of this study, a user program that can execute a line of kernel
 code changed by such a patch is considered to have the \textit{potential to
-exploit that flaw}.  Note, it is possible that in some situations this may
+exploit that flaw}.  Note that it is possible that in some situations this may
 overestimate the ability for an attacker to exploit a flaw, since it may be
 possible that additional lines of code must also be executed to trigger the flaw.
 
@@ -89,28 +88,28 @@ possible that additional lines of code must also be executed to trigger the flaw
 \end{figure}
 
 %After examining the set of lines that were patched to fix bugs and the traces for
-%the commonly-used kernel paths, 
+%the commonly-used kernel paths,
 The experiment result in Section~\ref{sec-setup} shows that only one of the 40 kernel bugs
-was found among the popular paths, even though these paths make up 12.4\% of the kernel 
-(Figure \ref{fig:coverage}). 
+was found among the popular paths, even though these paths make up 12.4\% of the kernel
+(Figure \ref{fig:coverage}).
 
-\textbf{Statistical significance.} To test the significance of these results, we 
+\textbf{Statistical significance.} To test the significance of these results, we
 performed a power analysis as follows.
 %utilizing a Poisson distribution, a form of probability analysis to express the
 %likelihood of a given number of events occurring in a fixed interval of time
 %and/or space.
 %
 We assume that kernel bugs appear at an average rate proportional to the
-number of lines of kernel code. 
+number of lines of kernel code.
 %and different kernel parts may have different rates that bugs appear.
-%independently of the time since the last bug occurrence. 
-Therefore, the rate of defect occurrence per LOC 
+%independently of the time since the last bug occurrence.
+Therefore, the rate of defect occurrence per LOC
 follows a Poisson distribution~\cite{Poisson-distribution}.
 This is consistent with the work of Mayer, et. al.~\cite{mayer1989probability}.
-%who proposed a probability model for characterizing the relationship 
+%who proposed a probability model for characterizing the relationship
 %between discrete data set.
 The premise we tested is that bugs occur at different rates in different
-parts of the kernel, i.e., the less popular kernel portion has more bugs. 
+parts of the kernel, i.e., the less popular kernel portion has more bugs.
 
 We first divided the kernel into two sets,
 $A$ and $B$, where bugs occur at rates $\lambda_A$ and
@@ -123,42 +122,42 @@ At a significance level of $\alpha=0.01$, the test was significant at
 $\rho=0.0015$, rejecting the null-hypothesis.
 The test also reported a 95\% confidence that $\lambda_A / \lambda_B
 \in [0.002, 0.525]$. This indicates that the ratio between the bug rates is well
-below 1, and $B$ is the risky set that has more bugs.
-In this test, $A$ is the commonly used paths in the kernel, while $B$
-represents the uncommonly used paths. The above results show that
-$A$ has a much lower bug rates than $B$. 
+below 1, and that $B$ is the risky set containing more bugs.
+In this test, $A$ is the popular paths in the kernel, while $B$
+represents the less commonly-used paths. The above results show that
+$A$ has a much lower bug rates than $B$.
 %which means that the popular kernel paths
 %contain much fewer bugs. Our metric is thus effective in locating bugs in the Linux kernel.
 
 \textbf{Comparison with other metrics.}
 %As we have already stated, we are not the first to propose a metric for judging
 %which sections of kernel code may be buggy.
-Many previous work attempted to provide security metrics at a coarser granularity, 
+Previous studies have attempted to provide security metrics at a coarser granularity,
 e.g., at the file level. However, when run at a file
-granularity, we found that even commonly used programs used parts of
+granularity, we found that even popular programs used parts of
 32 files that contained flaws. \yanyan{where does 32 come from?} In fact, common
 programs executed 36 functions that were later patched to fix security
-flaws, indicating the need to localize bugs at a finer granularity. 
+flaws, indicating the need to localize bugs at a finer granularity.
 
 \begin{figure}
 \centering
 \includegraphics[width=1.0\columnwidth]{diagram/metrics_age.png}
-\caption{\small Bug distribution with Ozment's metric \cite{ozment2006milk}.}
+\caption{\small Bug distribution using Ozment's metric \cite{ozment2006milk}.}
 \label{fig:metrics_age}
 \end{figure}
 
 Earlier work by Ozment, et al.~\cite{ozment2006milk} demonstrated that code that
 had been around longer in the BSD kernel tended to have fewer bugs.
 They determined that a significant extent (61\%) of the reported
-vulnerabilities were 
-%``foundational," meaning they were 
-introduced prior to the initial version studied. 
+vulnerabilities were
+%``foundational," meaning they were
+introduced prior to the initial version studied.
 %They also reported these vulnerabilities have a median lifetime of at least 2.6 years.
-We used Ozment's metric on our Linux kernel code and our 40 bug dataset, 
-by dividing the Linux kernel code into five different age groups. 
-Our results (Figure \ref{fig:metrics_age}) showed that there is a substantial 
-number of bugs located in each age group. 
-%No evident cluster patterns among bugs in any particular age group could be identified. 
+We used Ozment's metric on our Linux kernel code and our 40 bug dataset
+by dividing the code into five different age groups.
+Our results (Figure \ref{fig:metrics_age}) showed that there are a substantial
+number of bugs located in each age group.
+%No evident cluster patterns among bugs in any particular age group could be identified.
 Therefore, buggy code in the Linux kernel cannot be identified simply
 by this age-based metric.
 
@@ -175,43 +174,41 @@ were more vulnerable than others. In particular, he identified device drivers as
 have much higher error rates than other parts of the kernel.
 Applying this metric on our dataset, we found that the driver code in our version
 of the Linux kernel accounted for only 8.9\% of the total codebase, and contained
-merely 4 out of the 40 bugs (Figure \ref{fig:metrics_drivers}). 
+merely 4 out of the 40 bugs (Figure \ref{fig:metrics_drivers}).
 This metric also proves to be difficult with the
 Linux kernel, since our results show that
 only 10.0\% of the kernel bugs could be detected.
 
-\textbf{Vulnerability profile.} 
-%However, this led us to consider that perhaps 
-From the above analysis, we hypothesize that unreachable code in certain 
+\textbf{Vulnerability profile.}
+%However, this led us to consider that perhaps
+From the above analysis, we hypothesize that unreachable code in certain
 situations may have a different vulnerability profile, e.g., drivers are not used
 in many scenarios.  To test this, we
 further examined the reachable lines of
 code in the kernel using two techniques. First,
 we performed system call fuzzing with the Trinity
-system call fuzz tester~\cite{Trinity}. 
+system call fuzz tester~\cite{Trinity}.
 %These included 16 child processes
 %(Trinity workers) executing each Linux system call with 1 million iterations.
 Second, we used the Linux Test Project (LTP)~\cite{LTP}, a test suite written
-with detailed kernel knowledge. 
+with detailed kernel knowledge.
 %This test suite is meant to exercise the
 %existing Linux system call interface to
 %test its correctness, robustness, and performance impact.
 %
 The (primarily) black box fuzzing from Trinity and test suite of
-LTP combined to reach 44.6\% of the kernel, including all 12.4\% of the common
-paths.  The security in the reachable portion is 
+LTP combined to reach 44.6\% of the kernel, including all 12.4\% of the popular
+paths.  The security in the reachable portion is
 slightly higher than the unreachable portion. This is true despite
-approximately 1/3 of this code, or the commonly-used paths, only contains
-a single flaw. This means that the rate of bug occurrence in reachable, but
-not commonly-used kernel paths, is higher than that in unused
-code. We speculate that this may because of a higher rate of bug discovery
+approximately 1/3 of this code, or that found in the popular paths, containing
+ only a single flaw. This means that the rate of bug occurrence in reachable, but
+not popular kernel paths, is higher than that in unused
+code. We speculate that this may be because of a higher rate of bug discovery
 in code that is available to execute in diverse configurations.
 
-To summarize, we demonstrated that the metric of using commonly-used
-kernel paths provides a statistically significant 
-%($\alpha=0.01$, $\rho=0.0015$) 
+To summarize, we demonstrated that the metric of using popular
+kernel paths provides a statistically significant
+%($\alpha=0.01$, $\rho=0.0015$)
 means for predicting where in the kernel exploitable flaws
-will be found in the future. \yanyan{our test is based on past bugs. how 
-to predict the future then?} For the remainder of the paper, we will
+will likely be found. For the remainder of the paper, we will
 focus on using this result to build more secure systems.
-

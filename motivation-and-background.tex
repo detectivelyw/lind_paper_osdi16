@@ -3,39 +3,39 @@
 
 \textbf{Goals.}
 Our goal is to design and build secure virtualization systems that allow
-untrusted programs to run on an unpatched and vulnerable host OS (Linux OS in 
-this study), without triggering vulnerabilities that attackers could exploit. 
-Developing effective defenses for the host OS kernel is essential as this privileged code 
-can provide attackers access that could lead to a system take-over.
+untrusted programs to run on an unpatched and vulnerable host OS (Linux OS in
+this study), without triggering vulnerabilities that attackers could exploit.
+Developing effective defenses for the host OS kernel is essential as kernel code
+can provide attackers privileged access that could lead to a system take-over.
 
-To combat this threat, untrusted programs are often executed in a secure 
-virtualization system, such as a guest OS virtual machine, a system call interposition 
+To combat this threat, untrusted programs are often executed in a secure
+virtualization system, such as a guest OS virtual machine, a system call interposition
 module, or a library OS system. Our intent is to
 build such a secure virtualization system capable of protecting not only
 an underlying host OS, but also any programs running in it, from both malicious attacks
-and accidental bugs by applications. However, as we will document
+and accidental triggering by applications. However, as we will document
 in Section 4, we are not the first to propose such a system.
 In this section, we define the scope of our approach, including some basic
 assumptions about the level of security that we intend to enforce,
-and the possible attacks that we desire to protect against. We also briefly note
-a few existing design schemes we chose to exclude from this study and why.
+and the types of attacks we need to defend against. We also briefly note why we
+chose to exclude a few existing design schemes from this study.
 
-In our study, we acknowledge that an attack attempt on the host OS could be staged in our secure
-virtualization system. The security goal is to prevent a potential outcome of such
-an attack: the exploitation of an unpatched vulnerability. Furthermore, we
-anticipate that such an exploit could be done directly, by performing an action in the
-virtualization system, or indirectly by causing a vulnerability to escape the
-containment of the virtualization system. In the former case, the attacker is
-taking advantage of the secure system by utilizing paths in the host OS kernel
-that have a vulnerability. In the second case, once the attacker has exploited
-this type of flaw, the attack program will be able to run arbitrary code, and
-therefore can make any system call in the host OS directly. 
-The secure virtualization system we will propose
+We start by acknowledging that an attack attempt on the host OS could be staged in
+secure virtualization system. The security goal is to prevent a potential
+outcome of such an attack: the exploitation of an unpatched vulnerability.
+Furthermore, we anticipate that such an exploit could be done directly, by performing
+ an action in the virtualization system, or indirectly if a vulnerability is
+able to escape the containment of the system. In the former case, the attacker
+takes advantage of paths in the system's host OS kernel
+that have a vulnerability. In the second case, once the vulnerability is exploited
+the attacker will be able to run arbitrary code, and can
+therefore directly make any system call in the host OS.
+The secure virtualization system design we will propose
 in Section 4 is designed to prevent both types of attacks.
 
 \noindent
 \textbf{Threat model.}
-To summarize, our threat model makes the following assumptions.
+To summarize, our threat model makes the following assumptions:
 
 \begin{itemize}\setlength\itemsep{0em}
 
@@ -44,26 +44,25 @@ To summarize, our threat model makes the following assumptions.
 \item The attacker is permitted to execute any code in the secure virtualization system.
 
 \item If the attack program can trigger a vulnerability in any privileged code,
-whether in the host OS or the secure virtualization system, the attacker is then considered successful 
+whether in the host OS or the secure virtualization system, the attacker is then considered successful
 in compromising the system.
 
 \end{itemize}
 
 \noindent
 \textbf{Exclusion.}
-It should be noted that we intentionally excluded from our study several existing
-solutions for building a virtualization system. These techniques were considered
-out of scope, as they have different hardware and software requirements.
-Primarily we chose not to include solutions that do not run on top of on a full-fledged
+It should be noted that our study intentionally excludes several existing
+approaches to virtualization systems. We considered these techniques
+out of scope due to differences in hardware and software requirements.
+Primarily we chose to exclude solutions that do not run on top of on a full-fledged
 privileged operating system, such as a virtualization system that uses a
 bare-metal hypervisor~\cite{Xen-03} or hardware-based virtualization
-solution~\cite{IntelVT}. 
-These solutions have substantial dependency on the
-underlying hardware, which differs from our proposed model. In addition,
-they do not interact with a privileged OS kernel, which makes them different
-in structure and function. 
+solution~\cite{IntelVT}.
+These devices are too dependent on the underlying hardware, and do not interact
+with a privileged OS kernel. These differences in both structure and function
+make it too difficult to directly compare them to our proposed model.
 
-To achieve our goals, we need to have a better understanding about how
+Once we establish the scope of our study, it is clear we need a better understanding about how
 bugs are triggered by attack programs. It is therefore critical to know where
 vulnerabilities are located in an OS kernel. Our first step is to design
 a security metric that can quantitatively measure how bugs and vulnerabilities
