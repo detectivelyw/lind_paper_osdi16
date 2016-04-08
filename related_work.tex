@@ -64,46 +64,28 @@ Silverlight~\cite{Silverlight} can provide safety in virtual systems by
 Though many sandboxes implement the bulk of standard libraries in
 memory-safe languages like Java or C\#, flaws in this code can
 still pose a threat~\cite{JavaBugs, Java-Lessons}.
-%In fact, many security critical bugs can be found in the standard libraries
-%Researchers have also
-%discovered many severe bugs in Java \cite{Java-Lessons}.
 Any bug or failure in a programming language virtual
-machine is usually fatal. In contrast, Lind with its very small TCB
-enhances security of privileged code due to fewer LOC, which in
-turn reduces the number of potential bugs or weaknesses. %\lois{why?}
+machine is usually fatal. In contrast, the main component of Lind 
+is built using Repy, which is a programming language with a very small TCB. 
+This enhances security of privileged code due to fewer LOC, which in
+turn reduces the number of potential bugs or weaknesses. 
 \lois{OK, what does the TCB have to do with these languages? My
 question still stands. How does the last sentence relate to programming
 languages}
-
-%because of the POSIX implementation with Repy to build the sandbox.
+\yiwen{I think it is fixed now.}
 
 \textit{OS virtualization}
 techniques include
-%can be divided into two categories:
-%Type-I or Type-II virtualization. Examples of Type-I virtualization
 bare-metal hardware virtualization, such as VMware ESX Server, Xen,
 LXC~\cite{LXC}, BSD's jail, Solaris zones, and Hyper-V, and
 hosted hypervisor virtualization such as VMware
 Workstation, VMware Server, VirtualPC and VirtualBox.
-%
 Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec}
-%is a feature of OS virtualization that
 provides safe executing environments through containment for multiple
 user-level virtual environments sharing the same hardware.
-%This approach relies on the VMM to confine untrusted applications within
-%guest OSes.
 However, there are limitations of this approach due to
 the large attack vectors against the hypervisors, including
 vulnerabilities of software and configuration risk. Lind avoids such restrictions due to a smaller TCB.
-%For example, the
-%small code footprint of a hypervisor can become a potential
-%vulnerability and lead to serious problems. Maintaining two OSs in
-%virtulized environments is among the other issues that add complexity
-%\cite{Virt-Issues}. Attackers are able to exploit vulnerabilities to
-%escape these systems and access arbitrary code in the underlying host
-%systems.
-%\lois{what is the connection between the above sentences and Lind?}
-%Lind deals with these concerns by using a much smaller and safer TCB.
 
 \textit{Library OSes}
 allow applications to efficiently
@@ -164,125 +146,22 @@ secure execution of applications by exposing a minimal kernel surface.
 This approach usually enforces the userspace policies through a monitor process that
 interacts with the system call execution engine
 %for building sandboxes, though it can be error prone
-\cite{SCI-04}.
-%Approaches for delegation and filtering have been extensively studied. For example,
-%along with their respective tradeoffs between security and
-%performance.
-%Janus (J2) \cite{Janus0:96, Janus:99} is an SCI solution for confining untrusted
-%applications that includes system call filtering and sandboxing mechanisms.
-%Garfinkel et al. in another effort, introduces Ostia \cite{SCI-04}, where system
-%calls are delegated to agents that enforce the policies.
-%Ostia resolves the tight dependencies with the underlying OS through process emulation and
-%the agents model at the userspace.
+\cite{SCI-04}. 
 Issues in SCI include the difficulty of appropriately replicating OS semantics,
 multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
-In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
-%
-%Recently, Wang et al. \cite{Jitk} discuss the issues of traditional SCI systems
-%in the context of in-kernel interpreters such as Seccomp, which is used by several
-%security critical applications, including Chrome, OpenSSH and Tor.
-%The authors propose Jitk architecture to avoid the weaknesses in traditional
-%kernelspace system call interceptors that arise from the unforeseen bugs within
-%the interceptors.
-%Jitk provides a formal verification tool that ensure the
-%correct translation of the userspace submitted code, e.g.
-%the  the BSD packet filter and INET-DIAG.
-%
-%The kernel module enforces policy, denies direct access to restricted
-%resources, and delegates certain calls to an emulation library.
-%which sends transformed system calls to the agents.
-%The agent reads the policy file and handles the delegation of calls.
-%
-%
-%Nevertheless, this technique is very useful and has inspired many new techniques, such as library OSes.
-%The concepts behind system call interposition have evolved into other modern techniques and has benefited many security systems, including Lind.
-%
+In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}. 
 SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
 of a system call through the Lind's reimplementation to ensure safe POSIX API for the userspace applications.
 
 \textbf{Software Fault Isolation} (SFI)
-%is an alternative to hardware memory
-%protection when running two applications in one address space. SFI
 provides sandboxing in which native
 instructions can only be executed if they do not violate the sandbox's
 constraints \cite{SFI:93}, and security policies are enforced through machine-level
 code analysis. In SFI, memory
 writes are protected and code jumps cannot access predefined memory of
-other programs to execute their code.
-%
-%The preliminary design of SFI was build on RISC
-%architectures. The authors of PittSFIeld \cite{PittSFIeld} optimized and
-%extended the original SFI to support CISC architectures.
-%For this purpose, the source instructions are padded with no-ops to fit, i.e.
-%in the 16-byte x86 byte chunk alignment, where a call instruction is
-%appended. A sequence of instructions form a instruction streams that
-%ensures execution order of the sequence. The final code before
-%execution will be checked by a verifier component to ensure safety.
-%
-%SFI has been also used in MisFIT \cite{MISFit} to ensure kernel
-%module integrity for x86. The authors emphasized the
-%extendability of object-oriented programming languages to eliminate
-%the need for remote calls to achieve high throughput.
-%
-%Nooks \cite{Nooks:03} is another SFI-based solution that provides
-%a protected environment for running device drivers by isolating kernel
-%modules.
-%Nooks' runtime environment is located within the
-%kernel and it includes the majority of drivers that needs to be protected
-%from each other.
-%These SFI containers embody the extensions to demonstrate the integrity
-%validation check in conjunction with the host environment resources.
-%i.e. network nook and video nook are two protection
-%domains without the possibility for memory writes outside their
-%protection domain. The Nook layer function as a reference monitor
-%between device devices and physical hardware by forwarding interrupts
-%Nooks also wrap calls from the operating system kernel into device
-%drivers and from device drivers into the kernel, allowing the
-%operating system to track resource usage and verify data that is
-%passed into and out of the kernel. Object tracking to allow OS for
-%resource consumption is another feature of wrappers in Nooks.
-%
-%To enforce the safety constraints, programs demand a specific compiler
-%in advance to validate and load the programs. For example, in
-%Another SFI system called Byte
-%Granularity Isolation (BGI) \cite{Castro-BGI} was introduced as a runtime tool to isolate drivers in
-%separate protection SFI domains, while sharing the same address space
-%between different domains.
-%%BGI mainly ensures write-integrity,
-%%control-flow integrity and type safety for kernel objects. For this
-%%purpose, a BGI compiler is required to transform the unmodified driver
-%%source code to instrumented driver. The instrumented driver will be
-%%linked to the BGI interposition libraries that enforce the protection
-%%constraints to produce the BGI drivers. The protection constraints
-%%that are enforced by the interposition library are implemented in
-%%access control lists (ACL). The ACLs contain policies for each byte of
-%%virtual memory and domain permissions.
-%A major issue of BGI is that it
-%does not solve the vulnerabilities at kernel-levels.
-%
+other programs to execute their code. 
 Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
 Chrome browser that allows native executable code to run directly in a
 browser. NaCl prevents suspicious code
 from memory corruption or direct access to the underlying system
 resources.
-%For this purpose NaCl loads untrusted modules from the
-%trusted modules into two different address spaces, where in most SFI
-%approaches both untrusted and trusted codes are loaded into a common
-%address space.
-
-%Mao et al. \cite{LXFI} study the shortcomings of XFI \cite{XFI} and
-%BGI \cite{Castro-BGI} kernel module isolation mechanisms that separate
-%kernel modules from the core kernel. Integrity of API calls was one of
-%the challenging issues in existing solutions. For example in XFI there
-%were no argument validation. LXFI solution was proposed as an
-%extension of existing SFI solutions with language annotation. LXFI
-%added argument integrity in XFI and call back integrity in BGI in
-%addition to enabling programmers for specifying principals for access
-%permissions within a module.
-%
-%In another effort \cite{PSFI}, Kroll et al. discuss the issues of
-%machine-level SFI that causes portability limitations across different
-%hardware architectures. The authors propose portable SFI through a
-%higher level of abstraction at the compiler layer. To this end,
-%programs are rewritten by an intermediate-level language compiler to
-%comply with policies.
