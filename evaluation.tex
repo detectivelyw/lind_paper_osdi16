@@ -33,9 +33,7 @@ real-world applications?}
 \subsection{Linux Kernel Bug Test and Evaluation}
 \label{Linux-Kernel-Bug-Test-and-Evaluation}
 
-\textbf{Test Purpose.}\lois{Note---this is our goal--what we set out to do. I don't
-think it needs to be a complete sentence...goals are often stated this way.
-I modified all of them.}
+\textbf{Test Purpose.} 
 To evaluate how well each virtualization system protects the Linux kernel
 against reported zero-day bugs.
 
@@ -496,11 +494,12 @@ to obtain the reachable kernel trace in Linux kernel 3.14.1.
 \noindent
 \textbf{Results.}
 An important question about Lind's security properties is what would happen if there is a bug or a failure in Lind's TCB,
-the Repy sandbox kernel?
+the SafePOSIX construction? To understand that, we will need to see how much of the kernel would be exposed to 
+the SafePOSIX code. Since our SafePOSIX is entirely built on top of the Repy sandbox kernel, it suffices to see the kernel 
+trace of Repy.  
 
-The results are shown in Table \ref{table:trace-Repy}. The trace of Repy\lois{Why is it
-Repy here and SafePosix in the subhead?} is
-slightly larger (5.8\%) than that of Lind.
+The results are shown in Table \ref{table:trace-Repy}. 
+The trace of Repy is slightly larger (5.8\%) than that of Lind.
 Repy's design can not allow attackers or bugs to
 have more access to the risky paths in the OS kernel, and only a small amount (5.8\%) of
 additional common paths in the OS kernel might be open.
