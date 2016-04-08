@@ -45,8 +45,8 @@ With this knowledge, we propose a new design for a secure virtual machine that
 accesses only the popular code paths through a very small trusted computing base.
 This design scheme, named \emph{Lock-in-Pop}, locks out kernel access to all code except
 that found in paths associated with frequently-used popular programs. \emph{Lock-in-Pop} requires an interface
-that builds on only basic OS primitives, performing essential operations for file system,
-networking, threading, and memory management. \yanyan{how do you decide these are essential?}
+that builds on only basic OS primitives, performing operations for file system,
+networking, threading, and memory management, etc.
 To accommodate the need for complex functionalities, it re-creates riskier system calls in
 a memory-safe programming language sandbox.
 
@@ -57,7 +57,7 @@ Dubbed Lind, the virtual machine pairs two components -- Google's Native Client
 (NaCl) and Seattle's Repy.
 NaCl serves as a computational module that isolates binaries, providing memory
 safety for a legacy program like Apache,
-while passing the system calls \yanyan{invoked by the binary?} to the operating system interface.
+while passing the system calls invoked by the  program to the operating system interface.
 The operating system interface, called SafePOSIX, is isolated within the Repy
 sandbox, and ensures access to only popular paths.
 Complex operating system functionalities in an isolated environment are
