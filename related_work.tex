@@ -2,7 +2,7 @@
 \label{sec.related_work}
 
 This section summarizes a number of previous security approaches
-that aim to ensure the safety of privileged code in user space and kernel space.
+that aim to ensure the safety of privileged code. %in user space and kernel space.
 These approaches include past efforts to better define safety metrics, and to quantify
 areas of risk in an OS kernel, key studies in the use of various virtualization
  techniques, as well as background information on technologies incorporated into
@@ -16,19 +16,22 @@ Palix found that the \texttt{drivers} directory in the Linux kernel contains the
 most faults, followed by HAL and \texttt{fs}~\cite{palix2011faults}. Similarly,
 Chou~\cite{PittSFIeld} showed that device drivers had
 much higher error rates than other parts of the kernel, and are thus more vulnerable.
-However, this narrower component-focused approach does not necessarily
-provide for the most effective detection and defense against kernel bugs, as our
-test of the Chou metric, described in Section 3, will attest.
+However, this component-focused approach does not necessarily
+provide effective detection and defense against kernel bugs, as our
+test of the Chou metric in Section~\ref{sec.metric} attests.
 
-There have been a number of other approaches to identifying kernel vulnerability, some of
-which grew out of research in code comprehension.  Alhazmi~\cite{alhazmi2008application}
+There are other approaches to identifying kernel vulnerabilities, some of
+which grew out of research in software engineering (code comprehension
+in particular). Alhazmi~\cite{alhazmi2008application}
 used metrics like defect density and fault exposure ratio to describe the
-vulnerability discovery process. In~\cite{zimmermann2010searching}, Zimmermann
+vulnerability discovery process. Zimmermann~\cite{zimmermann2010searching}
 described metrics like code complexity, and code churn (the total added/modified/
 deleted lines of code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
 the correlation between shared code size and shared vulnerabilities in
-successive versions of a software system. While
-these metrics can be useful for determining readiness for release, and
+successive versions of a software system. In~\cite{engler2001bugs} Engler analyzed 
+system code by static analysis to look for contradictions, such as acquired locks that are
+not released. While
+these prior approaches can be useful for determining readiness for release, and
 evaluating the risk of vulnerability exploitation,
 they do not provide insights for secure system design.
 
@@ -38,21 +41,18 @@ both studied how security issues evolve over
 time. Ozment reported a decrease in the rate at which new vulnerabilities
 are reported by studying the age of vulnerabilities in OpenBSD. 
 Li reported several bug characteristics. They found a decrease in memory-related 
-bugs, and semantic bugs the dominant root causes.  
- \lois{this sentence about Li says nothing and reads like
- nonsense. He reported an increase in the bugs by studying the number of bugs?
-I checked the paper but had no clue what this referred to}
-\yiwen{I fixed it. Please check.}
-However, neither of these two approaches provided data
-a on how vulnerabilities are distributed.
-In contrast, guided by its design metric, Lind can assess that the primary location
-of bugs will be in the less-used paths.
+bugs, and semantic bugs being the dominant root causes.  
+% \lois{this sentence about Li says nothing and reads like
+% nonsense. He reported an increase in the bugs by studying the number of bugs?
+%I checked the paper but had no clue what this referred to}
+%\yiwen{I fixed it. Please check.}
+However, neither of these approaches provided data
+on how vulnerabilities are distributed.
+In contrast, guided by its design metric, Lind can assess that the primary locations
+of bugs are in the less-used paths.
 
-Much work has been done in analyzing system faults using techniques in
-software engineering. For example,
-in~\cite{engler2001bugs} Engler analyzed system code by static analysis
-to look for contradictions, such as acquired locks that are
-not released.
+%Much work has been done in analyzing system faults using techniques in
+%software engineering. For example,
 
 \textbf{Virtualization.}
 Lind incorporates a number of virtualization techniques. This section details some
@@ -61,20 +61,21 @@ of the significant work relevant to the development of Lind.
 \textit{Language-based virtualization.}
 Programming languages like Java, JavaScript, Lua~\cite{Lua}, and
 Silverlight~\cite{Silverlight} can provide safety in virtual systems by
-"translating" application commands into a native language.
-
+``translating" application commands into a native language.
+%
 Though many sandboxes implement the bulk of standard libraries in
 memory-safe languages like Java or C\#, flaws in this code can
 still pose a threat~\cite{JavaBugs, Java-Lessons}.
 Any bug or failure in a programming language virtual
 machine is usually fatal. In contrast, the main component of Lind 
 is built using Repy, which is a programming language with a very small TCB. 
-This enhances security of privileged code due to fewer LOC, which in
+This enhances the security of privileged code due to fewer LOC, \yanyan{should
+we mention these fewer LOC are in common paths?} which in
 turn reduces the number of potential bugs or weaknesses. 
-\lois{OK, what does the TCB have to do with these languages? My
-question still stands. How does the last sentence relate to programming
-languages}
-\yiwen{I think it is fixed now.}
+%\lois{OK, what does the TCB have to do with these languages? My
+%question still stands. How does the last sentence relate to programming
+%languages}
+%\yiwen{I think it is fixed now.}
 
 \textit{OS virtualization}
 techniques include
@@ -87,14 +88,13 @@ provides safe executing environments through containment for multiple
 user-level virtual environments sharing the same hardware.
 However, there are limitations of this approach due to
 the large attack vectors against the hypervisors, including
-vulnerabilities of software and configuration risk. Lind avoids such restrictions due to a smaller TCB.
+vulnerabilities of software and configuration risks. Lind avoids such restrictions due to a smaller TCB.
 
 \textit{Library OSes}
-allow applications to efficiently
-obtain the benefits of virtual machines,  
+allow applications to efficiently obtain the benefits of virtual machines  
 by refactoring a traditional OS kernel into an application library. 
-\lois{HOW?} 
-\yiwen{fixed.}
+%\lois{HOW?} 
+%\yiwen{fixed.}
 %including security isolation, host platform compatibility, and
 %migration.
 %Libra \cite {Libra} is an example of a library OS that allows
@@ -134,7 +134,7 @@ in an untrusted cloud host.
 %executing unmodified legacy binaries and protecting them from a
 %malicious host.
 
-While the library OS technique relies extensively on
+While library OSes rely extensively on
 the underlying kernels to perform system functions,
 Lind reimplements complex OS functions through memory-safe Repy
 code, relying on only a limited set of system functions from the Repy
@@ -156,7 +156,8 @@ Issues in SCI include the difficulty of appropriately replicating OS semantics,
 multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
 In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}. 
 SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
-of a system call through the Lind's reimplementation to ensure safe POSIX API for the userspace applications.
+of a system call through the Lind's reimplementation 
+\yanyan{need to replace reimplementation} to ensure safe POSIX API for the userspace applications.
 
 \textbf{Software Fault Isolation} (SFI)
 provides sandboxing in which native
