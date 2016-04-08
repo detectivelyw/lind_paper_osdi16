@@ -36,11 +36,13 @@ Prior work has also examined the evolution of kernel defects. For example,
 Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have
 both studied how security issues evolve over
 time. Ozment reported a decrease in the rate at which new vulnerabilities
-are reported by studying the age of vulnerabilities in OpenBSD.  Li
-reported an increase in security bugs by studying the number and relative
-percentage of bugs. \lois{this sentence about Li says nothing and reads like
+are reported by studying the age of vulnerabilities in OpenBSD. 
+Li reported several bug characteristics. They found a decrease in memory-related 
+bugs, and semantic bugs the dominant root causes.  
+ \lois{this sentence about Li says nothing and reads like
  nonsense. He reported an increase in the bugs by studying the number of bugs?
 I checked the paper but had no clue what this referred to}
+\yiwen{I fixed it. Please check.}
 However, neither of these two approaches provided data
 a on how vulnerabilities are distributed.
 In contrast, guided by its design metric, Lind can assess that the primary location
@@ -89,7 +91,10 @@ vulnerabilities of software and configuration risk. Lind avoids such restriction
 
 \textit{Library OSes}
 allow applications to efficiently
-obtain the benefits of virtual machines.\lois{HOW?}
+obtain the benefits of virtual machines,  
+by refactoring a traditional OS kernel into an application library. 
+\lois{HOW?} 
+\yiwen{fixed.}
 %including security isolation, host platform compatibility, and
 %migration.
 %Libra \cite {Libra} is an example of a library OS that allows
