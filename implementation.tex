@@ -6,11 +6,11 @@ called Lind\footnote{\scriptsize An old English word for a shield constructed fr
 linden wood, providing strength in a lightweight form, the name is appropriate for
 a virtual machine that adapts two technologies\textendash
 yet still protects vulnerable OS kernel code from exploitation by
-untrusted user programs.}. 
+untrusted user programs.}.
 Lock-in-Pop utilizes a
 computational module and a library OS. In Lind, Native Client (NaCl) serves as the former,
 while Restricted Python (Repy), and a POSIX interface built into it, performs the task of the latter.
-We present a brief description of these components and how they were integrated
+What follows is a brief description of these components and how they were integrated
 into Lind, followed by a brief example of how the system works.
 
 \subsection{Primary Components}
@@ -31,9 +31,10 @@ To build an API to access the safe parts of the underlying kernel, we need
 two things. First, we need a restricted sandbox that isolates computation
 and only allows access to commonly used kernel paths.  We used
 Seattle's Repy~\cite{Repy-10} sandbox to perform this task.
-Second, to serve the user programs, there has to be an operating system interface that 
-provide system functions. We chose the widely accepted standard POSIX interface. 
-To enforce isolation, we need to build our POSIX implementation to run within that sandbox.
+Second, to serve the user programs, there has to be an operating system interface that
+provide system functions. We chose the widely accepted standard POSIX interface.
+To enforce isolation, we needed to re-build our POSIX implementation to run
+within that sandbox.
 
 \textit{The Repy Sandbox Kernel.}
 As the only piece of code in contact with the system call paths of the TCB,
@@ -47,11 +48,11 @@ functions, including 13 network functions, 6 file functions, 6 threading functio
 and 8 miscellaneous functions~\cite{Repy-10, RepyKernel}. The code is
 written using style guidelines designed to ease security auditing
  of the code~\cite{style}. Most of these functions are simple and
-regularly used system calls that access the commonly used kernel paths.
+regularly used system calls that access the popular kernel paths.
 
 The Repy kernel code provides a solid foundation for our secure virtual
 machine. It has been audited by a professional penetration tester and, since 2010,
-there has also been a bug bounty program for security flaws in the sandbox.
+Seattle has operated a bug bounty program for security flaws in the sandbox.
 The code is deployed in daily use across thousands of devices,
 including on the Seattle testbed \cite{seattle}, and has been examined by
 hundreds of parties. To date no security flaws have been found in the sandbox
@@ -71,7 +72,7 @@ safety protection through both isolation and a POSIX interface that
 reformulates risky system calls to
 provide sufficient API for legacy applications, with minimal impact on the kernel.
 
-\textbf{An example system call execution.}
+\textbf{An example of system call execution.}
 In Lind, a system call issued from user code is
 received by NaCl, and then redirected to our system API module, which
 includes a POSIX API to serve those requests. A POSIX API is a set of standard
@@ -82,41 +83,47 @@ Lind takes advantage of the fact that Repy is a programming language sandbox to
 construct a variation on the POSIX API. Following the
 Lock-in-Pop design, to service a system call in NaCl, a server routine in
 Lind marshals its arguments into a text string, and sends the call and the arguments
-to the Repy sandbox, where the "reimplemented" system call, marshals the result and
+to the Repy sandbox, where the re-created system call marshals the result and
 returns it back to NaCl. Eventually, the result is returned as the appropriate
 native type to the calling program.
 
 Using the file system API in Lock-in-Pop as an example, it only needs
-to provide functionality of writing data to storage. 
+to provide functionality of writing data to storage.
 %\yanyan{why only discuss file system?
 %how about network, threading, etc?}
-%\yiwen{threading is done by the OS kernel directly, no reconstruction to discuss. 
-%And our network functions are really simple, things like opening and closing a socket is 
+%\yiwen{threading is done by the OS kernel directly, no reconstruction to discuss.
+%And our network functions are really simple, things like opening and closing a socket is
 %not very exciting.}
 It eliminates the need of having a direct abstraction, the
 concept of file permissions, links, or even the concept of multiple files.
 The system API safe reimplementation is a set of more complicated system calls
 derived from functions in the sandbox kernel.
-We reimplement those system calls because we do not want this potentially risky user code
-to have direct access to the underlying OS kernel.
-Instead, our reimplementation layer serves as a mediator between the user code
+We re-create those system calls because we do not want this potentially risky user code
+directly accessing the underlying OS kernel.
+Instead, our re-creation layer serves as a mediator between the user code
 and the OS kernel. The reimplementation is safe
-because the reconstructed calls are isolated in a sandbox, and the code for the
-reimplementation is written in a memory-safe programming language.
+because the reconstructed calls are isolated in a sandbox, and its code is written
+ in a memory-safe programming language.
 
 Here is an example of how this reimplementation would work with the symbolic link function.
 If there is a bug in this function, rather than rely on the kernel code paths
-for symbolic links, Lind implements the incorrect behavior, such as creating a symbolic link 
-with a deleted file. 
-This denies the code the privileged access to the system the OS kernel does.
+for symbolic links, Lind implements the incorrect behavior, such as creating a symbolic link
+with a deleted file.
+This denies the code the privileged access to the system the OS kernel has.
 As a result, instead of creating a security issue, the application is denied access
 to the file system.
 
 Our design could include more than two sandboxes, e.g., by sandboxing the sandbox
 kernel. However, in a secure system,
-the sandbox at the lowest level must have the fundamental,
-even if limited, access to system resources, such as memory, and storage, threads.
-Even if we were to sandbox the sandbox kernel, 
+the sandbox at the lowest level must have fundamental,
+even if limited, access to system resources, such as memory, storage, and threads.
+Even if we were to sandbox the sandbox kernel,
 %and have additional sandboxes,
 the one at the lowest level will still access the OS kernel in a similar way.
 Thus, having multiple sandboxes does not provide extra security benefits.
+
+The Lind design offers a promising new approach to OS kernel code protection.
+ To determine if the ideas behind Lind were valid, we
+designed a multi-step study to compare its security performance against a number
+ of existing virtualization systems. Details of the study and its results are presented
+ in the following section.
