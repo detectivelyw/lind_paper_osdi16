@@ -3,14 +3,16 @@
 
 In this paper, we propose a new security metric based on quantitative measures derived from
 the execution of kernel code when running user applications.
-We devise a new design for secure virtual machines, called \emph{Lock-in-Pop}, 
-as it locks out application access to all kernel code except that found in paths frequently used by 
-popular programs that contain fewer vulnerabilities. 
-We implement a prototype system Lind, with a minimized TCB and interacting with the kernel in only popular paths. 
-Lind addresses the need to support risky system calls by securely reconstructing complex, yet essential OS functionality 
-inside a sandbox. 
-Evaluation results have shown that Lind is the most effective system in preventing zero-day Linux kernel bugs, 
-when compared to seven other virtualization systems, such as VirtualBox, VMWare Workstation, Docker, LXC, 
-QEMU, KVM and Graphene.
-
-All of the data and source code for this paper is available at the Lind website~\cite{Lind}. 
+After determining that fewer bugs exist in popular paths associated with frequently-used
+programs, we devise a new design for secure virtual machines, called \emph{Lock-in-Pop}.
+As the name implies, the design scheme locks out access to all
+kernel code except that found in paths frequently used by
+popular programs. We test the Lock-in-Pop idea by implementing a prototype system
+called Lind, that features a minimized TCB and prevents direct access to application
+calls from less-used, risker paths.
+Instead, Lind support complex system calls by securely re-creating
+essential OS functionality inside a sandbox.
+In tests against VirtualBox, VMWare Workstation, Docker, LXC,
+QEMU, KVM and Graphene, Lind emerged as the most effective system in preventing
+zero-day Linux kernel bugs.
+All of the data and source code for this paper is available at the Lind website~\cite{Lind}.
