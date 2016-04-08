@@ -1,104 +1,116 @@
 \section{Introduction}
 \label{sec.introduction}
 
-For many years system designers and developers have had to deal with a common security issue -- 
-how to defend their programs from threats hidden within its own code. Despite the efforts of programmers 
-to develop systems free of vulnerabilities, researchers frequently uncover new flaws in operating system kernels that 
-can be triggered by interaction with untrusted programs. Yet, users want to be able to run any applications 
-on open source operating systems, even if an application is untrusted. Complicating the problem is that 
-a possible compromise of privileged code in the OS kernel is particularly dangerous because any bugs or flaws triggered there 
-can pose a direct security threat to other parts of the system. Severe vulnerabilities have been discovered 
-which resulted in serious security problems such as privilege escalation \cite{CVE-2016-0728, CVE-2015-8660}, 
+For many years system designers and developers have had to deal with a common security issue --
+how to defend their programs from threats hidden within its own code. Despite efforts
+to develop systems free of vulnerabilities, researchers frequently uncover new flaws in
+operating system kernels that can be triggered by interaction with untrusted programs.
+Yet, even though its risky, users want to be able to run
+ any application on open source operating systems. Complicating the problem is that
+a possible compromise of privileged code in the OS kernel can trigger bugs or flaws that
+pose a direct security threat, including privilege escalation \cite{CVE-2016-0728, CVE-2015-8660},
 denial of service \cite{CVE-2015-8539, CVE-2015-5364}, and memory corruption \cite{CVE-2014-9529}.
 
-Solving this problem has been hampered by the fact that much is still unknown about the security impact of 
-interaction between user programs and privileged code. As a result, the design of secure systems has been 
-somewhat ``hit-or-miss.'' Many people believe that existing virtual machines provide enough isolation to 
-execute programs safely. However, vulnerabilities found in those virtual machines suggest that there is still a long way to go. 
-Virtualbox has 40 reported vulnerabilities \cite{Virtualbox-Vulnerabilities}, 
-while more than 100 bugs have been found in VMware Workstation \cite{VMWare-Vulnerabilities}. 
-Other studies have looked to the development of security metrics \cite{PittSFIeld, ozment2006milk} to pinpoint vulnerable areas. 
-%A 2001 study by Chou, et al. \cite{PittSFIeld} provided evidence that more bugs could be found in device drivers than in other parts of the OS kernel. 
-%Another study presented evidence that code grew safer with time, so newer code could contain more hidden bugs than older code \cite{ozment2006milk}. 
-%Both of these studies, and many others, have also contributed to improved kernel safety technologies by analyzing where vulnerabilities are likely to exist. 
-%However, despite all of this research, solutions that respond broadly to security concerns still remain elusive. 
-%In other words, we are still lacking reproducible quantitative measures to evaluate the security of kernel code. 
-However, reproducible quantitative measures to evaluate the security of kernel code still do not exist. 
+Solving this problem has been hampered by the fact that much is still unknown about
+ the security impact of interaction between user programs and privileged code.
+As a result, the design of secure systems has been
+somewhat ``hit-or-miss.'' Many people believe that existing virtual machines provide
+enough isolation to execute programs safely. However, when Virtualbox reports 40 vulnerabilities
+ \cite{Virtualbox-Vulnerabilities},and
+ more than 100 bugs have been found in VMware Workstation \cite{VMWare-Vulnerabilities},
+it suggests that they have a long way to go.
+Others have looked to the development of security metrics \cite{PittSFIeld, ozment2006milk}
+ to pinpoint vulnerable areas.
+%A 2001 study by Chou, et al. \cite{PittSFIeld} provided evidence that more bugs could be found in device drivers than in other parts of the OS kernel.
+%Another study presented evidence that code grew safer with time, so newer code could contain more hidden bugs than older code \cite{ozment2006milk}.
+%Both of these studies, and many others, have also contributed to improved kernel safety technologies by analyzing where vulnerabilities are likely to exist.
+%However, despite all of this research, solutions that respond broadly to security concerns still remain elusive.
+%In other words, we are still lacking reproducible quantitative measures to evaluate the security of kernel code.
+However, reproducible quantitative measures to evaluate the security of kernel code still do not exist.
 
-In this paper, we are one step closer to that goal by the development 
-of a new design that offers a more reliable foundation for building secure virtual machines. 
-Proposing that code found in popular paths, associated with frequently-used programs, 
-has less potential risk than code in less-used parts of the kernel, we set out to determine 
-which lines could be executed safely within the OS kernel. 
-After running a quantitative analysis of resilience to flaws in two versions of the Linux kernel, 
-we used this data to predict where zero-day bugs could later be discovered. 
-We found that only 2.5\% - 4.0\% of the bugs were present in popular code paths, 
-despite these paths accounting for nearly 32.2\% - 34.5\% of the total reachable kernel code. 
-When we ran the same study using the aforementioned other metrics (Chou \cite{PittSFIeld} and Ozment \cite{ozment2006milk}), 
-we found them less  effective at predicting the location of zero-day bugs in the Linux kernel versions that we tested.
+With this paper, we move one step closer to that goal by the development
+of a new design that offers a more reliable foundation for building secure virtual machines.
+Proposing that code found in popular paths, associated with frequently-used programs,
+has less potential risk than code in less-used parts of the kernel, we set out to determine
+which lines could be executed safely within the OS kernel.
+A quantitative analysis of resilience to flaws in two versions of the Linux kernel
+found that only 2.5\% - 4.0\% of the bugs were present in popular code paths,
+despite these paths accounting for nearly 32.2\% - 34.5\% of the total reachable kernel code.
+When we ran the same study using the aforementioned other metrics
+(Chou \cite{PittSFIeld} and Ozment \cite{ozment2006milk}),
+we found them less effective at predicting the location of zero-day bugs in the
+Linux kernel versions that we tested.
 
-With this knowledge, we propose a new design for a secure virtual machine that 
-accesses only the popular code paths through a very small trusted computing base. 
-This design scheme, named \emph{Lock-in-Pop}, locks out kernel access to all code except 
-that found in paths associated with frequently-used popular programs. \emph{Lock-in-Pop} requires an interface 
-that builds on only basic OS primitives, performing essential operations for file system, 
+With this knowledge, we propose a new design for a secure virtual machine that
+accesses only the popular code paths through a very small trusted computing base.
+This design scheme, named \emph{Lock-in-Pop}, locks out kernel access to all code except
+that found in paths associated with frequently-used popular programs. \emph{Lock-in-Pop} requires an interface
+that builds on only basic OS primitives, performing essential operations for file system,
 networking, threading, and memory management. \yanyan{how do you decide these are essential?}
-To accommodate the need for complex functionalities, it re-creates riskier system calls in 
+To accommodate the need for complex functionalities, it re-creates riskier system calls in
 a memory-safe programming language sandbox.
 
-Based on the \emph{Lock-in-Pop} design scheme, we implement a new prototype virtual machine that 
-builds complex operating system functionality (e.g., directories and permissions) utilizing only commonly-used primitives (e.g., reading and writing to a file). 
-Dubbed Lind, the virtual machine pairs two components -- Google's Native Client (NaCl) and Seattle's Repy. 
-NaCl serves as a computational module that isolates binaries, providing memory safety for a legacy program like Apache, 
-while passing the system calls \yanyan{invoked by the binary?} to the operating system interface. 
-The operating system interface, called SafePOSIX, is isolated within the Repy sandbox, and ensures access to only popular paths. 
-Complex operating system functionalities in an isolated environment are provided by the small (8K LOC) Repy sandbox kernel. 
-This provides straightforward access to the required popular kernel paths, 
-while allowing more complex functionalities to be built on top. 
-In this manner, Lind can offer enhanced security without sacrificing basic functionality. 
+Based on the \emph{Lock-in-Pop} design scheme, we implement a new prototype virtual
+ machine that builds complex operating system functionality (e.g., directories and
+ permissions) utilizing only commonly-used primitives (e.g., reading and writing to a file).
+Dubbed Lind, the virtual machine pairs two components -- Google's Native Client
+(NaCl) and Seattle's Repy.
+NaCl serves as a computational module that isolates binaries, providing memory
+safety for a legacy program like Apache,
+while passing the system calls \yanyan{invoked by the binary?} to the operating system interface.
+The operating system interface, called SafePOSIX, is isolated within the Repy
+sandbox, and ensures access to only popular paths.
+Complex operating system functionalities in an isolated environment are
+provided by the small (8K LOC) Repy sandbox kernel.
+This provides straightforward access to the required popular kernel paths,
+while allowing more complex functionalities to be built on top.
+In this manner, Lind can offer enhanced security without sacrificing basic functionality.
 
-To test Lind's effectiveness, we replicated 35 kernel bugs in the Linux kernel version 3.14.1, 
-and attempted to trigger them in seven other virtualized environments, 
-including VirtualBox, VMWare Workstation, 
-Docker, LXC, KVM, QEMU, and Graphene. 
-Our results show that applications in Lind were least likely to trigger kernel bugs, 
+To test Lind's effectiveness, we replicated 35 kernel bugs in the Linux kernel version 3.14.1,
+and attempted to trigger them in seven other virtualized environments,
+including VirtualBox, VMWare Workstation,
+Docker, LXC, KVM, QEMU, and Graphene.
+Our results show that applications in Lind were least likely to trigger kernel bugs,
 with only one out of the 35 (2.9\%) kernel vulnerabilities tested for being triggered.
 
 In summary, the main contributions of this paper are as follows:
 
 \begin{itemize}\setlength\itemsep{0em}
 \item
-We postulate a new approach for securing privileged code, 
-such as the OS kernel, based on the idea that commonly-used popular kernel paths contain fewer bugs. 
+We postulate a new approach for securing privileged code,
+such as the OS kernel, based on the idea that commonly-used popular kernel paths contain fewer bugs.
 
 \item
-We propose a quantitative security metric to evaluate the security of kernel code at the line-of-code level. 
-After testing our safety metric against others, we find it effective in locating bugs in the Linux kernel, 
-which provides a more accurate base for developing new secure designs for protecting the OS kernel.
+We propose a quantitative security metric to evaluate the security of kernel code
+ at the lines-of-code level.
+After testing our safety metric against others, we find it effective in locating
+ bugs in the Linux kernel,
+which provides a more accurate base for developing new secure designs.
 
 \item
-We develop a new design scheme called \emph{Lock-in-Pop} that accesses only popular code paths 
-through a very small trusted computer base. 
-The need for complex functionality is addressed by adding a strategy to the \emph{Lock-in-Pop} design that 
-uses a memory-safe programming language to recreate riskier systems calls within a secure sandbox. 
+We develop a new design scheme called \emph{Lock-in-Pop} that accesses only popular code paths
+through a very small trusted computer base.
+The need for complex functionality is addressed by adding a strategy to the \emph{Lock-in-Pop} design that
+uses a memory-safe programming language to recreate riskier systems calls within a secure sandbox.
 
 \item
-We build a prototype virtual machine called Lind and tested its effectiveness 
-%at not triggering known zero-day bugs 
-against seven other security systems. We found that Lind triggers only one (2.9\%) of the 35 zero day bugs we had targeted, 
+We build a prototype virtual machine called Lind and tested its effectiveness
+%at not triggering known zero-day bugs
+against seven other security systems. We found that Lind triggers only one
+(2.9\%) of the 35 zero day bugs we had targeted,
 making it an order of magnitude more secure than other systems.
 \end{itemize}
 
 %\yiwen{Can we lose the last map paragraph? I'd like to remove it and it will save a lot of space.}
 %
 %The remainder of this paper is organized as follows.
-%Section \ref{sec.motivation-and-background} presents the scope of our study and our threat model. 
-%A study of earlier kernel protection metrics and the results of tests we ran to compare their performance 
-%against our newly proposed design are discussed in Section \ref{sec.metric}. 
-%Section \ref{sec.design} describes the development of our \emph{Lock-in-Pop} design scheme. 
-%In Section \ref{sec.implementation} we discuss the construction of the Lind prototype, 
-%while Section \ref{sec.evaluation} provides the  results of tests that directly compare Lind's performance 
-%in preventing the triggering of bugs to other virtualization systems. 
-%Section \ref{sec.limitation} outlines possible future initiatives. 
-%Finally, Section \ref{sec.related_work} reviews existing design metrics, as well as techniques that share some of Lind's security techniques and goals, 
+%Section \ref{sec.motivation-and-background} presents the scope of our study and our threat model.
+%A study of earlier kernel protection metrics and the results of tests we ran to compare their performance
+%against our newly proposed design are discussed in Section \ref{sec.metric}.
+%Section \ref{sec.design} describes the development of our \emph{Lock-in-Pop} design scheme.
+%In Section \ref{sec.implementation} we discuss the construction of the Lind prototype,
+%while Section \ref{sec.evaluation} provides the  results of tests that directly compare Lind's performance
+%in preventing the triggering of bugs to other virtualization systems.
+%Section \ref{sec.limitation} outlines possible future initiatives.
+%Finally, Section \ref{sec.related_work} reviews existing design metrics, as well as techniques that share some of Lind's security techniques and goals,
 %while the cogent points relayed in the paper are reviewed in Section \ref{sec.conclusion}.
