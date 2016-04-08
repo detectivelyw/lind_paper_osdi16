@@ -135,8 +135,10 @@ $A$ has a much lower bug rates than $B$.
 Previous studies have attempted to provide security metrics at a coarser granularity,
 e.g., at the file level. However, when run at a file
 granularity, we found that even popular programs used parts of
-32 files that contained flaws. \yanyan{where does 32 come from?} In fact, common
-programs executed 36 functions that were later patched to fix security
+32 files that contained flaws. But in fact, only one bug was triggered by those programs. 
+\yanyan{where does 32 come from?} 
+\yiwen{I think it is fixed now.}
+In addition, common programs also executed 36 functions that were later patched to fix security
 flaws, indicating the need to localize bugs at a finer granularity.
 
 \begin{figure}
