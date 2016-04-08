@@ -538,9 +538,10 @@ Since the safe portion contains fewer kernel bugs, the Repy sandbox kernel
 has only a very slim chance of triggering OS kernel bugs.
 
 Since it is the direct point of connect with the OS kernel, it could be argued
-that Repy is the weakest link in terms of the overall security coverage provided by Lind.
- However, the results above show that, even if sandbox kernel has a
-bug or failure, it should not substantially increase the risk of triggering
+that Repy sandbox kernel is the weakest link in terms of the overall security coverage provided by Lind. 
+And SafePOSIX, built on Repy, could become a security weakness. 
+However, the results above show that, even if SafePOSIX has a 
+bug or failure, it should not substantially increase the risk of triggering 
 kernel bugs. \lois{this paragraph may still need to be strengthened.}
 
 \subsection{Performance Overhead Evaluation}
