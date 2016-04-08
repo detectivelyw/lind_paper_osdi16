@@ -83,7 +83,7 @@ Lind takes advantage of the fact that Repy is a programming language sandbox to
 construct a variation on the POSIX API. Following the
 Lock-in-Pop design, to service a system call in NaCl, a server routine in
 Lind marshals its arguments into a text string, and sends the call and the arguments
-to the Repy sandbox, where the re-created system call marshals the result and
+to the Repy sandbox. The re-created system call marshals the result and
 returns it back to NaCl. Eventually, the result is returned as the appropriate
 native type to the calling program.
 
@@ -96,11 +96,9 @@ to provide functionality of writing data to storage.
 %not very exciting.}
 It eliminates the need of having a direct abstraction, the
 concept of file permissions, links, or even the concept of multiple files.
-The system API safe reimplementation is a set of more complicated system calls
+The system API safe re-construction is a set of more complicated system calls
 derived from functions in the sandbox kernel.
-We re-create those system calls because we do not want this potentially risky user code
-directly accessing the underlying OS kernel.
-Instead, our re-creation layer serves as a mediator between the user code
+Our re-creation layer serves as a mediator between the user code
 and the OS kernel. The reimplementation is safe
 because the reconstructed calls are isolated in a sandbox, and its code is written
  in a memory-safe programming language.
@@ -109,7 +107,7 @@ Here is an example of how this reimplementation would work with the symbolic lin
 If there is a bug in this function, rather than rely on the kernel code paths
 for symbolic links, Lind implements the incorrect behavior, such as creating a symbolic link
 with a deleted file.
-This denies the code the privileged access to the system the OS kernel has.
+This denies the code the privileged access to the system the OS kernel would have.
 As a result, instead of creating a security issue, the application is denied access
 to the file system.
 
