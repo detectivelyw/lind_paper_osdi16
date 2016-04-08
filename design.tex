@@ -2,7 +2,7 @@
 \label{sec.design}
 
 Providing essential system functionality without exposing privileged code is one of the
-primary challenges.
+primary challenges in the design of secure systems.
 Currently, there are two basic approaches.
 One, called system call interposition (SCI), checks and passes system calls
 through to the underlying kernel. The other, which we call ``functionality
@@ -49,7 +49,7 @@ obtain and interpret the OS state (e.g., permissions, user groups, register flag
 associated with the programs it is monitoring.
 The complexity of OS states makes this process difficult and can lead to
 inaccurate policy decisions.
-Second, there are many indirect paths in the kernel that can be accessed.
+In addition, there are many indirect paths in the kernel that can be accessed.
 If security policy makers overlook those paths, it renders the
 system call interposition policy ineffective, as attackers will be able to
 bypass the imposed security checks.

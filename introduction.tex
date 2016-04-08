@@ -18,7 +18,7 @@ somewhat ``hit-or-miss.'' Many people believe that existing virtual machines pro
 enough isolation to execute programs safely. However, when Virtualbox reports 40 vulnerabilities
  \cite{Virtualbox-Vulnerabilities},and
  more than 100 bugs have been found in VMware Workstation \cite{VMWare-Vulnerabilities},
-it suggests that they have a long way to go.
+it suggests that they still have a long way to go.
 Others have looked to the development of security metrics \cite{PittSFIeld, ozment2006milk}
  to pinpoint vulnerable areas.
 %A 2001 study by Chou, et al. \cite{PittSFIeld} provided evidence that more bugs could be found in device drivers than in other parts of the OS kernel.
@@ -28,7 +28,7 @@ Others have looked to the development of security metrics \cite{PittSFIeld, ozme
 %In other words, we are still lacking reproducible quantitative measures to evaluate the security of kernel code.
 However, reproducible quantitative measures to evaluate the security of kernel code still do not exist.
 
-With this paper, we move one step closer to that goal by the development
+With this paper, we move one step closer to that goal with the development
 of a new design that offers a more reliable foundation for building secure virtual machines.
 Proposing that code found in popular paths, associated with frequently-used programs,
 has less potential risk than code in less-used parts of the kernel, we set out to determine
@@ -94,7 +94,7 @@ The need for complex functionality is addressed by adding a strategy to the \emp
 uses a memory-safe programming language to recreate riskier systems calls within a secure sandbox.
 
 \item
-We build a prototype virtual machine called Lind and tested its effectiveness
+We build a prototype virtual machine called Lind and test its effectiveness
 %at not triggering known zero-day bugs
 against seven other security systems. We found that Lind triggers only one
 (2.9\%) of the 35 zero day bugs we had targeted,

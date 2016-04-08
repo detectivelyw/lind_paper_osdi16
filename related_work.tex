@@ -28,7 +28,7 @@ vulnerability discovery process. Zimmermann~\cite{zimmermann2010searching}
 described metrics like code complexity, and code churn (the total added/modified/
 deleted lines of code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
 the correlation between shared code size and shared vulnerabilities in
-successive versions of a software system. In~\cite{engler2001bugs} Engler analyzed 
+successive versions of a software system. In~\cite{engler2001bugs} Engler analyzed
 system code by static analysis to look for contradictions, such as acquired locks that are
 not released. While
 these prior approaches can be useful for determining readiness for release, and
@@ -39,9 +39,9 @@ Prior work has also examined the evolution of kernel defects. For example,
 Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have
 both studied how security issues evolve over
 time. Ozment reported a decrease in the rate at which new vulnerabilities
-are reported by studying the age of vulnerabilities in OpenBSD. 
-Li reported several bug characteristics. They found a decrease in memory-related 
-bugs, and semantic bugs being the dominant root causes.  
+are reported by studying the age of vulnerabilities in OpenBSD.
+Li found a decrease in memory-related
+bugs, and identified semantic bugs being the dominant root causes.  
 % \lois{this sentence about Li says nothing and reads like
 % nonsense. He reported an increase in the bugs by studying the number of bugs?
 %I checked the paper but had no clue what this referred to}
@@ -67,11 +67,11 @@ Though many sandboxes implement the bulk of standard libraries in
 memory-safe languages like Java or C\#, flaws in this code can
 still pose a threat~\cite{JavaBugs, Java-Lessons}.
 Any bug or failure in a programming language virtual
-machine is usually fatal. In contrast, the main component of Lind 
-is built using Repy, which is a programming language with a very small TCB. 
+machine is usually fatal. In contrast, the main component of Lind
+is built using Repy, which is a programming language with a very small TCB.
 This enhances the security of privileged code due to fewer LOC, \yanyan{should
 we mention these fewer LOC are in common paths?} which in
-turn reduces the number of potential bugs or weaknesses. 
+turn reduces the number of potential bugs or weaknesses.
 %\lois{OK, what does the TCB have to do with these languages? My
 %question still stands. How does the last sentence relate to programming
 %languages}
@@ -91,9 +91,9 @@ the large attack vectors against the hypervisors, including
 vulnerabilities of software and configuration risks. Lind avoids such restrictions due to a smaller TCB.
 
 \textit{Library OSes}
-allow applications to efficiently obtain the benefits of virtual machines  
-by refactoring a traditional OS kernel into an application library. 
-%\lois{HOW?} 
+allow applications to efficiently obtain the benefits of virtual machines
+by refactoring a traditional OS kernel into an application library.
+%\lois{HOW?}
 %\yiwen{fixed.}
 %including security isolation, host platform compatibility, and
 %migration.
@@ -151,12 +151,12 @@ secure execution of applications by exposing a minimal kernel surface.
 This approach usually enforces the userspace policies through a monitor process that
 interacts with the system call execution engine
 %for building sandboxes, though it can be error prone
-\cite{SCI-04}. 
+\cite{SCI-04}.
 Issues in SCI include the difficulty of appropriately replicating OS semantics,
 multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
-In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}. 
+In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
 SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
-of a system call through the Lind's reimplementation 
+of a system call through the Lind's reimplementation
 \yanyan{need to replace reimplementation} to ensure safe POSIX API for the userspace applications.
 
 \textbf{Software Fault Isolation} (SFI)
@@ -165,7 +165,7 @@ instructions can only be executed if they do not violate the sandbox's
 constraints \cite{SFI:93}, and security policies are enforced through machine-level
 code analysis. In SFI, memory
 writes are protected and code jumps cannot access predefined memory of
-other programs to execute their code. 
+other programs to execute their code.
 Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
 Chrome browser that allows native executable code to run directly in a
 browser. NaCl prevents suspicious code

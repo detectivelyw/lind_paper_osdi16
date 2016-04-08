@@ -125,7 +125,7 @@ The test also reported a 95\% confidence that $\lambda_A / \lambda_B
 below 1, and that $B$ is the risky set containing more bugs.
 In this test, $A$ is the popular paths in the kernel, while $B$
 represents the less commonly-used paths. The above results show that
-$A$ has a much lower bug rates than $B$.
+$A$ has a much lower bug rate than $B$.
 %which means that the popular kernel paths
 %contain much fewer bugs. Our metric is thus effective in locating bugs in the Linux kernel.
 
@@ -134,10 +134,8 @@ $A$ has a much lower bug rates than $B$.
 %which sections of kernel code may be buggy.
 Previous studies have attempted to provide security metrics at a coarser granularity,
 e.g., at the file level. However, when run at a file
-granularity, we found that even popular programs used parts of
-32 files that contained flaws. But in fact, only one bug was triggered by those programs. 
-\yanyan{where does 32 come from?} 
-\yiwen{I think it is fixed now.}
+granularity, we found that even popular programs used parts of as many as
+32 files that contained flaws. But in fact, only one bug was triggered by those programs.
 In addition, common programs also executed 36 functions that were later patched to fix security
 flaws, indicating the need to localize bugs at a finer granularity.
 
@@ -167,17 +165,17 @@ by this age-based metric.
 \begin{figure}
 \centering
 \includegraphics[width=0.9\columnwidth]{diagram/metrics_drivers.png}
-\caption{\small Bug distribution with Chou's metric \cite{PittSFIeld}.}
+\caption{\small Bug distribution using Chou's metric \cite{PittSFIeld}.}
 \label{fig:metrics_drivers}
 \end{figure}
 
 Chou, et al.~\cite{PittSFIeld} showed that certain parts of the kernel
 were more vulnerable than others. In particular, he identified device drivers as
-have much higher error rates than other parts of the kernel.
+having much higher error rates than other parts of the kernel.
 Applying this metric on our dataset, we found that the driver code in our version
 of the Linux kernel accounted for only 8.9\% of the total codebase, and contained
 merely 4 out of the 40 bugs (Figure \ref{fig:metrics_drivers}).
-This metric also proves to be difficult with the
+This metric also proves to be difficult to use with the
 Linux kernel, since our results show that
 only 10.0\% of the kernel bugs could be detected.
 
@@ -201,8 +199,8 @@ with detailed kernel knowledge.
 The (primarily) black box fuzzing from Trinity and test suite of
 LTP combined to reach 44.6\% of the kernel, including all 12.4\% of the popular
 paths.  The security in the reachable portion is
-slightly higher than the unreachable portion. This is true despite
-approximately 1/3 of this code, or that found in the popular paths, containing
+slightly higher than in the unreachable portion. This is true despite
+approximately 1/3 of this code—what was found in the popular paths—containing
  only a single flaw. This means that the rate of bug occurrence in reachable, but
 not popular kernel paths, is higher than that in unused
 code. We speculate that this may be because of a higher rate of bug discovery
