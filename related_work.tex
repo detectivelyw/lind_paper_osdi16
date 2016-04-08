@@ -3,7 +3,7 @@
 
 This section summarizes a number of previous security approaches
 that aim to ensure the safety of privileged code in user space and kernel space.
-These approaches include past efforts to better define safety metrics and to quantify
+These approaches include past efforts to better define safety metrics, and to quantify
 areas of risk in an OS kernel, key studies in the use of various virtualization
  techniques, as well as background information on technologies incorporated into
  Lind.
@@ -21,7 +21,7 @@ provide for the most effective detection and defense against kernel bugs, as our
 test of the Chou metric, described in Section 3, will attest.
 
 There have been a number of other approaches to identifying kernel vulnerability, some of
-which grew out of efforts in code comprehension.  Alhazmi~\cite{alhazmi2008application}
+which grew out of research in code comprehension.  Alhazmi~\cite{alhazmi2008application}
 used metrics like defect density and fault exposure ratio to describe the
 vulnerability discovery process. In~\cite{zimmermann2010searching}, Zimmermann
 described metrics like code complexity, and code churn (the total added/modified/
@@ -43,8 +43,8 @@ percentage of bugs. \lois{this sentence about Li says nothing and reads like
 I checked the paper but had no clue what this referred to}
 However, neither of these two approaches provided data
 a on how vulnerabilities are distributed.
-In contrast, guided its design metric, Lind can assess the primary location
-of bugs as being in the less-used paths.
+In contrast, guided by its design metric, Lind can assess that the primary location
+of bugs will be in the less-used paths.
 
 Much work has been done in analyzing system faults using techniques in
 software engineering. For example,
@@ -52,21 +52,10 @@ in~\cite{engler2001bugs} Engler analyzed system code by static analysis
 to look for contradictions, such as acquired locks that are
 not released.
 
-Coverage-based fault localization assumes that execution events that occur
-mostly in failing test cases, but rarely in passing test cases, are more likely
-to be the cause~\cite{jones2002visualization}. Further research lead to measuring the set
-difference of the statements covered by passing and failing test scenarios
-with run-time events~\cite{agrawal1995fault, jones2005empirical, liblit2005scalable}.
-Ostrand in \cite{ostrand2005predicting} predicted the number of faults in a system based on fault and modification history from previous releases.
-\yanyan{While safety may be the eventual end goal, the authors of these SE papers
-are more interested in understanding the code than using it as a security tool. I wonder
-if this paragraph should be cut.} \lois{Since we appear to be running short on space, I concur}
-explain more about why these do not work?}
-
-
 \textbf{Virtualization.}
 Lind incorporates a number of virtualization techniques. This section details some
 of the significant work relevant to the development of Lind.
+
 \textit{Language-based virtualization.}
 Programming languages like Java, JavaScript, Lua~\cite{Lua}, and
 Silverlight~\cite{Silverlight} can provide safety in virtual systems by
@@ -79,7 +68,7 @@ still pose a threat~\cite{JavaBugs, Java-Lessons}.
 %Researchers have also
 %discovered many severe bugs in Java \cite{Java-Lessons}.
 Any bug or failure in a programming language virtual
-machine is usually fatal. In contrast, Lind with a very small TCB
+machine is usually fatal. In contrast, Lind with its very small TCB
 enhances security of privileged code due to fewer LOC, which in
 turn reduces the number of potential bugs or weaknesses. %\lois{why?}
 \lois{OK, what does the TCB have to do with these languages? My
