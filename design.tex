@@ -5,15 +5,17 @@ Providing essential system functionality without exposing privileged code is one
 primary challenges. 
 Currently, there are two basic approaches.
 One, called ``System Call Interposition (SCI)," checks and passes system calls
-through to the underlying kernel. The other, known as ``functionality
-reimplementation," \yanyan{is this the official name?} 
+through to the underlying kernel. The other, we call ``functionality
+reimplementation," 
+\yanyan{is this the official name?} 
+\yiwen{No. We can come up with a better one.}
 requires rebuilding system functionality with new code. In the
 following, we show that both methods are limited in their ability to
 prevent attacks in the kernel. 
 With our metric in Section~\ref{sec.metric}, 
 we propose a new design scheme named ``Lock-in-Pop" that combines safer reimplementation
-within a secure environment, and accesses only popular code requests through a
-very small trusted computer base. \yanyan{what is popular code requests?}
+within a secure environment, and accesses only popular code paths through a
+very small trusted computer base.
 
 
 \subsection{System Call Interposition (SCI)}
@@ -27,9 +29,8 @@ allowed to pass to the underlying kernel, and which ones must be stopped.
 Figure \ref{fig:design_system_call_interposition} illustrates the general design
 of a system call interposition system. System administrators have direct access to 
 setting and changing the security policies through a policy engine. 
-This key part of the system would pose great threat if compromised, thus making it 
-one component of the trusted computing base. \yanyan{why posing great threat
-makes it part of TCB?}
+This key part of the system would pose critical security threat if compromised, thus making it 
+one component of the trusted computing base. 
 
 \begin{figure}%[h]
 \centering
@@ -62,9 +63,8 @@ It is difficult for developers to fully understand the side-effects of all the
 system calls in an interface as complex as the UNIX API. 
 For example, many applications that rely on \texttt{setuid} fail to check its return value. 
 If \texttt{setuid} is blocked and fails, these applications will continue to function in a compromised state, 
-with incorrect permissions and privileges. \yanyan{I find it hard to understand
-the relationship between these two sentences.}
-Therefore, it would be very challenging to design and build a secure virtualization system using
+with incorrect permissions and privileges. 
+The above limitations make it very challenging to design and build a secure virtualization system using
 system call interposition alone.
 
 \subsection{Functionality Reimplementation}
@@ -115,7 +115,7 @@ gain privilege to execute arbitrary code in the host
 OS, even shellcode to access the kernel of the host OS~\cite{CVE-2008-2100}. 
 
 Even operations that are considered
-legal and harmless in the guest OS may open up \yanyan{risky?} system call paths in the underlying
+legal and harmless in the guest OS may open up risky system call paths in the underlying
 host OS and cause a problem.
 This type of problem can be fatal, 
 as it can reach and trigger vulnerabilities in the underlying OS kernel.
@@ -158,7 +158,7 @@ The library OS sandbox responds to the system call requests and
 returns results to the user code, if the requests are granted.
 It is comprised of two parts: a sandbox kernel that provides access to basic but critical
 system calls, and a system functionality safe reimplementation \yanyan{reconstruction?} that implements more
-complex calls, such as file system calls. \yanyan{not all file system calls are complex.}
+complex calls, such as symbolic link system call. 
 The sandbox kernel forms the only TCB of our library OS, and is kept
 extremely small and simple so that it is easy to verify its security.
 The sandbox code provides an API that performs a few critical system calls with
