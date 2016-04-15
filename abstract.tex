@@ -1,32 +1,23 @@
 \subsection*{Abstract}
-%System designers and developers want users to be able to
-%run applications -- even untrusted ones -- on open source operating systems
-%without triggering potential security breaches. Yet, a possible compromise of privileged code
-%in the OS kernel is particularly dangerous because bugs or flaws triggered there pose a direct security threat
-%to the system itself and all other programs running in it.
-
-Running untrusted programs on a vulnerable operating system kernel is a challenge.
-%A number of security strategies have evolved over the years in response to these concerns,
-A number of security strategies have evolved over the years to solve this problem,
-such as system call interposition, operating system virtual machines, and library OSes.
-However, without a widely applicable quantitative metric to guide efforts, systems
-for securing privileged code
-have emerged on almost a ``case-by-case'' basis. To develop more consistently
-effective security systems,
-more needs to be known about the location of flaws in kernel code.
-
-In this paper, we document the development, testing, and application of a new
-design for a secure virtual machine
-that is based on a more accurate determination of what lines of code can be
-executed safely within the Linux OS kernel.
-With this knowledge, we devise a design scheme called \emph{Lock-in-Pop},
-as it locks out application access to all kernel code
-except that found in paths frequently used by popular programs that we discover
-contain fewer vulnerabilities.
-Using this new design scheme, we build a secure virtual machine called Lind that accesses only
-the popular code paths through a very small trusted computing base. Complex functionality is addressed
-by using a memory-safe programming language to recreate riskier system calls in a sandbox.
-Our test results for 35 bugs examined in Linux kernel version 3.14.1 show that Lind can
-reduce the threat of an attack to less than 3\%.
-This result is about an order of magnitude better than existing systems like VirtualBox (40\%), VMWare Workstation (31\%), Docker (23\%),
-LXC (34\%), QEMU (14\%), KVM (14\%), and Graphene (23\%).
+A possible compromise of privileged code, such as that in the OS kernel, is a
+daunting security threat. Severe vulnerabilities have been discovered in this
+code, which, when triggered, have resulted in privilege escalation,
+denial of service [CVE-2015-8539], [CVE-2015-5364], memory corruption
+ [CVE-2014-9529] and other problems. However, securing this code has been hampered
+  by a lack of knowledge about where flaws may be located. Without this knowledge,
+ previous strategies, such as system call interposition, operating system virtual
+ machines, and library OSes, have had only limited success. In this paper, we
+ document the development, testing, and application of a new secure virtual
+ machine based on a quantitative evaluation metric that predicts code located
+  in the popular paths will contain fewer bugs. We leverage this knowledge
+  for a design scheme called  Lock-in-Pop, which locks out application access
+ to all kernel code except that found in paths associated with frequently-used
+ popular programs. Lastly, we build and test  a secure virtual machine called Lind,
+  which accesses only the popular code paths through a very small trusted computing
+   base. Complex functionalities in Lind are addressed by using a memory-safe
+    programming language to re-create riskier system calls within a sandbox.
+  When Lind was  tested against seven other virtual machines in whether it would
+   trigger any of 35 bugs examined in Linux kernel version 3.14.1, the threat of
+    an attack was reduced to less than 3%. This result is about an order of
+    magnitude better than existing systems like VirtualBox (40%), VMWare Workstation
+     (31%), Docker (23%), LXC (34%), QEMU (14%), KVM (14%), and Graphene (23%).
