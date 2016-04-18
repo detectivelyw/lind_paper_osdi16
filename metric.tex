@@ -9,7 +9,7 @@ how lines of code in the kernel are used, we can predict their likelihood to con
 design a solution to prevent any exploitation.
 In this section, we formulate and test
 a quantitative evaluation metric for securing the OS kernel.
-This metric is based on the idea that kernel paths executed by common applications
+This metric is based on the idea that kernel paths executed by popular applications
 during everyday use are less likely to contain security flaws.
 %The intuition is that
 These code paths are well-tested due to their constant use. As a result,
@@ -38,15 +38,14 @@ To trace the kernel, we used \texttt{gcov}~\cite{gcov}, a standard program profi
 tool in the GNU compiler collection (GCC) suite. The tool indicates which lines of kernel
 code are executed when an application runs.
 
-\textbf{Commonly-used kernel paths.}
-To capture the commonly-used kernel paths, we used two strategies concurrently.
+\textbf{Popular kernel paths.}
+To capture the popular kernel paths, we used two strategies concurrently.
 First, we attempted to capture the normal usage behavior of popular applications.
 To do this, two students used applications in the 50 most popular Debian
 packages~\cite{Top-Packages} (omitting libraries) for Debian 7.0, a widely-used and
 popular open source project.
 Each student used 25 applications for their designed
-tasks (i.e., writing, spell checking, printing in a text editor, or using
-%recoloring and adding a caption to a picture in
+tasks (i.e., writing, spell checking, printing in a text editor, or using 
 an image processing software). In instances where there were two applications that performed a
 similar task (i.e., Mozilla Firefox and Google Chrome), both programs were
 used. These tests were completed over 20 hours of
@@ -62,8 +61,29 @@ With the two strategies, we obtained a profile of the lines of
 kernel code (publicly available at~\cite{Lind}) that defined our
 popular kernel paths.
 
+\textbf{Reachable kernel paths.}
+There are certain paths in the kernel that are not reachable and unused, 
+such as unloaded drivers. 
+To make sure that our analysis reflects the bug distribution in the reachable kernel, 
+which is useful in the design of secure virtualization systems, 
+we further examined the reachable lines of
+code in the kernel using two techniques. First,
+we performed system call fuzzing with the Trinity
+system call fuzz tester~\cite{Trinity}.
+%These included 16 child processes
+%(Trinity workers) executing each Linux system call with 1 million iterations.
+Second, we used the Linux Test Project (LTP)~\cite{LTP}, a test suite written
+with detailed kernel knowledge.
+%This test suite is meant to exercise the
+%existing Linux system call interface to
+%test its correctness, robustness, and performance impact.
+%
+%The (primarily) black box fuzzing from Trinity and test suite of
+%LTP combined to reach 44.6\% of the kernel, including all 12.4\% of the popular
+%paths.  
+
 \textbf{Locating bugs.}
-Having identified the kernel paths used in applications,
+Having identified the kernel paths used in popular applications,
 we then investigated how bugs are distributed among these paths. We collected a list of
 severe kernel bugs from the National Vulnerability Database~\cite{NVD}.
 For each bug, we found the patch that fixed the problem and identified
@@ -77,13 +97,9 @@ flaw would require executing additional lines of code.
 \subsection{Results and Analysis}
 \label{Verification-of-Hypothesis}
 
-\lois{Remember to change "commonly-used" kernel path to "popular" kernel paths in
-the legend. Also the three figures 2 and three are to be identified as "Bug Distribution
-by age of code" and "Bug distribution in drivers"}
-
 \begin{figure}
 \centering
-\includegraphics[width=1.0\columnwidth]{diagram/kernel_coverage.png}
+\includegraphics[width=1.0\columnwidth]{diagram/popular_paths.png}
 \caption{\small Percentage of different kernel areas that were reached during
  LTP and Trinity system call fuzzing experiments, with the zero-day kernel bugs identified
  in each area.}
@@ -96,10 +112,8 @@ The experiment result in Section~\ref{sec-setup} shows that only one of the 40 k
 was found among the popular paths, even though these paths make up 12.4\% of the kernel
 (Figure \ref{fig:coverage}).
 
-\textbf{Statistical significance.} To test the significance of these results, we
-performed a power analysis as follows. \lois{If we are making the comparison with
-the other metric Section 3.3, then I would take out the "statistical significance"
-subhead}
+To test the significance of these results, we
+performed a power analysis as follows. 
 %utilizing a Poisson distribution, a form of probability analysis to express the
 %likelihood of a given number of events occurring in a fixed interval of time
 %and/or space.
@@ -134,9 +148,8 @@ $A$ has a much lower bug rate than $B$.
 %which means that the popular kernel paths
 %contain much fewer bugs. Our metric is thus effective in locating bugs in the Linux kernel.
 
-\textbf{Comparison with other metrics.}
-%As we have already stated, we are not the first to propose a metric for judging
-%which sections of kernel code may be buggy.
+\subsection{Comparison with Other Security Metrics}
+
 Previous studies have attempted to provide security metrics at a coarser granularity,
 e.g., at the file level. However, when run at a file
 granularity, we found that even popular programs used parts of as many as
@@ -148,7 +161,7 @@ flaws, indicating the need to localize bugs at a finer granularity.
 \begin{figure}
 \centering
 \includegraphics[width=1.0\columnwidth]{diagram/metrics_age.png}
-\caption{\small Bug distribution using Ozment's metric \cite{ozment2006milk}.}
+\caption{\small Bug distribution by age of code \cite{ozment2006milk}.}
 \label{fig:metrics_age}
 \end{figure}
 
@@ -165,14 +178,16 @@ Our results (Figure \ref{fig:metrics_age}) showed that there are a substantial
 number of bugs located in each age group.
 %No evident cluster patterns among bugs in any particular age group could be identified.
 Therefore, buggy code in the Linux kernel cannot be identified simply
-by this age-based metric. \lois{In the analysis, remember to include the argument
-that a system can not be run exclusively on old code.}
-
+by this age-based metric. 
+In addition, it would be very difficult to design a secure virtualization system purely based on 
+this type of metric, since a system cannot be run exclusively on old code. 
+New code is frequently desired because it can provide additional functionality, patches to 
+fix existing problems, and new technology to improve user experience.   
 
 \begin{figure}
 \centering
 \includegraphics[width=0.9\columnwidth]{diagram/metrics_drivers.png}
-\caption{\small Bug distribution using Chou's metric \cite{PittSFIeld}.}
+\caption{\small Bug distribution in drivers \cite{PittSFIeld}.}
 \label{fig:metrics_drivers}
 \end{figure}
 
@@ -184,39 +199,15 @@ of the Linux kernel accounted for only 8.9\% of the total codebase, and containe
 merely 4 out of the 40 bugs (Figure \ref{fig:metrics_drivers}).
 This metric also proves to be difficult to use with the
 Linux kernel, since our results show that
-only 10.0\% of the kernel bugs could be detected.\lois{remember to cite the newer Palix
-study. Fewer driver bugs may be the result of a concentrated effort to improve}
-
-\textbf{Vulnerability profile.}
-%However, this led us to consider that perhaps
-From the above analysis, we hypothesize that unreachable code in certain
-situations may have a different vulnerability profile, e.g., drivers are not used
-in many scenarios.  To test this, we
-further examined the reachable lines of
-code in the kernel using two techniques. First,
-we performed system call fuzzing with the Trinity
-system call fuzz tester~\cite{Trinity}.
-%These included 16 child processes
-%(Trinity workers) executing each Linux system call with 1 million iterations.
-Second, we used the Linux Test Project (LTP)~\cite{LTP}, a test suite written
-with detailed kernel knowledge.
-%This test suite is meant to exercise the
-%existing Linux system call interface to
-%test its correctness, robustness, and performance impact.
-%
-The (primarily) black box fuzzing from Trinity and test suite of
-LTP combined to reach 44.6\% of the kernel, including all 12.4\% of the popular
-paths.  The security in the reachable portion is
-slightly higher than in the unreachable portion. This is true despite
-approximately 1/3 of this code—what was found in the popular paths—containing
- only a single flaw. This means that the rate of bug occurrence in reachable, but
-not popular kernel paths, is higher than that in unused
-code. We speculate that this may be because of a higher rate of bug discovery
-in code that is available to execute in diverse configurations.
+only 10.0\% of the kernel bugs could be detected. 
+Other researchers also have findings that support our claim. 
+Palix \cite{palix2011faults} found that with development of the Linux kernel, 
+\texttt{drivers} now have lower 
+fault rate than that of other directories, such as \texttt{arch} and \texttt{fs}. 
 
 To summarize, we demonstrated that the metric of using popular
 kernel paths provides a statistically significant
 %($\alpha=0.01$, $\rho=0.0015$)
 means for predicting where in the kernel exploitable flaws
 will likely be found. For the remainder of the paper, we will
-focus on using this result to build more secure systems.
+focus on using this result to build secure virtualization systems.
