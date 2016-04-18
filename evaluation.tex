@@ -470,7 +470,7 @@ A large portion of the kernel paths accessed by Lind lie in
 \texttt{fs/} to perform file system operations.
 To restrict file system calls to popular paths, Lind only allows basic calls,
 like \texttt{open()}, \texttt{close()}, \texttt{read()}, \texttt{write()}, \texttt{mkdir()},
-\texttt{rmdir(), and commonly used flags like \texttt{O\_CREAT}, \texttt{O\_EXCL},
+\texttt{rmdir()}, and commonly used flags like \texttt{O\_CREAT}, \texttt{O\_EXCL},
  \texttt{O\_APPEND}, \texttt{O\_TRUNC},
 \texttt{O\_RDONLY}, \texttt{O\_WRONLY}, and \texttt{O\_RDWR} are
 permitted for \texttt{open()}.
@@ -533,9 +533,9 @@ The results are shown in Table \ref{table:trace-Repy}.
 The trace of Repy is slightly larger (5.8\%) than that of Lind.
 This larger design does not allow attackers or bugs to
 access the risky paths in the OS kernel, and it leaves open only a small amount (5.8\%) of
-additional common paths.\lois{The 5.8% thing is confusing. If you are using this
+additional common paths.\lois{The 5.8\% thing is confusing. If you are using this
 to describe the same thing...The "leftover" part of Repy outside of Lind, then don't
-repeat the number. Otherwise it seems to be saying that 5.8% of Repy is risky.}
+repeat the number. Otherwise it seems to be saying that 5.8\% of Repy is risky.}
 Additional kernel paths are added because some functions in Repy
 have more capabilities for message sending and network connection than Lind's
  system call interface.\lois{But these paths are safe?} For example, in Repy,
