@@ -3,25 +3,25 @@
 
 As previously mentioned, current kernel
 security systems lack reliable quantitative metrics capable of
- accurately identifying OS kernel portions that potentially have
-bugs. By understanding how lines of code in the kernel are used, we
-we can predict their likelihood to contain security flaws, and thus
+ accurately identifying potentially buggy OS kernel portions. By understanding
+how lines of code in the kernel are used, we can predict their likelihood to contain
+ security flaws, and thus
 design a solution to prevent any exploitation.
 In this section, we formulate and test
 a quantitative evaluation metric for securing the OS kernel.
 This metric is based on the idea that kernel paths executed by common applications
 during everyday use are less likely to contain security flaws.
 %The intuition is that
-These code paths are well-tested due to their constant use, and
-thus it is much less likely that security bugs will occur in these lines of code.
+These code paths are well-tested due to their constant use. As a result,
+it is much less likely that security bugs will occur in these lines of code.
 Our initial tests yielded promising results, with only one
-bug appearing in these popular paths.  We later tested the performance effectiveness
+bug appearing in these popular paths.  We later tested the effectiveness
 of our metric against two earlier works offering methods to predict bug
 locations in the OS kernel, and found our results compared favorably.
 
 \subsection{Experimental Setup}\label{sec-setup}
 To test our metric, we performed an analysis of two different versions of
-the Linux kernel, 3.13.0 and 3.14.1.
+the Linux kernel.
 %Since our findings for these versions are quantitatively and qualitatively similar, we report
 %the results for 3.13.0 in this section and use 3.14.1 in Section~\ref{sec.evaluation}.
 %We used two different versions of Linux kernel, because we want to first establish
@@ -35,7 +35,7 @@ the results from two different kernel versions concur that our design is
 a solution that is useful for multiple versions of the Linux kernel.
 
 To trace the kernel, we used \texttt{gcov}~\cite{gcov}, a standard program profiling
-tool in the GNU compiler collection (GCC) suite that indicates which lines of kernel
+tool in the GNU compiler collection (GCC) suite. The tool indicates which lines of kernel
 code are executed when an application runs.
 
 \textbf{Commonly-used kernel paths.}
@@ -59,7 +59,7 @@ software, communicated with friends and family, and other tasks, using this syst
 Software was installed as needed.
 %
 With the two strategies, we obtained a profile of the lines of
-kernel code (publicly available at~\cite{Lind}) that indicate
+kernel code (publicly available at~\cite{Lind}) that defined our
 popular kernel paths.
 
 \textbf{Locating bugs.}
@@ -70,13 +70,16 @@ For each bug, we found the patch that fixed the problem and identified
 which lines of kernel code were modified to remove it.
 For the purpose of this study, a user program that can execute a line of kernel
 code changed by such a patch is considered to have the \textit{potential to
-exploit that flaw}.  Note that it is possible that in some situations this may
-overestimate the ability for an attacker to exploit a flaw, since it may be
-possible that additional lines of code must also be executed to trigger the flaw.
-
+exploit that flaw}.  Note that it is possible that, in some situations, this may
+overestimate the ability for an attacker to exploit a flaw, since triggering the
+flaw would require executing additional lines of code.
 
 \subsection{Results and Analysis}
 \label{Verification-of-Hypothesis}
+
+\lois{Remember to change "commonly-used" kernel path to "popular" kernel paths in
+the legend. Also the three figures 2 and three are to be identified as "Bug Distribution
+by age of code" and "Bug distribution in drivers"}
 
 \begin{figure}
 \centering
@@ -94,7 +97,9 @@ was found among the popular paths, even though these paths make up 12.4\% of the
 (Figure \ref{fig:coverage}).
 
 \textbf{Statistical significance.} To test the significance of these results, we
-performed a power analysis as follows.
+performed a power analysis as follows. \lois{If we are making the comparison with
+the other metric Section 3.3, then I would take out the "statistical significance"
+subhead}
 %utilizing a Poisson distribution, a form of probability analysis to express the
 %likelihood of a given number of events occurring in a fixed interval of time
 %and/or space.
@@ -136,7 +141,8 @@ Previous studies have attempted to provide security metrics at a coarser granula
 e.g., at the file level. However, when run at a file
 granularity, we found that even popular programs used parts of as many as
 32 files that contained flaws. But in fact, only one bug was triggered by those programs.
-In addition, common programs also executed 36 functions that were later patched to fix security
+In addition, common programs tested at this level also executed 36 functions
+that were later patched to fix security
 flaws, indicating the need to localize bugs at a finer granularity.
 
 \begin{figure}
@@ -159,7 +165,8 @@ Our results (Figure \ref{fig:metrics_age}) showed that there are a substantial
 number of bugs located in each age group.
 %No evident cluster patterns among bugs in any particular age group could be identified.
 Therefore, buggy code in the Linux kernel cannot be identified simply
-by this age-based metric.
+by this age-based metric. \lois{In the analysis, remember to include the argument
+that a system can not be run exclusively on old code.}
 
 
 \begin{figure}
@@ -177,7 +184,8 @@ of the Linux kernel accounted for only 8.9\% of the total codebase, and containe
 merely 4 out of the 40 bugs (Figure \ref{fig:metrics_drivers}).
 This metric also proves to be difficult to use with the
 Linux kernel, since our results show that
-only 10.0\% of the kernel bugs could be detected.
+only 10.0\% of the kernel bugs could be detected.\lois{remember to cite the newer Palix
+study. Fewer driver bugs may be the result of a concentrated effort to improve}
 
 \textbf{Vulnerability profile.}
 %However, this led us to consider that perhaps
