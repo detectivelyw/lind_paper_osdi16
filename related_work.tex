@@ -4,14 +4,15 @@
 This section summarizes a number of previous security approaches
 that aim to ensure the safety of privileged code. %in user space and kernel space.
 These approaches include past efforts to better define safety metrics, and to quantify
-areas of risk in an OS kernel, key studies in the use of various virtualization
- techniques, as well as background information on technologies incorporated into
- Lind.
+areas of risk in an OS kernel, key studies in the use of various virtualization 
+techniques, as well as background information on technologies incorporated into Lind.
 
-\textbf{Safety metrics for evaluating kernel code risk.}
+\textbf{Safety metrics for evaluating software risk.}
+Quantitatively evaluating the risk of software is the first step towards the design of secure virtualization systems, 
+since it provides critical information on where the system is vulnerable and needs most protection. 
 Earlier approaches to quantifying risk
-in the OS kernel focused on identifying a correlation between certain
-kernel directories or modules and the presence of faults. For example,
+in software systems focused on identifying a correlation between 
+certain directories or module of the system and the presence of faults. For example,
 Palix found that the \texttt{drivers} directory in the Linux kernel contains the
 most faults, followed by HAL and \texttt{fs}~\cite{palix2011faults}. Similarly,
 Chou~\cite{PittSFIeld} showed that device drivers had
@@ -19,6 +20,9 @@ much higher error rates than other parts of the kernel, and are thus more vulner
 However, this component-focused approach does not necessarily
 provide effective detection and defense against kernel bugs, as our
 test of the Chou metric in Section~\ref{sec.metric} attests.
+
+\yiwen{I vote to take out the following paragraph, since the metrics mentioned there 
+are not closely related to what we are doing.}
 
 There are other approaches to identifying kernel vulnerabilities, some of
 which grew out of research in software engineering (code comprehension
@@ -54,9 +58,37 @@ of bugs are in the less-used paths.
 %Much work has been done in analyzing system faults using techniques in
 %software engineering. For example,
 
-\textbf{Virtualization.}
-Lind incorporates a number of virtualization techniques. This section details some
+\textbf{Design of virtualization systems.}
+Different techniques and approaches have been tried in the design of secure virtualization systems. 
+Lind incorporates a number of previous virtualization techniques, such as Library OSes. This section details some
 of the significant work relevant to the development of Lind.
+
+\textit{System Call Interposition} (SCI) provides
+%offers a number of properties that make it attractive to run applications
+secure execution of applications by exposing a minimal kernel surface.
+This approach usually enforces the userspace policies through a monitor process that
+interacts with the system call execution engine
+%for building sandboxes, though it can be error prone
+\cite{SCI-04}.
+Issues in SCI include the difficulty of appropriately replicating OS semantics,
+multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
+In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
+SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
+of a system call through the Lind's SafePOSIX re-creation to ensure safe POSIX API for the userspace applications.
+
+\textit{Software Fault Isolation} (SFI)
+provides sandboxing in which native
+instructions can only be executed if they do not violate the sandbox's
+constraints \cite{SFI:93}, and security policies are enforced through machine-level
+code analysis. In SFI, memory
+writes are protected and code jumps cannot access predefined memory of
+other programs to execute their code.
+Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
+Chrome browser that allows native executable code to run directly in a
+browser. NaCl prevents suspicious code
+from memory corruption or direct access to the underlying system
+resources. Lind adopts NaCl as one key component to ensure secure execution 
+of binary code. 
 
 \textit{Language-based virtualization.}
 Programming languages like Java, JavaScript, Lua~\cite{Lua}, and
@@ -142,32 +174,3 @@ sandbox. Unlike Lind, Drawbridge, Bascule or Haven
 do not have the sandbox environment that properly contains
 buggy or malicious behavior, and therefore could allow attackers
 to trigger zero-day vulnerabilities in the underlying kernel.
-
-%&\yanyan{please add comparison of Drawbridge/Bascule/Haven to Lind.}
-
-\textbf{System Call Interposition} (SCI) provides
-%offers a number of properties that make it attractive to run applications
-secure execution of applications by exposing a minimal kernel surface.
-This approach usually enforces the userspace policies through a monitor process that
-interacts with the system call execution engine
-%for building sandboxes, though it can be error prone
-\cite{SCI-04}.
-Issues in SCI include the difficulty of appropriately replicating OS semantics,
-multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
-In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
-SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
-of a system call through the Lind's reimplementation
-\yanyan{need to replace reimplementation} to ensure safe POSIX API for the userspace applications.
-
-\textbf{Software Fault Isolation} (SFI)
-provides sandboxing in which native
-instructions can only be executed if they do not violate the sandbox's
-constraints \cite{SFI:93}, and security policies are enforced through machine-level
-code analysis. In SFI, memory
-writes are protected and code jumps cannot access predefined memory of
-other programs to execute their code.
-Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
-Chrome browser that allows native executable code to run directly in a
-browser. NaCl prevents suspicious code
-from memory corruption or direct access to the underlying system
-resources.
