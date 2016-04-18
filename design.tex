@@ -1,32 +1,30 @@
 \section{Design Options for Secure Virtualization Systems}
 \label{sec.design}
 
-Providing essential system functionality without exposing privileged code is one of the
-primary challenges in the design of secure systems.
+Providing essential system functionality without exposing privileged code is one
+primary challenge in the design of secure systems.
 Currently, there are two basic approaches.
 One, called system call interposition (SCI), checks and passes system calls
 through to the underlying kernel. The other, which we call ``functionality
-re-creation," requires rebuilding system functionality with new code. In the
-following, we show that both methods are limited in their ability to
+re-creation," requires rebuilding system functionality with new code. In this
+section, we show that both methods are limited in their ability to
 prevent attacks in the kernel.
 Using our metric described in Section~\ref{sec.metric},
-we propose a new design scheme named ``Lock-in-Pop," which accesses only popular
+we then propose a new design scheme named ``Lock-in-Pop," which accesses only popular
  code paths through a very small trusted computer base, and utilizes
  functionality re-creation within a secure environment for complex implementations.
 
 \subsection{System Call Interposition (SCI)}
-SCI is the long-standing idea behind sandboxing systems like Janus
+SCI is the long-standing idea behind sandbox systems like Janus
 \cite{Janus0:96, Janus:99}. It relies on the underlying kernel
-to provide system functionality. To prevent attackers from undermining the system,
-SCI uses a system call filter to mediate requests
+to provide system functionality. A system call filter mediates requests
 from untrusted user code instead of allowing it to go directly to the kernel.
 The filter checks a predefined security policy to decide which system calls are
 allowed to pass to the underlying kernel, and which ones must be stopped.
 Figure \ref{fig:design_system_call_interposition} illustrates the general design
 of a system call interposition system. System administrators have direct access to
 setting and changing the security policies through a policy engine.
-This key part of the system would pose a critical security threat if compromised, thus making it
-one component of the trusted computing base.
+This key part of the system would pose a critical security threat if compromised.
 
 \begin{figure}%[h]
 \centering
@@ -51,14 +49,14 @@ The complexity of OS states makes this process difficult and can lead to
 inaccurate policy decisions.
 In addition, there are many indirect paths in the kernel that can be accessed.
 If security policy makers overlook those paths, it renders the
-system call interposition policy ineffective, as attackers will be able to
+policy ineffective, as attackers will be able to
 bypass the imposed security checks.
 Moreover, many side-effects of blocking
 certain system calls could affect the function of desired system calls.
 It is difficult for developers to fully understand the side-effects of all the
 system calls in an interface as complex as the UNIX API.
 For example, many applications that rely on \texttt{setuid} fail to check its return value.
-If \texttt{setuid} is blocked and fails, these applications will continue to function in a compromised state,
+If \texttt{setuid} fails, these applications will continue to function in a compromised state,
 with incorrect permissions and privileges.
 The above limitations make it very challenging to design and build a secure virtualization system using
 system call interposition alone.
@@ -80,9 +78,8 @@ full functionalities of an OS re-created in their codebase. We call such a desig
 \label{fig:design_functionality_reimplementation}
 \end{figure}
 
-The key of this design is to not fully rely on the underlying
-kernel for system functions. Instead, critical OS functions are re-written with new
-code. As illustrated in Figure \ref{fig:design_functionality_reimplementation},
+The key to this design is to not fully rely on the underlying
+kernel for system functions. As illustrated in Figure \ref{fig:design_functionality_reimplementation},
 this design re-creates its own system functionalities to provide to user code.
 When it has to %communicate with the kernel to
 access resources like memory, CPU, and disk storage, the system accesses the kernel directly with
@@ -97,10 +94,10 @@ and provides basic ABI functions to the OS library.
 
 Functionality re-creation provides a more realistic solution to building
 virtualization systems than earlier efforts, and offers rich functionality.
-However, hundreds of vulnerabilities in existing virtualization systems have still been
-reported over the past ten years~\cite{NVD}. One shortcoming of such systems is the size
-of the implemented components. To provide rich functions, systems using this design have
-introduced larger codebases and increased the size of their TCBs. In addition, the
+However, hundreds of vulnerabilities have been
+reported in existing virtualization systems over the past ten years~\cite{NVD}.
+One shortcoming of such systems is they often
+introduce large codebases and enlarged TCBs. In addition, the
 complex semantics of OS functions can easily result in bugs and vulnerabilities
 emerging during the re-creation process. Some of these vulnerabilities
 can directly cause a privilege escalation, which allows attackers to escape the sandbox
@@ -117,7 +114,7 @@ This type of problem can be fatal,
 as it can reach and trigger vulnerabilities in the underlying OS kernel.
 
 \subsection{Lock-in-Pop: Staying on the Beaten Path }
-A weakness of the previous approaches is the inevitable contact
+As discussed above, weakness of the previous approaches is the inevitable contact
 between the privileged kernel code and the untrusted application.
 By leveraging our key observation
 that ``popular, frequently-used kernel paths contain fewer bugs," we propose a design
@@ -142,18 +139,18 @@ functions that require contact with the OS kernel is re-created using
 memory-safe code and is contained within a sandbox. This approach has advantages
 over others that require modifications to
 the OS kernel (Section {\ref{sec.metric}). The isolation provided by placing
-``Lock-in-Pop'' in the userspace is also an added protection over functionality
-reimplemention. If a modified module in the OS kernel is compromised, it
-exposes kernel privileges that could allow attacks
+``Lock-in-Pop'' in the userspace is also an added protection over the functionality
+re-creation modules. Lock-in-Pop does not
+expose kernel privileges that could allow attacks
 in the underlying system and any applications in the userspace.
 
 As shown in Figure \ref{fig:design_safe_reimplementation}, the key to
-``Lock-in-Pop'' is to construct a set of safe system functions within
+``Lock-in-Pop'' is that it constructs a set of safe system functions within
 the library OS sandbox.
 The sandbox responds to system call requests and
 returns results to the user code, if the requests are granted.
 It is comprised of two parts: a sandbox kernel that provides access to basic but critical
-system calls, and a system functionality safe re-creation API that implements more
+system calls, and a safely re-created API to implement more
 complex calls, such as symbolic link system call.
 The sandbox kernel forms the only TCB of our library OS, and is kept
 extremely small and simple so that it is easy to verify its security.
@@ -163,10 +160,10 @@ and communicating with the network.
 %The kernel utilizes the most simplistic calls
 %possible with the most basic arguments.
 Complex system functionality is then built on top of the sandbox kernel using our
-safer re-creation interface. One important design rule is to only rely on the
-sandbox kernel API when trying to acquire hardware resources from the underlying OS kernel.
-The safe re-creation technique will then use those basic resources, such as memory allocations,
-network sockets, and file descriptors to construct a virtual system interface, which will be
+safer re-creation interface.
+The safe re-creation technique of sandbox kernel APIs will then use those basic
+resources, such as memory allocations,
+network sockets, and file descriptors to construct a more complex virtual system interface, which will be
 provided to untrusted user code.
 
 %With the system functionality safe reimplementation, unmodified user code is able to run on top of our designed system.

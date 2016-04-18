@@ -4,31 +4,29 @@
 For many years system designers and developers have had to deal with a common security issue --
 how to defend against threats hidden within the system's own code. Despite
  decades of effort, researchers still frequently uncover new flaws in operating
- system kernels. Such interactions
-are dangerous because, if triggered by
-interaction with untrusted programs, these
-bugs can lead to security threats like privilege escalation
+ system kernels. Such flaws are dangerous because, if triggered by an untrusted
+ program, these bugs can lead to security threats like privilege escalation
  [CVE-2016-0728], [CVE-2015-8660], denial of service [CVE-2015-8539], [CVE-2015-5364],
   and memory corruption [CVE-2014-9529].
 
-The search for an ideal way to protect this code has been hampered by limited
+The search for an ideal way to protect kernel code has been hampered by limited
 knowledge of the security impact of its interaction with user programs.
-A number of strategies have been tried. One prevailing belief was that virtual
+A number of strategies have been attempted. One prevailing belief was that virtual
 machines could provide enough isolation to execute programs safely.
 However, when Virtualbox reports 40 vulnerabilities \cite{Virtualbox-Vulnerabilities},
- and more than 100 bugs have been found in VMware Workstation
+ and more than 100 bugs have been found in VMware Workstation,
 it suggests that isolation alone may not be enough. Other researchers have looked
- to the development of
- metrics capable of pinpointing bugs, and, therefore, securing the most
- vulnerable areas.\cite{PittSFIeld, ozment2006milk} As these examples indicate, the design of
- secure systems has been somewhat “hit-or-miss.” Observations may lead to
+ to the development of metrics capable of pinpointing bugs, and, therefore,
+securing the most vulnerable areas\cite{PittSFIeld, ozment2006milk}. As these
+examples indicate, the design of secure systems has been somewhat “hit-or-miss.”
+ Observations may lead to
  the reduction of specific threats, but not to a reproducible, broadly applicable,
 quantitative design solution.
 
-With this paper, we move one step closer to that goal. We start with the proposition
- that code found in popular paths, associated with frequently-used programs,
+With this paper, we move one step closer to identifying such a solution. We start
+ with the proposition that code found in popular paths, associated with frequently-used programs,
 has less potential risk of bugs than code in less-used parts of the kernel.
-Therefore, we should be able to determine which lines of code can be executed
+Therefore, we will be able to determine which lines of code can be executed
  safely within the OS kernel. We performed a quantitative analysis of resilience
   to flaws in two versions of the Linux kernel, and
 found that only 2.5\% - 4.0\% of the bugs were present in popular code paths,
@@ -40,12 +38,12 @@ Linux kernel versions that we tested.
 
 Guided by this knowledge, we propose a new design scheme for a secure virtual machine that
 accesses only the popular code paths through a very small trusted computing base.
-Named \emph{Lock-in-Pop}, because it locks out kernel access to all code except
-that found in paths associated with frequently-used popular programs, the scheme
- requires an interface built only on basic OS primitives. This is sufficient to
-  perform operations for file systems, such as
-networking, threading, and memory management, and other required functions.
-For complex functionalities,  \emph{Lock-in-Pop}, re-creates system calls in
+We gave it the name \emph{Lock-in-Pop}, because it locks out kernel access to all code except
+that found in paths associated with frequently-used popular programs. The design
+requires an interface built only on basic OS primitives. This is sufficient to
+perform operations for file systems, such as
+networking, threading, memory management, and other required functions.
+For complex functionalities,  \emph{Lock-in-Pop} re-creates system calls in
 a memory-safe programming language sandbox.
 
 To demonstrate the viability of \emph{Lock-in-Pop} we use it to implement a new
@@ -54,17 +52,17 @@ prototype virtual machine that can offer enhanced security without sacrificing
 (NaCl) and Seattle's Repy. NaCl serves as a computational module that isolates
 binaries, providing memory
 safety for a legacy program like Apache. It also passes system calls invoked by
- the program to the operating system interface,called SafePOSIX. This interface,
-  isolated within the Repy
-sandbox, ensures access to only popular paths, while the small (8K LOC) sandbox
- kernel allows complex operating system functionalities to be built on top of the machine.
+the program to the operating system interface, called SafePOSIX. This interface,
+isolated within the Repy
+sandbox, ensures access to only popular paths. However, the small (8K LOC) sandbox
+kernel allows complex operating system functionalities to be built on top of the machine.
 
 To test Lind's effectiveness, we replicated 35 kernel bugs in the Linux kernel
 version 3.14.1,
 and attempted to trigger them in seven other virtualized environments,
 including VirtualBox, VMWare Workstation,
 Docker, LXC, KVM, QEMU, and Graphene.
-Our results show that applications in Lind were least likely to trigger kernel bugs,
+Our results show that applications in Lind were the least likely to trigger kernel bugs,
 with only one out of the 35 (2.9\%) kernel vulnerabilities tested for being triggered.
 
 In summary, the main contributions of this paper are as follows:
@@ -88,7 +86,7 @@ The need for complex functionality is addressed by re-creating riskier systems c
 in a memory-safe programming language within a secure sandbox.
 
 \item
-We build a prototype virtual machine, Lind, using the \emph{Lock-in-Pop} principles,
+We build a prototype virtual machine, Lind, using the \emph{Lock-in-Pop} design,
  and test its effectiveness against seven other security systems. We find that
  Lind triggers only one
 (2.9\%) of the 35 zero day bugs we had targeted,
