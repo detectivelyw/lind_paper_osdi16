@@ -1,32 +1,30 @@
 \section{Related Work}
 \label{sec.related_work}
 
-This section summarizes a number of previous security approaches
-that aim to ensure the safety of privileged code. %in user space and kernel space.
-These approaches include past efforts to better define safety metrics, and to quantify
-areas of risk in an OS kernel, key studies in the use of various virtualization 
+This section summarizes a number of previous approaches to ensuring the safety of
+ privileged code. %in user space and kernel space.
+The literature referenced in this section includes past efforts to better define safety metrics,
+and to quantify areas of risk in an OS kernel, key studies in the use of various virtualization
 techniques, as well as background information on technologies incorporated into Lind.
 
 \textbf{Safety metrics for evaluating software risk.}
-Quantitatively evaluating the risk of software is the first step towards the design of secure virtualization systems, 
-since it provides critical information on where the system is vulnerable and needs most protection. 
-Earlier approaches to quantifying risk
-in software systems focused on identifying a correlation between 
-certain directories or module of the system and the presence of faults. For example,
-Palix found that the \texttt{drivers} directory in the Linux kernel contains the
-most faults, followed by HAL and \texttt{fs}~\cite{palix2011faults}. Similarly,
-Chou~\cite{PittSFIeld} showed that device drivers had
-much higher error rates than other parts of the kernel, and are thus more vulnerable.
+\lois{I see no reason to repeat info on Chou, and Palix. This is all documented
+in Section 3) As we discussed in Section~\ref{sec.metric}, one safety metric
+approach looked at identifying a correlation between
+certain directories or module of the system and the presence of bugs (Chou~\cite{PittSFIeld},
+Palix~\cite{palix2011faults}.)
 However, this component-focused approach does not necessarily
-provide effective detection and defense against kernel bugs, as our
-test of the Chou metric in Section~\ref{sec.metric} attests.
+provide effective detection and defense against kernel bugs, as our test of the
+Chou metric in Section~\ref{sec.metric} attests.
 
-\yiwen{I vote to take out the following paragraph, since the metrics mentioned there 
-are not closely related to what we are doing.}
+\yiwen{I vote to take out the following paragraph, since the metrics mentioned there
+are not closely related to what we are doing.} \lois{I think it needs to stay,
+because these are the traditional factors about code comprehension mentioned in a
+lot of the literature}
 
 There are other approaches to identifying kernel vulnerabilities, some of
-which grew out of research in software engineering (code comprehension
-in particular). Alhazmi~\cite{alhazmi2008application}
+which grew out of research in complexity and code comprehension.
+Alhazmi~\cite{alhazmi2008application}
 used metrics like defect density and fault exposure ratio to describe the
 vulnerability discovery process. Zimmermann~\cite{zimmermann2010searching}
 described metrics like code complexity, and code churn (the total added/modified/
@@ -39,29 +37,30 @@ these prior approaches can be useful for determining readiness for release, and
 evaluating the risk of vulnerability exploitation,
 they do not provide insights for secure system design.
 
-Prior work has also examined the evolution of kernel defects. For example,
-Ozment~\cite{ozment2006milk} and Li~\cite{li2006have} have
-both studied how security issues evolve over
-time. Ozment reported a decrease in the rate at which new vulnerabilities
-are reported by studying the age of vulnerabilities in OpenBSD.
+Lastly, prior work has also examined the evolution of kernel defects over time, including
+Ozment~\cite{ozment2006milk} (see Section~\ref{sec.metric} and Li~\cite{li2006have}.
 Li found a decrease in memory-related
-bugs, and identified semantic bugs being the dominant root causes.  
+bugs, and identified semantic bugs as being the dominant root cause of these
+defects.
 % \lois{this sentence about Li says nothing and reads like
 % nonsense. He reported an increase in the bugs by studying the number of bugs?
 %I checked the paper but had no clue what this referred to}
 %\yiwen{I fixed it. Please check.}
-However, neither of these approaches provided data
+However, unlike Lind, neither of these approaches provide data
 on how vulnerabilities are distributed.
-In contrast, guided by its design metric, Lind can assess that the primary locations
-of bugs are in the less-used paths.
 
 %Much work has been done in analyzing system faults using techniques in
 %software engineering. For example,
 
+\lois{I stopped working on this because I see a fundamental problem. A related work
+generally mentions the author, as we have done above. What follows starting from this
+part of the section reads like the component descriptions that used to be in the paper.
+We need to talk about this}
 \textbf{Design of virtualization systems.}
-Different techniques and approaches have been tried in the design of secure virtualization systems. 
-Lind incorporates a number of previous virtualization techniques, such as Library OSes. This section details some
-of the significant work relevant to the development of Lind.
+Lind incorporates a number of previous virtualization techniques, such as Library OSes.
+This section details some
+of the significant work relevant to the development of today's virtual machines,
+including Lind.
 
 \textit{System Call Interposition} (SCI) provides
 %offers a number of properties that make it attractive to run applications
@@ -71,7 +70,8 @@ interacts with the system call execution engine
 %for building sandboxes, though it can be error prone
 \cite{SCI-04}.
 Issues in SCI include the difficulty of appropriately replicating OS semantics,
-multi-threaded applications that cause race conditions, and indirect paths to resources that are often overlooked.
+multi-threaded applications that cause race conditions, and indirect paths to
+resources that are often overlooked.
 In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
 SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
 of a system call through the Lind's SafePOSIX re-creation to ensure safe POSIX API for the userspace applications.
@@ -87,8 +87,8 @@ Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
 Chrome browser that allows native executable code to run directly in a
 browser. NaCl prevents suspicious code
 from memory corruption or direct access to the underlying system
-resources. Lind adopts NaCl as one key component to ensure secure execution 
-of binary code. 
+resources. Lind adopts NaCl as one key component to ensure secure execution
+of binary code.
 
 \textit{Language-based virtualization.}
 Programming languages like Java, JavaScript, Lua~\cite{Lua}, and
