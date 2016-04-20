@@ -1,7 +1,7 @@
 \section{Developing a Quantitative Metric for Evaluating Kernel Security}
 \label{sec.metric}
 
-By understanding how lines of code in the kernel are used, we can predict their
+By understanding how lines of code in the kernel are used, we can better predict their
 likelihood to contain security flaws. In this section, we formulate and test
 a quantitative evaluation metric for securing the OS kernel.
 This metric is based on the idea that kernel paths executed by popular applications
@@ -21,7 +21,7 @@ the Linux kernel in our study.
 %We used two different versions of Linux kernel, because we want to first establish
 %the foundation of our new design with one dataset,
 We used version 3.13.0 to test our proposed metric, and evaluated the prototype system based on this
- metric with version 3.14.1 in
+ metric using version 3.14.1 in
 Section~\ref{sec.evaluation}. Obtaining results from two different datasets that both validate
 our idea ensures that our security metric is unbiased. Furthermore,
 it demonstrates the metric is applicable
@@ -55,9 +55,7 @@ With the two strategies, we obtained a profile of the lines of
 kernel code (publicly available at~\cite{Lind}) that defined our
 popular kernel paths.
 
-\textbf{Reachable kernel paths.} \lois{I am fine with this shift. However, was
-anything else in that "Vulnerability Analysis" removed that we needed?} 
-\yiwen{I think it should be fine.}
+\textbf{Reachable kernel paths.}
 There are certain paths in the kernel, such as unloaded drivers, that are
 unreachable and unused.
 To make sure that our analysis reflects bug distribution in all reachable paths,
@@ -154,11 +152,11 @@ granularity, we found that even popular programs used parts of as many as
 32 files that contained flaws. Yet, only one bug was triggered by those programs.
 In addition, common programs tested at this level also executed 36 functions
 that were later patched to fix security
-flaws, indicating the need to localize bugs at a finer granularity. 
-Researchers have studied metrics with a finer granularity than file level, which work 
-at the lines-of-code level. 
-We now discuss two such metrics, and use our Linux kernel version with the 40 bugs dataset 
-to conduct comparison between our popular-paths metric with them. 
+flaws, indicating the need to localize bugs at a finer granularity.
+A few researchers have studied metrics at a finer granularity than file level, which
+is at the lines-of-code.
+We now discuss two such metrics, and use our Linux kernel version and 40 bugs dataset
+to conduct a comparison between them and our popular-paths metric.
 
 \begin{figure}
 \centering
@@ -167,22 +165,22 @@ to conduct comparison between our popular-paths metric with them.
 \label{fig:bug_density}
 \end{figure}
 
-Earlier work by Ozment, et al.~\cite{ozment2006milk} demonstrated that code that
+Ozment, et al.~\cite{ozment2006milk} demonstrated that code that
 had been around longer in the BSD kernel tended to have fewer bugs.
 They determined that a significant extent (61\%) of the reported
 vulnerabilities were
 %``foundational," meaning they were
 introduced prior to the initial version studied.
 %They also reported these vulnerabilities have a median lifetime of at least 2.6 years.
-We tested Ozment's metric on our Linux kernel code and 40 bug dataset.
-The code wa divided into five different age groups.
+To test Ozment's metric using our Linux code and bug dataset,
+we separated the code into five different age groups.
 Our results (Figure \ref{fig:bug_density}) showed a substantial
-number of bugs located in each group, not just in the newer code.
+number of bugs located in each group, and not just in the newer code.
 %No evident cluster patterns among bugs in any particular age group could be identified.
 Therefore, buggy code in the Linux kernel cannot be identified simply
 by this age-based metric.
 In addition, this metric would seem to have limited use for designing a secure
-virtualization system. New code is frequently needed because it can provide
+virtualization system. New code is frequently needed to provide
 additional functionality,
 fix existing problems in the form of patches, and add new technology to improve
 user experience. A system could not run very long exclusively on old code.
@@ -193,20 +191,20 @@ having much higher error rates.
 Applying this metric on our dataset, we found that the driver code in our version
 of the Linux kernel accounted for only 8.9\% of the total codebase, and contained
 merely 4 out of the 40 bugs (Figure \ref{fig:bug_density}).
-One reason for this relatively low number is that, after the study was published,
-designers focused their efforts on improving driver code. Palix \cite{palix2011faults}
-found that with development of the Linux kernel,
+One reason for this relatively low number is that, after the Chou study was published,
+designers focused efforts on improving driver code. Palix \cite{palix2011faults}
+found that, with development of the Linux kernel,
 \texttt{drivers} now have lower fault rate than that of other directories,
 such as \texttt{arch} and \texttt{fs}.
 However, this metric also proves to be difficult to use with the
 Linux kernel, since our results show that
 only 10.0\% of the kernel bugs could be detected.
 
-To summarize, we demonstrated that both the age-of-code metric and 
-the drivers metric have weak correlation between the occurrence of bugs 
+To summarize, we demonstrated that both the age-of-code metric and
+the drivers metric have weak correlation between the occurrence of bugs
 and areas of code they identify. By contrast, our metric of popular
 kernel paths provides an effective and statistically significant
 %($\alpha=0.01$, $\rho=0.0015$)
 means for predicting where in the kernel exploitable flaws
 will likely be found. For the remainder of the paper, we will
-focus on using this result to design and build secure virtualization systems. 
+focus on using this result to design and build secure virtualization systems.
