@@ -45,9 +45,32 @@ access to the minimal set of system call API needed to build general
 computational functionality. Repy allows
 access only to the popular portions of the OS kernel through 33 basic API
 functions, including 13 network functions, 6 file functions, 6 threading functions,
-and 8 miscellaneous functions~\cite{Repy-10, RepyKernel}. The code is
-written using style guidelines designed to ease security auditing
- of the code~\cite{style}.
+and 8 miscellaneous functions (Table \ref{table:RepyKernel}) 
+~\cite{Repy-10, RepyKernel}. 
+The code is written using style guidelines designed to ease security auditing 
+of the code~\cite{style}.
+
+\begin{table}
+\centering
+\caption {Repy sandbox kernel functions that support Lind's SafePOSIX re-creation.}
+
+  \begin{tabular}{ | p{2.5cm} | p{4.5cm} |}
+  \hline
+  \textbf{Repy Function} & \textbf{Available System Calls}  \\ \hline
+
+Networking & \emph{gethostbyname, openconnection, getmyip, socket.send, socket.receive, socket.close,
+listenforconnection, tcpserversocket.getconnection, tcpserversocket.close, sendmessage, listenformessage,
+udpserversocket.getmessage, and udpserversocket.close.} \\ \hline
+
+I/O Operations & \emph{openfile, file.close, file.readat, file.writeat, listfiles, and removefile.} \\ \hline
+
+Threading & \emph{createlock, sleep, lock.acquire, lock.release, createthread, and getthreadname.} \\ \hline
+
+Miscellaneous Functions & \emph{getruntime, randombytes, log, exitall, createvirtualnamespace,
+virtualnamespace.evaluate, getresources, and getlasterror.}  \\ \hline
+    \end{tabular}
+    \label{table:RepyKernel}
+\end{table}
 
 The Repy kernel code provides a solid foundation for our secure virtual
 machine. It has been audited by a professional penetration tester and, since 2010,
@@ -58,7 +81,7 @@ hundreds of parties. To date no security flaws have been found in the sandbox
 kernel. Having a small, easily auditable piece of code thus helps to reduce the
 risk of such occurrences.
 
-\subsection{Enhanced Safety in Call Handling}
+\subsection{Enhanced Safety in Call Handling with SafePOSIX Re-creation}
 
 However, Lind's security does not rely solely on Repy's
 safety record.
@@ -99,13 +122,15 @@ and the OS kernel. The re-creation is safe
 because the reconstructed calls are isolated in a sandbox, and its code is written
  in a memory-safe programming language.
 
-Here is an example of how this re-creation would work with the symbolic link function.
-If there is a bug in this function, rather than rely on the kernel code paths
-for symbolic links, Lind implements the incorrect behavior. It might create a symbolic link
-with a deleted file.\lois{The example is not exactly clear. Please explain}
-This denies the code the privileged access to the system the OS kernel would have.
-As a result, instead of creating a security issue, the application is simply denied access
-to the file system.
+Here is an example of how this re-creation would work with the symbolic link function. 
+Instead of relying on the underlying kernel to create symbolic links between real files 
+in the host file system, Lind builds and maintains its own metadata to represent a virtual symbolic link 
+between files within Lind's file system. In this case, if there is a bug in this symbolic link function, 
+such as creation of a link with a deleted file, the bug will be contained within Lind's re-creation. 
+As a result, instead of creating a security issue, the application is denied privileged access
+to the host OS kernel. 
+Therefore, attackers will not be able to leverage a bug within the symbolic link function to 
+exploit the host kernel.  
 
 The Lind design offers a promising new approach to OS kernel code protection.
  To determine if the ideas behind Lind were valid, we
