@@ -8,8 +8,6 @@ and to quantify areas of risk in an OS kernel, key studies in the use of various
 techniques, as well as background information on technologies incorporated into Lind.
 
 \textbf{Safety metrics for evaluating software risk.}
-\lois{I see no reason to repeat info on Chou, and Palix. This is all documented
-in Section 3} 
 As we discussed in Section~\ref{sec.metric}, one safety metric
 approach looked at identifying a correlation between
 certain directories or module of the system and the presence of bugs (Chou~\cite{PittSFIeld},
@@ -17,11 +15,6 @@ Palix~\cite{palix2011faults}.)
 However, this component-focused approach does not necessarily
 provide effective detection and defense against kernel bugs, as our test of the
 Chou metric in Section~\ref{sec.metric} attests.
-
-\yiwen{I vote to take out the following paragraph, since the metrics mentioned there
-are not closely related to what we are doing.} \lois{I think it needs to stay,
-because these are the traditional factors about code comprehension mentioned in a
-lot of the literature}
 
 There are other approaches to identifying kernel vulnerabilities, some of
 which grew out of research in complexity and code comprehension.
@@ -57,35 +50,32 @@ on how vulnerabilities are distributed.
 generally mentions the author, as we have done above. What follows starting from this
 part of the section reads like the component descriptions that used to be in the paper.
 We need to talk about this}
+\yiwen{I revised the following texts, please take a look.}
 \textbf{Design of virtualization systems.}
 Lind incorporates a number of previous virtualization techniques, such as Library OSes.
 This section details some
 of the significant work relevant to the development of today's virtual machines,
 including Lind.
 
-\textit{System Call Interposition} (SCI) provides
-%offers a number of properties that make it attractive to run applications
-secure execution of applications by exposing a minimal kernel surface.
-This approach usually enforces the userspace policies through a monitor process that
-interacts with the system call execution engine
-%for building sandboxes, though it can be error prone
-\cite{SCI-04}.
-Issues in SCI include the difficulty of appropriately replicating OS semantics,
-multi-threaded applications that cause race conditions, and indirect paths to
-resources that are often overlooked.
-In addition, system calls that are denied can cause inconsistencies~\cite{Problems-SCI}.
+\textit{System Call Interposition} (SCI) is a technique tried by many researchers 
+to develop early virtualization systems. 
+Goldberg, et al. developed Janus \cite{Janus0:96, Janus:99}, a filtering-based SCI system. 
+The key idea is to adopt a user-level ``monitor'' that filter system call requests, based on 
+a user-specified policy. Later on, Garfinkel, et al. proposed a delegating architecture for secure system call interposition, 
+called Ostia \cite{SCI-04}. Their system introduced emulation libraries in the user space 
+to mediate sensitive system calls issued by the sandboxed process. 
+Researchers have realized that many limitations come with SCI. 
+Garfinkel has examined and discussed many important issues and problems \cite{Problems-SCI} related to SCI systems.
 SCI is similar to the Lind isolation mechanism. However, a key difference is the actual execution
-of a system call through the Lind's SafePOSIX re-creation to ensure safe POSIX API for the userspace applications.
+of a system call through Lind's SafePOSIX re-creation to ensure safe POSIX API for the userspace applications. 
+In SCI systems, there is no such re-creation module. 
 
-\textit{Software Fault Isolation} (SFI)
-provides sandboxing in which native
-instructions can only be executed if they do not violate the sandbox's
-constraints \cite{SFI:93}, and security policies are enforced through machine-level
-code analysis. In SFI, memory
-writes are protected and code jumps cannot access predefined memory of
-other programs to execute their code.
-Native Client (NaCl) \cite{NaCl-09} is an SFI system for the
-Chrome browser that allows native executable code to run directly in a
+\textit{Software Fault Isolation} (SFI) is another widely-used technique 
+to build virtual machines. 
+Wahbe, et al. \cite{SFI:93} presented a software approach to implementing 
+fault isolation within a single address space. 
+Yee, et al. from Google developed Native Client (NaCl) \cite{NaCl-09}, 
+an SFI system for the Chrome browser that allows native executable code to run directly in a
 browser. NaCl prevents suspicious code
 from memory corruption or direct access to the underlying system
 resources. Lind adopts NaCl as one key component to ensure secure execution
@@ -102,13 +92,8 @@ still pose a threat~\cite{JavaBugs, Java-Lessons}.
 Any bug or failure in a programming language virtual
 machine is usually fatal. In contrast, the main component of Lind
 is built using Repy, which is a programming language with a very small TCB.
-This enhances the security of privileged code due to fewer LOC, \yanyan{should
-we mention these fewer LOC are in common paths?} which in
-turn reduces the number of potential bugs or weaknesses.
-%\lois{OK, what does the TCB have to do with these languages? My
-%question still stands. How does the last sentence relate to programming
-%languages}
-%\yiwen{I think it is fixed now.}
+This enhances the security of privileged code due to fewer LOC in the popular kernel paths, 
+which in turn reduces the number of potential bugs or weaknesses.
 
 \textit{OS virtualization}
 techniques include
@@ -125,21 +110,10 @@ vulnerabilities of software and configuration risks. Lind avoids such restrictio
 
 \textit{Library OSes}
 allow applications to efficiently obtain the benefits of virtual machines
-by refactoring a traditional OS kernel into an application library.
-%\lois{HOW?}
-%\yiwen{fixed.}
-%including security isolation, host platform compatibility, and
-%migration.
-%Libra \cite {Libra} is an example of a library OS that allows
-%applications to customize their OSs within VMs.
-%This solution is similar to the exokernel approach where a small trusted kernel
-% is separated from the untrusted libraries
-%that function as an abstraction layer between the applications and the underlying hardware.
-%Libra utilizes a hypervisor instead of the exokernel to deliver efficient
-%portability and performance. \lois{Ok..so what is the connection}
-%
-Drawbridge \cite{Drawbridge-11} is a library OS that uses picoprocesses
-(lightweight containers), a security monitor (to enforce rules),
+by refactoring a traditional OS kernel into an application library. 
+Porter, et al. developed Drawbridge \cite{Drawbridge-11}, 
+a library OS that uses picoprocesses (lightweight containers), 
+a security monitor (to enforce rules),
 and a library OS to present a Windows persona for %a wide variety of
 Windows applications. Similar to Lind,
 it restricts access from usermode to host OS through a number
@@ -149,27 +123,19 @@ of operations that pass through the security monitor.
 %This approach brings many of the benefits of VM based temporal,
 %spatial and fault isolation properties to a per-process level.
 %
-Bascule \cite{Bascule}, an architecture for library OS extensions
+Baumann, et al. presented Bascule \cite{Bascule}, an architecture for library OS extensions
 based on Drawbridge, allows application behavior to be customized by
-extensions loaded at runtime.
-Graphene \cite{Graphene-14} is a library OS system that
-executes both single and
-multi-process applications with low performance overheads.
-%It broadens the library OS paradigm to support secure, multi-process
-%APIs, such as copy-on-write fork, signals, and System V IPC.
-Haven \cite{Haven} uses a library OS to implement
+extensions loaded at runtime. Later on, they further extended their work and developed Haven \cite{Haven},
+which uses a library OS to implement
 shielded execution of unmodified server applications
 in an untrusted cloud host.
-%Haven leverages the hardware protection of
-%Intel SGX to defend against
-%privileged code and physical attacks, such as memory probes, but also
-%addresses the dual challenges of
-%executing unmodified legacy binaries and protecting them from a
-%malicious host.
+Tsai, et al. developed Graphene \cite{Graphene-14}, a library OS system that
+executes both single and
+multi-process applications with low performance overheads.
 
 While library OSes rely extensively on
 the underlying kernels to perform system functions,
-Lind reimplements complex OS functions through memory-safe Repy
+Lind re-creates complex OS functions through memory-safe Repy
 code, relying on only a limited set of system functions from the Repy
 sandbox. Unlike Lind, Drawbridge, Bascule or Haven
 do not have the sandbox environment that properly contains
