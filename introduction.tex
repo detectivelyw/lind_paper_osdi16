@@ -5,7 +5,7 @@ For many years system designers and developers have had to deal with a common se
 how to defend against threats hidden within the system's own code. Despite
  decades of effort, researchers still frequently uncover new flaws in operating
  system kernels. Such flaws are dangerous because, if triggered by an untrusted
- program, these bugs can lead to security threats like privilege escalation
+ program, these bugs can lead to such security threats as privilege escalation
  [CVE-2016-0728], [CVE-2015-8660], denial of service [CVE-2015-8539], [CVE-2015-5364],
   and memory corruption [CVE-2014-9529].
 
@@ -16,8 +16,8 @@ machines could provide enough isolation to execute programs safely.
 However, when Virtualbox reports 40 vulnerabilities \cite{Virtualbox-Vulnerabilities},
  and more than 100 bugs have been found in VMware Workstation,
 it suggests that isolation alone may not be enough. Other researchers have looked
- to the development of metrics capable of pinpointing bugs, and, therefore,
-securing the most vulnerable areas\cite{PittSFIeld, ozment2006milk}. As these
+ to the development of metrics capable of pinpointing bugs, and,
+securing just those vulnerable areas\cite{PittSFIeld, ozment2006milk}. As these
 examples indicate, the design of secure systems has been somewhat “hit-or-miss.”
  Observations may lead to
  the reduction of specific threats, but not to a reproducible, broadly applicable,
@@ -26,20 +26,19 @@ quantitative design solution.
 With this paper, we move one step closer to identifying such a solution. We start
  with the proposition that code found in popular paths, associated with frequently-used programs,
 has less potential risk of bugs than code in less-used parts of the kernel.
-Therefore, we will be able to determine which lines of code can be executed
- safely within the OS kernel. We performed a quantitative analysis of resilience
+Therefore, we can determine which lines of code can be safely executed
+ within the OS kernel. We performed a quantitative analysis of resilience
   to flaws in two versions of the Linux kernel, and
 found that only 2.5\% - 4.0\% of the bugs were present in popular code paths,
 despite these paths accounting for nearly 32.2\% - 34.5\% of the total reachable kernel code.
 When we ran the same study on the same Linux kernel versions using two other metrics
 (Chou \cite{PittSFIeld} and Ozment \cite{ozment2006milk}),
-we found them less effective at predicting the location of zero-day bugs in the
-Linux kernel versions that we tested.
+we found them less effective at predicting the location of zero-day bugs.
 
 Guided by this knowledge, we propose a new design scheme for a secure virtual machine that
 accesses only the popular code paths through a very small trusted computing base.
-We gave it the name \emph{Lock-in-Pop}, because it locks out kernel access to all code except
-that found in paths associated with frequently-used popular programs. The design
+We gave it the name \emph{Lock-in-Pop}, because it locks kernel access to only code
+associated with popular programs. The design
 requires an interface built only on basic OS primitives. This is sufficient to
 perform operations for file systems, such as
 networking, threading, memory management, and other required functions.
@@ -63,7 +62,7 @@ and attempted to trigger them in seven other virtualized environments,
 including VirtualBox, VMWare Workstation,
 Docker, LXC, KVM, QEMU, and Graphene.
 Our results show that applications in Lind were the least likely to trigger kernel bugs,
-with only one out of the 35 (2.9\%) kernel vulnerabilities tested for being triggered.
+with only one out of the 35 (2.9\%) vulnerabilities tested for being triggered.
 
 In summary, the main contributions of this paper are as follows:
 
