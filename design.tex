@@ -1,7 +1,7 @@
 \section{Design Options for Secure Virtualization Systems}
 \label{sec.design}
 
-Providing essential system functionality without exposing privileged code is one
+Providing essential system functionality without exposing privileged code is a
 primary challenge in the design of secure systems.
 Currently, there are two basic approaches.
 One, called system call interposition (SCI), checks and passes system calls
@@ -24,7 +24,6 @@ allowed to pass to the underlying kernel, and which ones must be stopped.
 Figure \ref{fig:design_system_call_interposition} illustrates the general design
 of a system call interposition system. System administrators have direct access to
 setting and changing the security policies through a policy engine.
-This key part of the system would pose a critical security threat if compromised.
 
 \begin{figure}%[h]
 \centering
@@ -50,12 +49,12 @@ inaccurate policy decisions.
 In addition, there are many indirect paths in the kernel that can be accessed.
 If security policy makers overlook those paths, it renders the
 policy ineffective, as attackers will be able to
-bypass the imposed security checks.
-Moreover, many side-effects of blocking
-certain system calls could affect the function of desired system calls.
+bypass security checks.
+Moreover, blocking
+certain system calls could affect necessary functionality.
 It is difficult for developers to fully understand the side-effects of all the
 system calls in an interface as complex as the UNIX API.
-For example, many applications that rely on \texttt{setuid} fail to check its return value.
+For example, many applications rely on \texttt{setuid} fail to check its return value.
 If \texttt{setuid} fails, these applications will continue to function in a compromised state,
 with incorrect permissions and privileges.
 The above limitations make it very challenging to design and build a secure virtualization system using
@@ -65,11 +64,11 @@ system call interposition alone.
 Systems such as  Drawbridge \cite{Drawbridge-11},
  Bascule \cite{Bascule}, and Graphene \cite{Graphene-14} can
 provide richer functionality and run more complex programs than most systems built
-with SCI because they have their own
+with SCI alone because they have their own
 interfaces and libraries. Some virtualization
 systems, such as OS VM systems VirtualBox, and VMWare Workstation, even have the
-full functionalities of an OS re-created in their codebase. We call such a design
-``functionality re-creation."
+full functionality of an OS re-created in their codebase. We label such a design
+as ``functionality re-creation."
 
 \begin{figure}%[h]
 \centering
@@ -93,31 +92,30 @@ Platform Adaptation Layer (PAL)  that has access to the kernel
 and provides basic ABI functions to the OS library.
 
 Functionality re-creation provides a more realistic solution to building
-virtualization systems than earlier efforts, and offers rich functionality.
+virtualization systems than earlier efforts.
 However, hundreds of vulnerabilities have been
 reported in existing virtualization systems over the past ten years~\cite{NVD}.
-One shortcoming of such systems is they often
+Such systems often
 introduce large codebases and enlarged TCBs. In addition, the
-complex semantics of OS functions can easily result in bugs and vulnerabilities
-emerging during the re-creation process. Some of these vulnerabilities
+complex semantics of OS functions can easily lead to emergence of bugs during
+the re-creation process. Some of these vulnerabilities
 can directly cause a privilege escalation, which allows attackers to escape the sandbox
 and execute arbitrary code on the host OS.
 For example, a vulnerability in VMWare's codebase caused by buffer overflows in the VIX
-API allowed local users to escape the guest VM and
+API allowed local users to
 gain privilege to execute arbitrary code in the host
 OS, even shellcode to access the kernel of the host OS~\cite{CVE-2008-2100}.
 
 Even operations that are considered
 legal and harmless in the guest OS may open up risky system call paths in the underlying
-host OS and cause a problem.
-This type of problem can be fatal,
-as it can reach and trigger vulnerabilities in the underlying OS kernel.
+host. This type of problem can be fatal,
+as it can reach and trigger vulnerabilities in the underlying kernel.
 
 \subsection{Lock-in-Pop: Staying on the Beaten Path }
-As discussed above, weakness of the previous approaches is the inevitable contact
-between the privileged kernel code and the untrusted application.
+As discussed above, a weakness of the previous approaches is the inevitable contact
+between the privileged kernel code and an untrusted application.
 By leveraging our key observation
-that ``popular, frequently-used kernel paths contain fewer bugs," we propose a design
+that ``popular kernel paths contain fewer bugs," we propose a design
 in which all code, including the complex part
 of the operating system interface, access only
 popular kernel paths through a small TCB. As it ``locks" all functionality
@@ -139,19 +137,19 @@ functions that require contact with the OS kernel is re-created using
 memory-safe code and is contained within a sandbox. This approach has advantages
 over others that require modifications to
 the OS kernel (Section {\ref{sec.metric}). The isolation provided by placing
-``Lock-in-Pop'' in the userspace is also an added protection over the functionality
-re-creation modules. Lock-in-Pop does not
+``Lock-in-Pop'' in the userspace is also an added protection over earlier designs.
+ Lock-in-Pop does not
 expose kernel privileges that could allow attacks
 in the underlying system and any applications in the userspace.
 
-As shown in Figure \ref{fig:design_safe_reimplementation}, the key to
-``Lock-in-Pop'' is that it constructs a set of safe system functions within
+As shown in Figure \ref{fig:design_safe_reimplementation},
+``Lock-in-Pop'' constructs a set of safe system functions within
 the library OS sandbox.
-The sandbox responds to system call requests and
-returns results to the user code, if the requests are granted.
-It is comprised of two parts: a sandbox kernel that provides access to basic but critical
+The sandbox responds to system call requests, if the requests are granted, and
+returns results to the user code.
+It is comprised of two parts: a sandbox kernel that provides access to basic, but critical
 system calls, and a safely re-created API to implement more
-complex calls, such as symbolic link system call.
+complex calls, such as a symbolic link system call.
 The sandbox kernel forms the only TCB of our library OS, and is kept
 extremely small and simple so that it is easy to verify its security.
 The sandbox code provides an API that performs a few critical system calls with
@@ -161,7 +159,7 @@ and communicating with the network.
 %possible with the most basic arguments.
 Complex system functionality is then built on top of the sandbox kernel using our
 safer re-creation interface.
-The safe re-creation technique of sandbox kernel APIs will then use those basic
+The re-created APIs will then use those basic
 resources, such as memory allocations,
 network sockets, and file descriptors to construct a more complex virtual system interface, which will be
 provided to untrusted user code.
