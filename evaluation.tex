@@ -334,8 +334,8 @@ in conjunction with a symbolic link. Unmounting from a symbolic link could block
 another unmount operation, and allow attackers to cause a denial of service or
 deploy use-after-free exploitation.
 
-Lind does not implement symbolic link, but
-even similar functionality that might be risky is implemented entirely
+Lind does not implement symbolic link, since it is not required to run most applications. 
+But even similar functionality that might be risky is implemented entirely
 within its SafePOSIX module. The bug would (at most) enable an attacker to execute
 code in the Repy sandbox and would not harm other parts of the system.
 
@@ -603,12 +603,9 @@ program. We expect other CPU bound processes to behave similarly.
 
 The other five applications experienced slowdowns roughly ranging from 3x to 6x.
 All of them require repeated calls into SafePOSIX, and this additional SafePOSIX
-computation produced the additional overhead. It should be noted that, for the six applications that we tested,
-Lind managed to control the performance slowdown to a
-level that is barely noticeable to users, even
- with the current overhead.\lois{Do we have proof that its barely noticeable to users?
- Otherwise I would cut this line.} The fact that the total execution time was limited
- to the magnitude of 10,000 ms ensures that the
+computation produced the additional overhead. 
+The fact that the total execution time was limited 
+to the magnitude of 10,000 ms ensures that the 
 user experience is still reasonably efficient.
 
 \begin{table}
@@ -675,6 +672,7 @@ The fact that Lind has shown an ability to run
 %\yiwen{I am looking at more apps and libs that we can run and test in Lind.}
 legacy applications
 suggests that it is worth continuing research to optimize these systems.
+
 \lois{Justin...were we missing something in this section?}
 \begin{table}
 \centering
