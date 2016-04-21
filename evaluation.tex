@@ -29,7 +29,7 @@ vulnerable in different virtualization systems?}
 (Section~{{\ref{Reachable-Kernel-Trace-Analysis-for-Repy-Sandbox}})
 
 \textit{In the Lind prototype, what is the expected performance overhead in
-real-world applications?} 
+real-world applications?}
 (Section~{{\ref{Performance-Evaluation}})
 
 \subsection{Linux Kernel Bug Test and Evaluation}
@@ -293,7 +293,7 @@ affect security in different ways.
 \emph{\textbf{All systems vulnerable.}}  Representative bug: CVE-2014-4171.
 This is the only vulnerability that was triggered in every
 system, including Lind. It resides inside the \texttt{mm/shmem.c} kernel
-path (a popular path) 
+path (a popular path) that
 can be triggered by using \texttt{mmap()} to access a hole in the memory.
 The \texttt{mmap()} call then invokes \texttt{shmem\_fault()}, which will cause contention
 on \texttt{i\_mmap\_mutex}, and lead to a serious starvation of memory resources.
@@ -314,10 +314,10 @@ memory allocation operations like \texttt{malloc()} and \texttt{brk()}, Graphene
 pass those system calls to the underlying kernel, and rely on it to
 perform \texttt{mmap()}.
 KVM and LXC both reside inside the Linux kernel and inherit \texttt{mmap()}
-from the kernel. QEMU is built on KVM, and so also relies on the KVM module to perform
+from it. QEMU is built on KVM, and so also relies on the KVM module to perform
 \texttt{mmap()}. Similarly, Docker, built on LXC, relies on the native Linux kernel to perform
 \texttt{mmap()}. In VirtualBox and VMWare Workstation, the OS VM has its own mechanism
-for memory management. During the initial setup, the OS VM needs to request memory resource 
+for memory management. During the initial setup, the OS VM needs to request memory resource
 and allocate memory space by making \texttt{mmap()} to the host kernel. Additionally, during the runtime of the VM process,
 when there is excessive memory usage, or reconfiguration of memory allocation, the VM kernel module
 will attempt to call \texttt{mmap()} to the host kernel. Thus, this \texttt{mmap()} vulnerability
@@ -336,10 +336,7 @@ deploy use-after-free exploitation.
 
 Lind does not implement symbolic link, but
 even similar functionality that might be risky is implemented entirely
-within its SafePOSIX module. 
-\lois{What does Lind do if an app needs symbolic link}
-\yiwen{This is a good question. But maybe it is not the right place to discuss it.} 
-The bug would (at most) enable an attacker to execute
+within its SafePOSIX module. The bug would (at most) enable an attacker to execute
 code in the Repy sandbox and would not harm other parts of the system.
 
 Graphene does not implement symbolic link in its Linux system call API, and thus avoids
@@ -363,11 +360,11 @@ CVE-2014-8086 resides in the \texttt{fs/ext4/file.c} kernel path (an unpopular p
 triggered when a file system \texttt{write}
 call is made together with \texttt{fcntl},
 using the argument \texttt{F\_SETFL} and the \texttt{O\_DIRECT} flag. If triggered, it could
-allow attackers to cause a denial of service (file unavailability), by raising a race condition. 
+allow attackers to cause a denial of service (file unavailability), by raising a race condition.
 Both Lind and Graphene prevented this bug, but for different reasons. Lind
 implements \texttt{fcntl} in SafePOSIX, so the underlying kernel is not called.
 Graphene checks and blocks certain system calls, including
-\texttt{fcntl} with the \texttt{O\_DIRECT} flag. 
+\texttt{fcntl} with the \texttt{O\_DIRECT} flag.
 \yiwen{More details will be added here. I am still working on it.}
 Other systems like VirtualBox, VMWare Workstation, Docker, and Native Linux,
 all suffer from this vulnerability because calls go directly into the host OS
@@ -385,7 +382,7 @@ This bug was not triggered in Lind, because it does not support the use of the
 opens a file does not take an argument for flags or other operations.  The
 only arguments allowed are a filename (that must consist of a small number
 of highly restricted characters) and a flag to indicate whether a file should
-be created if one does not exist. 
+be created if one does not exist.
 \yiwen{More details will be added here.}
 Other virtualization systems allow more complex configuration of flags to
 pass to the underlying OS kernel.
@@ -400,10 +397,7 @@ Our initial results % as illustrated by the above case studies,
 suggest that bugs are usually triggered by complex system calls, or basic system calls
 with complicated or rarely used flags. The \emph{Lock-in-Pop} design, and thus Lind,
 provides strictly controlled access to the kernel, and so, poses
-the least risk. We next compare how
-much kernel access, or potential risk, is  possible in systems not
-using our design metric.
-
+the least risk.
 
 \subsection{Comparison of Kernel Code Exposure in Different Virtualization
 Systems}
@@ -476,7 +470,7 @@ permitted for \texttt{open()}.
 
 The other virtualization systems all accessed a substantial number of code
 paths in the kernel,
-and they all accessed a larger section of the risky portion.
+and they all accessed a larger section from the unpopular paths.
 This is because they have
 more dependence on complex system calls, and
 allow extensive use of complicated flags. For example,
@@ -528,27 +522,21 @@ The results are shown in Table \ref{table:trace-Repy}.
 The trace of Repy is slightly larger (5.8\%) than that of Lind.
 This larger design does not allow attackers or bugs to
 access the risky paths in the OS kernel, and it leaves open only a small amount of
-additional popular paths.\lois{The 5.8\% thing is confusing. If you are using this
-to describe the same thing...The "leftover" part of Repy outside of Lind, then don't
-repeat the number. Otherwise it seems to be saying that 5.8\% of Repy is risky.}
-\yiwen{addressed} 
-Additional kernel paths are added because some functions in Repy
-have more capabilities for message sending and network connection than Lind's 
-system call interface. 
-\lois{But these paths are safe?} 
-\yiwen{Yes, because they are popular paths.}
+additional popular paths. These are added because some functions in Repy
+have more capabilities for message sending and network connection than Lind's
+system call interface.
 For example, in Repy,
 \texttt{sendmessage()} and \texttt{openconnection()}
-functions could reach out to more lines of code when fuzzed. However, the kernel 
-trace of Repy still lies completely within the popular kernel paths. 
+functions could reach out to more lines of code when fuzzed. However, the kernel
+trace of Repy still lies completely within the popular kernel paths.
 Since the popular paths contain fewer kernel bugs, the Repy sandbox kernel
 has only a very slim chance of triggering OS kernel bugs.
 
-Since it is the direct point of contact with the OS kernel, it could be argued
-that Repy sandbox kernel could be a weakness in the overall security coverage provided by Lind.
-However, the results above show that, even if SafePOSIX has a
+Since it is the direct point of contact with the OS kernel, in theory, the Repy
+ sandbox kernel could be a weakness in the overall security coverage provided by Lind.
+However, the results above show that, even if it has a
 bug or failure, it should not substantially increase the risk of triggering
-kernel bugs. \lois{this paragraph may still need to be strengthened.}
+kernel bugs.
 
 \subsection{Performance Overhead}
 \label{Performance-Evaluation}
@@ -614,15 +602,12 @@ required, and there is no need to go through the SafePOSIX interface. The small
 program. We expect other CPU bound processes to behave similarly.
 
 The other five applications experienced slowdowns roughly ranging from 3x to 6x.
-Since they are all I/O heavy applications,
-each repeatedly calls into SafePOSIX. 
-\lois{Maybe explain why they have to repeatedly call in?} 
-\yiwen{I/O heavy means I/O system calls are needed repeatedly. So I think this is fine.} 
-This additional SafePOSIX computation produced the additional
-overhead. It should be noted that, for the six applications that we tested,
+All of them require repeated calls into SafePOSIX, and this additional SafePOSIX
+computation produced the additional overhead. It should be noted that, for the six applications that we tested,
 Lind managed to control the performance slowdown to a
-level that is barely noticeable to the users, even
- with the current overhead. The fact that the total execution time was limited
+level that is barely noticeable to users, even
+ with the current overhead.\lois{Do we have proof that its barely noticeable to users?
+ Otherwise I would cut this line.} The fact that the total execution time was limited
  to the magnitude of 10,000 ms ensures that the
 user experience is still reasonably efficient.
 
@@ -672,29 +657,25 @@ slowdowns are due to the increased code size produced by NaCl,
 and the increased overhead from Lind's SafePOSIX system call interface.
 
 Results for the Apache benchmarking tool \texttt{ab} is presented in Table \ref{table:performance_apache}.
-In the set of experiments, Lind produced performance slowdowns around 2.7x. 
+In the set of experiments, Lind produced performance slowdowns around 2.7x.
 Most of the overhead was incurred due to system call operations inside the
 SafePOSIX re-creation.
 
 As shown above, Lind generally incurs some performance overhead.
 However, performance slowdown is common in virtualization systems.
 For example, Graphene \cite{Graphene-14} also shows an overhead ranged from
-1.4x to 2x 
-\lois{It is confusing to mix percent signs for one side of the range and
-magnitude x for the other}, 
-\yiwen{I think we do not have percent signs now.}
-when running applications such as Apache and UNIX benchmark.
+1.4x to 2x when running applications such as Apache and UNIX benchmark.
 Lind shares the same magnitude of slowdown with Graphene in many cases.
 Since an attack on the kernel can have devastating
 consequences, %at this initial stage,
 a tradeoff between security and performance could be justified.
-The fact that Lind has sown an ability to run
+The fact that Lind has shown an ability to run
 %\cappos{4 applications isn't many...
 %Do we have Apache numbers or something else to quantify?}
 %\yiwen{I am looking at more apps and libs that we can run and test in Lind.}
 legacy applications
 suggests that it is worth continuing research to optimize these systems.
-
+\lois{Justin...were we missing something in this section?}
 \begin{table}
 \centering
 \scriptsize
