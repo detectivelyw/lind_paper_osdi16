@@ -1,32 +1,44 @@
 \section{Developing a Quantitative Metric for Evaluating Kernel Security}
 \label{sec.metric}
 
-By understanding how lines of code in the kernel are used, we can better predict their
-likelihood to contain security flaws. In this section, we formulate and test
-a quantitative evaluation metric for securing the OS kernel.
-This metric is based on the idea that kernel paths executed by popular applications
+If we knew which lines of code in the kernel were likely to contain zero day
+bugs, we could try to avoid using them in an OSVM.  
+%By understanding how lines of code in the kernel are used, we can better predict their
+%likelihood to contain security flaws. 
+In this section, we formulate and test a quantitative evaluation metric that
+indicates which lines of code are likely to contain bugs.
+This metric is based on the idea that kernel paths executed by popular 
+applications
 during everyday use are less likely to contain security flaws.
 %The intuition is that
-The rationale is that these code paths are well-tested due to their constant use, and so
-fewer bugs can go undetected. Our initial tests yielded promising results, with only one
-bug appearing in these popular paths.  We later tested the effectiveness
+The rationale is that these code paths are well-tested due to their constant 
+use, and so fewer bugs can go undetected. 
+Our initial tests yielded promising results, with only one
+bug appearing in these popular paths.  \cappos{Is it common in OSDI papers
+to `tease' the result in the intro paragraph of the section?}
+We later tested the effectiveness
 of our metric against two earlier strategies for predicting bug
 locations in the OS kernel, and found our results compared favorably.
 
 \subsection{Experimental Setup}\label{sec-setup}
 We used two different versions of
 the Linux kernel in our study.
-%Since our findings for these versions are quantitatively and qualitatively similar, we report
-%the results for 3.13.0 in this section and use 3.14.1 in Section~\ref{sec.evaluation}.
+\cappos{ Why was this text changed in favor of the sentence that follows?  
+Is there something inaccurate in this?
+Since our findings for these versions are quantitatively and qualitatively similar, we report
+the results for 3.13.0 in this section and use 3.14.1 in Section~\ref{sec.evaluation}.
+}
 %We used two different versions of Linux kernel, because we want to first establish
 %the foundation of our new design with one dataset,
 We used version 3.13.0 to test our proposed metric, and evaluated the prototype system based on this
  metric using version 3.14.1 in
 Section~\ref{sec.evaluation}. Obtaining results from two different datasets that both validate
-our idea ensures that our security metric is unbiased. Furthermore,
+our idea ensures that our security metric is unbiased \cappos{No, it just gives
+very slightly greater confidence that it isn't biased.}. Furthermore,
 it demonstrates the metric is applicable
 %not a specifically tailored solution for just one version, but rather
-for multiple versions of the Linux kernel.
+for multiple versions of the Linux kernel. \cappos{I'm not sure what this is
+adding that wasn't already obvious...}
 
 To trace the kernel, we used \texttt{gcov}~\cite{gcov}, a standard program profiling
 tool in the GNU compiler collection (GCC) suite. The tool indicates which lines of kernel
@@ -36,20 +48,23 @@ code are executed when an application runs.
 To capture the popular kernel paths, we used two strategies concurrently.
 First, we attempted to capture the normal usage behavior of popular applications.
 To do this, two students used applications in the 50 most popular Debian
-packages~\cite{Top-Packages} (omitting libraries) for Debian 7.0, a widely-used and
-popular open source project.
+packages according to Popularity Contest~\cite{Top-Packages} (omitting 
+libraries, which get included automatically by packages that depend on them) 
+for Debian 7.0. %, a widely-used and popular open source project.
 Each student used 25 applications for their designed
 tasks (i.e., writing, spell checking, printing in a text editor, or using
-an image processing software). In instances where there were two applications that performed a
-similar task (i.e., Mozilla Firefox and Google Chrome), both programs were
-used. These tests were completed over 20 hours of
+an image processing software). 
+%In instances where there were two applications that performed a
+%similar task (i.e., Mozilla Firefox and Google Chrome), both programs were
+%used. 
+These tests were completed over 20 hours of
 total use over 5 calendar days.
 
 The second strategy was to try to capture the total range of applications an
 individual computer user might regularly access. The students used the workstation as their
 desktop machine for a one-week period. They did their homework, developed
-software, communicated with friends and family, and other tasks, using this system.
-Software was installed as needed.
+software, communicated with friends and family, and other tasks, using this 
+system.  Software was installed as needed.
 %
 With the two strategies, we obtained a profile of the lines of
 kernel code (publicly available at~\cite{Lind}) that defined our
@@ -59,6 +74,7 @@ popular kernel paths.
 There are certain paths in the kernel, such as unloaded drivers, that are
 unreachable and unused.
 To make sure that our analysis reflects bug distribution in all reachable paths,
+\cappos{I'm not sure why this matters}
 we used two techniques to further examine the reachable lines of
 code in the kernel. First,
 we performed system call fuzzing with the Trinity
@@ -83,9 +99,12 @@ For each bug, we found the patch that fixed the problem and identified
 which lines of kernel code were modified to remove it.
 For the purpose of this study, a user program that can execute a line of kernel
 code changed by such a patch is considered to have the \textit{potential to
-exploit that flaw}.  Note that it is possible that, in some situations, this may
-overestimate the ability for an attacker to exploit a flaw, since triggering the
-flaw would require executing additional lines of code.
+exploit that flaw}.  Note that it is possible that in some situations, 
+this will overestimate because reaching the lines of kernel code where a 
+bug exists, does not necessarily imply a reliable, repeatable capability to
+exploit the bug.
+%overestimate the ability for an attacker to exploit a flaw, since triggering the
+%flaw would require executing additional lines of code.
 
 \subsection{Results and Analysis}
 \label{Verification-of-Hypothesis}
@@ -144,25 +163,8 @@ popular paths have a much lower bug rate than unpopular ones.
 
 \subsection{Comparison with Other Security Metrics}
 
-Over the years, a number of metrics for identifying bugs in the OS kernel have
-previously been proposed. Most of these security metrics operated at a coarser granularity,
-e.g., at the file level. However, when our kernel tests were run at a file
-granularity, we found that even popular programs used parts of as many as
-32 files that contained flaws. Yet, only one bug was triggered by those programs.
-In addition, common programs tested at this level also executed 36 functions
-that were later patched to fix security
-flaws, indicating the need to localize bugs at a finer granularity.
-A few researchers have studied metrics at a finer granularity than file level, which
-is at the lines-of-code.
-We now discuss two such metrics, and use our Linux kernel version and 40 bugs dataset
-to conduct a comparison between them and our popular-paths metric.
-
-\begin{figure}
-\centering
-\includegraphics[width=1.2\columnwidth]{diagram/bug_density_v2.png}
-\caption{\small Bug density comparison among three metrics.}
-\label{fig:bug_density}
-\end{figure}
+\cappos{I need to think what to do here.  Perhaps combine into the previous
+section.  We say a lot without saying a lot...}
 
 Ozment, et al.~\cite{ozment2006milk} demonstrated that code that
 had been around longer in the BSD kernel tended to have fewer bugs.
@@ -198,6 +200,27 @@ such as \texttt{arch} and \texttt{fs}.
 However, this metric also proves to be difficult to use with the
 Linux kernel, since our results show that
 only 10.0\% of the kernel bugs could be detected.
+
+
+{\bf file vs line granularity} Over the years, a number of metrics for identifying bugs in the OS kernel have
+previously been proposed. Most of these security metrics operated at a coarser granularity,
+e.g., at the file level. However, when our kernel tests were run at a file
+granularity, we found that even popular programs used parts of as many as
+32 files that contained flaws. Yet, only one bug was triggered by those programs.
+In addition, common programs tested at this level also executed 36 functions
+that were later patched to fix security
+flaws, indicating the need to localize bugs at a finer granularity.
+%A few researchers have studied metrics at a finer granularity than file level, which
+%is at the lines-of-code.
+%We now discuss two such metrics, and use our Linux kernel version and 40 bugs dataset
+%to conduct a comparison between them and our popular-paths metric.
+
+\begin{figure}
+\centering
+\includegraphics[width=1.2\columnwidth]{diagram/bug_density_v2.png}
+\caption{\small Bug density comparison among three metrics.}
+\label{fig:bug_density}
+\end{figure}
 
 To summarize, we demonstrated that both the age-of-code metric and
 the drivers metric have weak correlation between the occurrence of bugs

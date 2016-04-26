@@ -72,14 +72,15 @@ virtualnamespace.evaluate, getresources, and getlasterror.}  \\ \hline
     \label{table:RepyKernel}
 \end{table}
 
-The Repy kernel code provides a solid foundation for our secure virtual
-machine. It has been audited by a professional penetration tester and, since 2010,
+The Repy sandbox code provides containment for the SafePOSIX implementation.
+Repy has been audited by a professional penetration tester and, since 2010,
 the Seattle testbed has operated a bug bounty program for security flaws in the
 sandbox~\cite{seattle}.
 The code is deployed in daily use across thousands of devices, and has been examined by
-hundreds of parties. To date no security flaws have been found in the sandbox
-kernel. Having a small, easily auditable piece of code thus helps to reduce the
-risk of such occurrences.
+hundreds of parties. Despite the discovery of bugs in other parts of the 
+system, to date no security flaws have been found in the sandbox
+kernel. While there certainly could be bugs in the sandbox kernel, having a 
+small, auditable piece of code helps to reduce the risk of such occurrences.
 
 \subsection{Enhanced Safety in Call Handling with SafePOSIX Re-creation}
 
