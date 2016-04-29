@@ -10,11 +10,12 @@ the kernel to do bad things...}
 % program, these bugs can lead to such security threats as privilege escalation
 % [CVE-2016-0728], [CVE-2015-8660], denial of service [CVE-2015-8539], [CVE-2015-5364],
 %  and memory corruption [CVE-2014-9529].
-
+%
+\yanyan{can we check if OSVM is a standard acronym?}
 
 In theory, running a malicious program in an operating system virtual 
 machine, such as VirtualBox, VMWare workstation, and Docker should isolate the
-program inside and prevent it from triggering zero day bugs.  However, to be 
+program inside and prevent it from triggering zero-day bugs.  However, to be 
 effective, this isolation must function in two cases.  First, the OSVM's 
 software must not contain bugs that allow the program to escape the 
 OSVM's containment and interact directly with the host OS.  These
@@ -27,13 +28,13 @@ system, these flaws present a major security risk to users [cite].
 
 
 The other key situation where isolation is not effective is when a malicious 
-program  can access a portion of the host OS's kernel that contains a zero 
-day flaw.  This typically occurs even while the containment of the OSVM is 
-working as designed and without knowledge of a flaw in the OSVM.  The reason
-this occurs is that many of the system calls made within a OSVM eventually 
+program  can access a portion of the host OS's kernel that contains a 
+zero-day flaw.  This typically occurs even while the containment of the OSVM is 
+working as designed but without knowledge of a flaw in the OSVM.  The reason
+this occurs is that many of the system calls made within an OSVM eventually 
 result in system calls in the host OS (e.g., network I/O from the guest
-OSVM results in network I/O by the host OS kernel.  If one of these paths in
-the OS kernel contains a zero day security bug, the malicious program
+OSVM results in network I/O by the host OS kernel).  If one of these paths in
+the OS kernel contains a zero-day security bug, the malicious program
 may be able to trigger it.
 
 %aspect of this isolation is preventing the program from triggering bugs
@@ -54,16 +55,16 @@ may be able to trigger it.
 %quantitative design solution.
 
 With this paper, we move one step closer to designing OSVM systems that are
-resilient to zero day flaws.   We start
- with the proposition that code found in popular paths, associated with frequently-used programs,
+resilient to zero-day flaws.   We start
+ with the proposition that kernel code found in popular paths, associated with frequently-used programs,
 has less potential risk of bugs than code in less-used parts of the kernel.
 We performed a quantitative analysis of resilience
   to flaws in two versions of the Linux kernel, and
 found that about 3\% of the bugs were present in popular code paths,
 despite these paths accounting for about one third of the total reachable 
 kernel code.  
-Therefore, OSVMs that only use these kernel paths have
-greatly increased resilience to zero day bugs in the host OS kernel.
+Therefore, OSVMs that only use these kernel paths will 
+greatly increase resilience to zero-day bugs in the host OS kernel.
 %When we ran the same study on the same Linux kernel versions 
 %using two other metrics
 %(Chou \cite{PittSFIeld} and Ozment \cite{ozment2006milk}),
@@ -71,14 +72,14 @@ greatly increased resilience to zero day bugs in the host OS kernel.
 
 Guided by this knowledge, we propose a new design scheme for a secure virtual machine that
 accesses only the popular code paths through a very small trusted computing base.
-We gave it the name \lip, because it locks kernel access to only code
+We name it \lip, as it locks kernel access to only code
 associated with popular programs. %However, the popular kernel functionality is
 %not sufficient to implement all of the system call functionality needed by 
 %applications.  
 However, there are many system calls outside of the popular paths that need to 
-be supported to run applications [cite Don's EUROSYS paper].  Our second
-observation in \lip is to reimplement needed-but-risky OSVM functionality 
-(e.g., POSIX) inside of a 
+be supported to run applications~\cite{tsai2016study}.  Our second
+observation in \lip is to re-create needed-but-risky OSVM functionalities
+(e.g., POSIX) in a 
 sandbox that only allows access to popular kernel paths.  In this way a bug
 inside of the OSVM implementation does not result in a system compromise
 so long as the minimal sandbox remains uncompromised.
@@ -86,22 +87,22 @@ so long as the minimal sandbox remains uncompromised.
 %This is sufficient to
 %perform operations for file systems, such as
 %networking, threading, memory management, and other required functions.
-\cappos{The fact it is a PL sandbox is an implemenation detail, not design 
-detail...  Comment out the next sentence if you agree.}
-For complex functionalities,  \emph{Lock-in-Pop} re-creates system calls in
-a memory-safe programming language sandbox.
+%\cappos{The fact it is a PL sandbox is an implemenation detail, not design 
+%detail...  Comment out the next sentence if you agree.}
+%For complex functionalities,  \emph{Lock-in-Pop} re-creates system calls in
+%a memory-safe programming language sandbox.
 
-To demonstrate the viability of \emph{Lock-in-Pop} we use it to implement a new
+To demonstrate the viability of \emph{Lock-in-Pop} we use it to implement a 
 prototype virtual machine that can offer enhanced security without sacrificing
  basic functionality. Dubbed Lind, it pairs two components -- Google's Native Client
 (NaCl) and Seattle's Repy. NaCl serves as a computational module that isolates
 binaries, providing memory
 safety for legacy programs running in our OSVM. It also passes system calls
 invoked by the program to the operating system interface, called SafePOSIX. 
-SafePOSIX re-implements the broader POSIX functionality needed by applications.
+SafePOSIX re-creates the broader POSIX functionalities needed by applications.
 SafePOSIX does this while being contained within the Repy sandbox, which
 provides an API that only allows access to popular kernel paths.  The small 
-(8K LOC) sandbox kernel of Repy contains flaws in the SafePOSIX implementation
+(8K LOC) sandbox kernel of Repy contains flaws in SafePOSIX 
 to prevent them from allowing direct access to the host OS kernel.
 
 
@@ -111,23 +112,23 @@ discovered in the Linux kernel version 3.14.1.  We attempted to trigger those
 bugs in seven other virtualized environments,
 including VirtualBox, VMWare Workstation, Docker, LXC, KVM, QEMU, and Graphene.
 Our results show that applications in Lind were substantially least likely to trigger 
-kernel bugs,
+kernel bugs. \yanyan{I think this is ok.}
 
 
 In summary, the main contributions of this paper are as follows:
 \cappos{I want to revisit this later on...}
 
 \begin{itemize}\setlength\itemsep{0em}
-\item
-We postulate a new approach for securing privileged code,
-such as the OS kernel, based on the idea that popular kernel paths contain 
-fewer bugs.  \cappos{I'm not sure how this differs from 3...}
+%\item
+%We postulate a new approach for securing privileged code,
+%such as the OS kernel, based on the idea that popular kernel paths contain 
+%fewer bugs.  \cappos{I'm not sure how this differs from 3...}
 
 \item
-We propose a quantitative metric that evaluates security at the lines-of-code 
-\cappos{line-of-code ?} level.  We compare to other proposed metrics
-such as the age of code (proposed in the Milk vs Wine paper [cite]) and
-the increased risk in driver code [cite].  We find that the metric of
+We propose a quantitative metric that evaluates security at the line-of-code 
+level.  We compare to other proposed metrics
+such as the age of code~\cite{ozment2006milk}, and
+the increased risk in driver code~\cite{PittSFIeld}.  We find that the metric of
 choosing popular kernel paths is much more effective at identifying lines of
 code that are unlikely to contain flaws.
 %of the kernel that
@@ -135,7 +136,8 @@ code that are unlikely to contain flaws.
 % bugs in the Linux kernel.
 
 \item
-Based on the metric, we develop a new design scheme called \emph{Lock-in-Pop} that
+Based on the metric, we postulate a new approach for securing privileged code, 
+and develop a new design scheme called \emph{Lock-in-Pop}. It
 accesses only popular code paths
 through a very small trusted computer base.
 The need for complex functionality is addressed by re-creating riskier systems calls
@@ -159,24 +161,24 @@ hard to follow.}
 The remainder of this paper is organized as follows.
 Section \ref{sec.motivation-and-background} presents the scope of our study 
 and precisely describes our threat model.
-To understand which kernel paths a 
+%To understand which kernel paths a 
 A study of earlier kernel protection metrics and the results of tests we ran to compare their performance
 against our newly proposed design are discussed in Section \ref{sec.metric}.
 We will discuss handling bugs in the OSVM software in 
-Section~\ref{sec.design}, while focusing on preventing zero day kernel
+Section~\ref{sec.design}, while focusing on preventing zero-day kernel
 bugs in the host OS from being exploited in the meantime.
-Section \ref{sec.design} describes the development of our \emph{Lock-in-Pop} 
-design scheme. \cappos{You shouldn't say `development' of a design scheme. 
-It's very odd to read.}
+Section \ref{sec.design} also describes our \emph{Lock-in-Pop} 
+design scheme.
 In Section \ref{sec.implementation} we discuss the construction of the Lind 
 prototype, while Section \ref{sec.evaluation} provides a quantitative security 
-analysis that examines how often zero day bugs are in reachable kernel paths
+analysis that examines how often zero-day bugs are in reachable kernel paths
 in different virtualization systems.
 Section \ref{sec.limitation} outlines possible future initiatives.
-Finally, Section \ref{sec.related_work} reviews existing design metrics, as well as techniques that share some of Lind's security techniques and goals,
+Finally, Section \ref{sec.related_work} reviews existing design metrics, as well as 
+techniques that share some of Lind's security goals,
 while the cogent points relayed in the paper are reviewed in Section \ref{sec.conclusion}.
-\yiwen{Can we lose the last map paragraph? I'd like to remove it and it will save a lot of space.}
-\cappos{Don't worry about space yet.}
+%\yiwen{Can we lose the last map paragraph? I'd like to remove it and it will save a lot of space.}
+%\cappos{Don't worry about space yet.}
 %
 %The remainder of this paper is organized as follows.
 %Section \ref{sec.motivation-and-background} presents the scope of our study and our threat model.
