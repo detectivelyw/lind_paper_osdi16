@@ -20,16 +20,19 @@ In this section, we define the scope of our efforts. We also briefly note why
 this study does not evaluate a few existing design schemes.
 
 \cappos{This paragraph also is confusing to me.}
-We start by acknowledging that it is possible for an attack attempt to be staged
+\yanyan{please check my edits.}
+%We start by acknowledging that 
+It is possible for an attack attempt to be staged
 on a host OS in a secure virtualization system.
-Furthermore, we anticipate that such an exploit could be done directly or indirectly.
-In a direct exploit, the attacker
-takes advantage of paths in the system's host OS kernel
+Furthermore, %we anticipate that 
+such an exploit could be done directly or indirectly.
+In a direct exploit, the attacker can access a portion of host OS's kernel
 that have a vulnerability. In an indirect exploit,
-the attacker takes advantage of the exploited vulnerability to run arbitrary code, and
-to make system calls in the host OS.
+the attacker takes advantage of a vulnerability in the virtualization system to 
+run arbitrary code, escapes the VM's containment and can 
+make system calls into the host OS. 
 The secure virtualization system design we will propose
-in Section 4 is designed to prevent both types of attacks.
+in Section~\ref{sec.design} is designed to prevent both types of attacks.
 
 \noindent
 \textbf{Threat model.}
@@ -56,12 +59,12 @@ It should be noted that our study intentionally excludes %several existing
 %approaches to virtualization systems. We considered these techniques
 %out of scope due to differences in hardware and software requirements.
 %Primarily we chose to exclude 
-a quantitative comparison with solutions that do not run on top of on a 
+a comparison with solutions that do not run on top of on a 
 full-fledged privileged operating system, such as a virtualization system that 
-uses a bare-metal hypervisor~\cite{Xen-03}\cappos{cite VMWare Server} or 
-hardware-based virtualization solution~\cite{IntelVT}\cappos{cite nohype}. 
+uses a bare-metal hypervisor~\cite{Xen-03, VMWare-Server} or 
+hardware-based virtualization solution~\cite{IntelVT, keller2010nohype}. 
 While the ideas and techniques we apply here potentially apply to those 
-systems as well, a direct comparison is not possible since they have different
+systems, a direct comparison is not possible since they have different
 trusted computing bases.
 %would be difficult to perform due to 
 %tracing techniques.
@@ -69,7 +72,7 @@ trusted computing bases.
 %with a privileged OS kernel. Such differences in both structure and function
 %make it difficult to directly compare these techniques to our proposed model.
 
-To build a system to resist zero day vulnerabilities, we need to know what
+To build a system to resist zero-day vulnerabilities, we need to know what
 portions of the kernel may be more prone to exploitation. Our first step is to
 define and test a security metric that can quantitatively measure how bugs and
-vulnerabilities are distributed within the kernel.
+vulnerabilities are distributed in the kernel.
