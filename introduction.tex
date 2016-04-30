@@ -1,8 +1,8 @@
 \section{Introduction}
 \label{sec.introduction}
 
-\cappos{Paragraph: Bad guys (hackers, NSA, etc.) are using zero day bugs in 
-the kernel to do bad things...}
+%\cappos{Paragraph: Bad guys (hackers, NSA, etc.) are using zero day bugs in 
+%the kernel to do bad things...}
 %For many years system designers and developers have had to deal with a common security issue --
 %how to defend against threats hidden within the system's own code. Despite
 % decades of effort, researchers still frequently uncover new flaws in operating
@@ -11,8 +11,15 @@ the kernel to do bad things...}
 % [CVE-2016-0728], [CVE-2015-8660], denial of service [CVE-2015-8539], [CVE-2015-5364],
 %  and memory corruption [CVE-2014-9529].
 %
-\yanyan{can we check if OSVM is a standard acronym?}
-
+The number of attacks that exploited zero-day vulnerabilities has more than 
+doubled from 2014 to 2015~\cite{zero-day}. Skilled hackers can find a security 
+hole in a system and use it to hold hostage of the system's users. Similarly, zero-day 
+flaws can be exploited by government agencies~\cite{fbi-ff, fbi-iphone} and
+lead to breach of privacy.
+%It is difficult to defend against these new and 
+%unknown vulnerabilities, leading to an arms race between hackers and software 
+%developers. 
+%
 In theory, running a malicious program in an operating system virtual 
 machine, such as VirtualBox, VMWare workstation, and Docker should isolate the
 program inside and prevent it from triggering zero-day bugs.  However, to be 
@@ -25,6 +32,7 @@ been found in VMware Workstation~[need cite]).  While it is understandable that
 bugs occur in the large amount of complex code that is needed for such a 
 system, these flaws present a major security risk to users [cite].
 \cappos{revise ending?}
+\yanyan{can we check if OSVM is a standard acronym?}
 
 
 The other key situation where isolation is not effective is when a malicious 
