@@ -38,27 +38,41 @@ real-world applications?}
 %\textbf{Test Purpose.}
 %To evaluate how well each virtualization system protects the Linux kernel
 %against reported zero-day bugs.
+\brendan{This is my best understanding of how the tests were conducted. Yiwen et al., please jump in and correct me if I got something wrong.} 
 
 \noindent
 \textbf{Setup.}
 To evaluate how well each virtualization system protects the Linux kernel
 against reported zero-day bugs,
-we identified and examined a list of 69 historical bugs that have
-targeted the Linux kernel 3.14.1 \cite{CVE-Datasource}.
+we identified and examined a list of 69 historical bugs that were found and patched in version 3.14.1 the Linux kernel \cite{CVE-Datasource}.
 By analyzing security patches for those bugs,
 we identified the lines of code in the kernel that correspond to each one.
 
-To test if a bug could be triggered, we created or located C
-code capable of exploiting each kernel bug \cite{Exploit-Database}.
-We were only able to trigger and obtain results for 35 out of the 69 bugs in our
-experiments. In some cases, there was a
-difficulty in clearly determining if triggering had occurred, while in other we
-were unable to find code to trigger them. We decided to focus our study on
-this group of 35 bugs and leave the more complex ones to future work.
+In the following evaluation, we assume that a bug is potentially triggerable if the lines of code that were changed in the patch are reached (i.e., the same metric described in Section~\ref{}).
+This measure may overestimate potential danger posed by a system (since simply reaching the buggy code does not mean that guest code actually has enough control to exploit the bug).
+However, this overestimate should apply equally to all of the systems we tested, which means it is still useful as a way to compare them.
 
-We compiled and ran the exploit C code under each virtualization system to
-obtain their kernel traces, and then used our kernel trace safety metric to
-determine if a specific bug was triggered.
+Next, we sought out proof-of-concept code that triggered each bug. We were able to obtain or create code that triggered nine out of the 69 bugs \cite{Exploit-Database}.
+For the remaining, we used the Trinity system call fuzzer \cite{Trinity} on Linux 3.14.1 (referred to as ``Native'' Linux in Table~\ref{table:trigger_vulnerabilities}).
+By comparing the code reached during fuzzing with the lines of code affected by security patches, we were able to identify an additional 26 bugs that could be triggered.
+
+We then evaluated the protection afforded by eight virtualization systems (including Lind) by attempting to trigger the 35 bugs from inside each.
+The host system for each test ran version of Linux 3.14.1 with gcov instrumentation enabled.
+For the nine bugs that we could directly trigger, we ran the proof of concept exploit inside the guest.
+For the other 26, we ran the Trinity fuzzer inside the guest, exercising each system call 1,000,000 times with random inputs.
+Finally, we checked whether the lines of code containing each bug were reached in the host kernel, indicating that the guest could have triggered the bug.
+
+%To test if a bug could be triggered, we created or located C
+%code capable of exploiting each kernel bug \cite{Exploit-Database}.
+%We were only able to trigger and obtain results for 35 out of the 69 bugs in our
+%experiments. In some cases, there was a
+%difficulty in clearly determining if triggering had occurred, while in other we
+%were unable to find code to trigger them. We decided to focus our study on
+%this group of 35 bugs and leave the more complex ones to future work.
+
+%We compiled and ran the exploit C code under each virtualization system to
+%obtain their kernel traces, and then used our kernel trace safety metric to
+%determine if a specific bug was triggered.
 
 \begin{table*}[!ht]
 \scriptsize
@@ -334,12 +348,12 @@ in conjunction with a symbolic link. Unmounting from a symbolic link could block
 another unmount operation, and allow attackers to cause a denial of service or
 deploy use-after-free exploitation.
 
-Lind does not implement symbolic link, since it is not required to run most applications. 
+Lind does not implement symbolic links, since it is not required to run most applications. 
 But even similar functionality that might be risky is implemented entirely
 within its SafePOSIX module. The bug would (at most) enable an attacker to execute
 code in the Repy sandbox and would not harm other parts of the system.
 
-Graphene does not implement symbolic link in its Linux system call API, and thus avoids
+Graphene does not implement symbolic links in its Linux system call API, and thus avoids
 this problem.
 OS VM like VirtualBox and VMWare Workstation have their own metadata to maintain their file
 directories and symbolic links, which do not directly rely on the host OS.
@@ -355,7 +369,7 @@ the same vulnerabilities that exist in Native Linux.
 \emph{\textbf{Some systems safe, some systems vulnerable.}}  Representative bug: CVE-2014-8086.
 This vulnerability was not triggered in Graphene or Lind, but was triggered in
 VirtualBox, VMWare workstation, Docker, and Native Linux. It was one of several
-bugs (i.e. CVE-2014-7826 and CVE-2014-5206) that were triggered in just a few systems.
+bugs (e.g., CVE-2014-7826 and CVE-2014-5206) that were triggered in just a few systems.
 CVE-2014-8086 resides in the \texttt{fs/ext4/file.c} kernel path (an unpopular path), and can be
 triggered when a file system \texttt{write}
 call is made together with \texttt{fcntl},
