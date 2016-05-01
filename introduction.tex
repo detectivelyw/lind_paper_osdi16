@@ -13,9 +13,11 @@
 %
 The number of attacks that exploited zero-day vulnerabilities has more than 
 doubled from 2014 to 2015~\cite{zero-day}. Skilled hackers can find a security 
-hole in a system and use it to hold hostage of the system's users, e.g., by 
+flaw in a system and use it to hold hostage of the system's users, e.g., by 
 gaining root access and compromising the host~\cite{linux-0day}. Similarly, zero-day 
-flaws can be exploited by government agencies~\cite{fbi-0day, nsa-0day}. 
+vulnerabilities can be exploited~\cite{fbi-0day} or held back~\cite{nsa-0day} by government 
+agencies, thus rendering millions of devices vulerable.
+%for national security reasons
 %\cappos{Must be OS kernel zero days.  Firefox
 %doesn't matter and privacy isn't the biggest concern.  It's someone breaking
 %into systems due to a flaw like this.}
@@ -31,19 +33,20 @@ zero-day bugs in the host OSes kernel.  However, to be
 effective, this isolation must function in two cases.  First, the OSVM's 
 software must not contain bugs that allow the program to escape the 
 OSVM's containment and interact directly with the host OS.  These
-issues are very common in OSVMs (Virtualbox reports 40 such 
-vulnerabilities~\cite{Virtualbox-Vulnerabilities} and more than 100 bugs have 
-been found in VMware Workstation~[need cite]).  While it is understandable that
-bugs occur in the large amount of complex code that is needed for such a 
-system, these flaws present a major security risk to users [cite].
-\cappos{revise ending?}
+issues are very common in OSVMs (Virtualbox reports more than 40 such 
+vulnerabilities~\cite{Virtualbox-Vulnerabilities} and over 100 bugs have 
+been found in VMware Workstation~\cite{VMWare-Vulnerabilities}).  While it is understandable that
+bugs occur in the large amount of complex code needed for such a 
+system, these flaws not only render the complex code unusable, but 
+leave tens of millions of user machines at risk~\cite{linux-0day}.
+%\cappos{revise ending?}
 \yanyan{can we check if OSVM is a standard acronym?}
 
 
 The other key situation where isolation is not effective is when a malicious 
 program  can access a portion of the host OS's kernel that contains a 
 zero-day flaw.  This typically occurs even while the containment of the OSVM is 
-working as designed but without knowledge of a flaw in the OSVM.  The reason
+working as designed but without knowledge of a flaw in the OSVM. \yanyan{should be in the host OS?} The reason
 this occurs is that many of the system calls made within an OSVM eventually 
 result in system calls in the host OS (e.g., network I/O from the guest
 OSVM results in network I/O by the host OS kernel).  If one of these paths in
