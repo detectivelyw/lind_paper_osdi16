@@ -8,22 +8,23 @@ and to quantify areas of risk in an OS kernel, as well as background information
  on technologies incorporated into Lind.
 
 \textbf{Safety metrics for evaluating software risk.}
-As we discussed in Section~\ref{sec.metric}, one safety metric
+As in Section~\ref{sec.metric}, one 
 approach looked at identifying a correlation between the presence of bugs
 and certain directories or modules of the system (Chou~\cite{PittSFIeld},
 Palix~\cite{palix2011faults}.)
-However, this component-focused approach does not necessarily
+However, this approach does not necessarily
 provide effective detection and defense against kernel bugs, as our test of the
 Chou metric in Section~\ref{sec.metric} attests.
 
 There are other approaches to identifying kernel vulnerabilities, some of
-which grew out of research in code complexity and code comprehension in software
-design.
+which grew out of research in 
+%code complexity and code comprehension in 
+software design.
 Alhazmi~\cite{alhazmi2008application}
 used metrics like defect density and fault exposure ratio to assess potential risk,
 while Zimmermann~\cite{zimmermann2010searching}
-described metrics like code complexity, and code churn (the total added/modified/
-deleted lines of code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
+described metrics like code complexity, and code churn (the total added/modified/deleted 
+lines of code) to predict vulnerabilities. Kim in~\cite{kim2007vulnerability} analyzed
 the correlation between shared code size and shared vulnerabilities in
 successive versions of a software system. In~\cite{engler2001bugs}, Engler analyzed
 system code by static analysis to look for contradictions, such as acquired locks that are
@@ -33,7 +34,7 @@ evaluating the risk of vulnerability exploitation,
 they are less useful in providing insights for secure system design.
 
 Lastly, prior work has also examined the evolution of kernel defects over time, including
-Ozment~\cite{ozment2006milk} (see Section~\ref{sec.metric} and Li~\cite{li2006have}.
+Ozment~\cite{ozment2006milk} (see Section~\ref{sec.metric}) and Li~\cite{li2006have}.
 Li found a decrease in memory-related
 bugs, and identified semantic bugs as being the dominant root cause of these
 defects.
@@ -41,17 +42,18 @@ defects.
 % nonsense. He reported an increase in the bugs by studying the number of bugs?
 %I checked the paper but had no clue what this referred to}
 %\yiwen{I fixed it. Please check.}
-However, unlike Lind, neither of these approaches provide data
+However, unlike Lind, neither of these approaches provide insights
 on how vulnerabilities are distributed.
 
 %Much work has been done in analyzing system faults using techniques in
 %software engineering. For example,
 
 \textbf{Design of virtualization systems.}
-Lind incorporates a number of existing virtualization techniques.
-This section details some
-of the significant work relevant to the development of today's virtual machines,
-including Lind.
+Lind incorporates a number of existing virtualization techniques, which are
+described in the following.
+%This section details some
+%of the significant work relevant to the development of today's virtual machines,
+%including Lind.
 
 \textit{System Call Interposition} (SCI) is a technique tried by many researchers
 to develop early virtualization systems.
@@ -87,7 +89,7 @@ is built using Repy, which is a programming language with a very small TCB.
 
 \textit{OS virtualization}
 techniques include
-bare-metal hardware virtualization, such as VMware ESX Server, Xen,
+bare-metal hardware virtualization, such as VMware ESX Server, Xen~\cite{Xen-03},
 LXC~\cite{LXC}, BSD's jail, Solaris zones, and Hyper-V, and
 hosted hypervisor virtualization such as VMware
 Workstation, VMware Server, VirtualPC and VirtualBox.
