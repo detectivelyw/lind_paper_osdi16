@@ -7,7 +7,7 @@ The literature referenced in this section includes past efforts to define safety
 and to quantify areas of risk in an OS kernel, as well as background information
  on technologies incorporated into Lind.
 
-\textbf{Safety metrics for evaluating software risk.}
+\textbf{Safety metrics.}
 As in Section~\ref{sec.metric}, one 
 approach looked at identifying a correlation between the presence of bugs
 and certain directories or modules of the system (Chou~\cite{PittSFIeld},
@@ -42,37 +42,41 @@ defects.
 % nonsense. He reported an increase in the bugs by studying the number of bugs?
 %I checked the paper but had no clue what this referred to}
 %\yiwen{I fixed it. Please check.}
-However, unlike Lind, neither of these approaches provide insights
+However, unlike Lind, neither of these approaches provides insights
 on how vulnerabilities are distributed.
 
 %Much work has been done in analyzing system faults using techniques in
 %software engineering. For example,
 
-\textbf{Design of virtualization systems.}
+\textbf{Virtualization systems.}
 Lind incorporates a number of existing virtualization techniques, which are
 described in the following.
 %This section details some
 %of the significant work relevant to the development of today's virtual machines,
 %including Lind.
 
-\textit{System Call Interposition} (SCI) is a technique tried by many researchers
-to develop early virtualization systems.
-Goldberg, et al. developed Janus \cite{Janus0:96, Janus:99}, a filtering-based SCI system.
-The key idea is to adopt a user-level ``monitor'' that filter system call requests, based on
-a user-specified policy. Later on, Garfinkel, et al. proposed a delegating architecture for secure system call interposition,
+\textit{System Call Interposition} (SCI) tracks all the system calls of processes such 
+that each system call can be modified or denied.
+Goldberg, et al. developed Janus \cite{Janus0:96, Janus:99}, 
+%a filtering-based SCI system. The key idea is to 
+which adopted a user-level ``monitor'' that filters system call requests based on
+user-specified policies. Garfinkel, et al. proposed a delegating architecture for secure system call interposition 
 called Ostia \cite{SCI-04}. Their system introduced emulation libraries in the user space
 to mediate sensitive system calls issued by the sandboxed process. SCI is similar to
- the Lind isolation mechanism. However, a key difference is the actual execution
-of a system call through Lind's SafePOSIX re-creation.
-In SCI systems, there is no such re-creation module.
+ the Lind isolation mechanism. However, SCI-based tools can easily be circumvented
+ if the implementation is not careful~\cite{Problems-SCI}.
+% However, a key difference is the actual execution
+%of a system call through Lind's SafePOSIX re-creation.
+%In SCI systems, there is no such re-creation module.
 
-\textit{Software Fault Isolation} (SFI) is another widely-used technique
-to build virtual machines.
+\textit{Software Fault Isolation} (SFI) transforms a given program so that the
+program is guaranteed to satisfy a security policy.
+%is another widely-used technique to build virtual machines.
 Wahbe, et al. \cite{SFI:93} presented a software approach to implementing
 fault isolation within a single address space.
 Yee, et al. from Google developed Native Client (NaCl) \cite{NaCl-09},
 an SFI system for the Chrome browser that allows native executable code to run directly in a
-browser. As described in Section 5, Lind adopts NaCl as one key component to ensure secure execution
+browser. As in Section 5, Lind adopts NaCl as a key component to ensure secure execution
 of binary code.
 
 \textit{Language-based virtualization.}
@@ -86,6 +90,7 @@ still pose a threat~\cite{JavaBugs, Java-Lessons}.
 Any bug or failure in a programming language virtual
 machine is usually fatal. In contrast, the main component of Lind
 is built using Repy, which is a programming language with a very small TCB.
+\yanyan{may explain why small TCB is safe.}
 
 \textit{OS virtualization}
 techniques include
@@ -96,19 +101,21 @@ Workstation, VMware Server, VirtualPC and VirtualBox.
 Security by isolation \cite{Qubes, Overshadow, SecureVM, HypSec}
 provides safe executing environments through containment for multiple
 user-level virtual environments sharing the same hardware.
-However, as established earlier in this paper, this approach is limited due to
+However, this approach is limited due to
 the large attack vectors against the hypervisors.
 
 \textit{Library OSes}
 allow applications to efficiently obtain the benefits of virtual machines
 by refactoring a traditional OS kernel into an application library.
 Porter, et al. developed Drawbridge \cite{Drawbridge-11},
-a library OS that uses picoprocesses (lightweight containers),
-a security monitor (to enforce rules),
-and a library OS to present a Windows persona for %a wide variety of
+a library OS 
+%that uses picoprocesses (lightweight containers),
+%a security monitor (to enforce rules),
+%and a library OS 
+that presents a Windows persona for %a wide variety of
 Windows applications. Similar to Lind,
-it restricts access from usermode to host OS through a number
-of operations that pass through the security monitor.
+it restricts access from usermode to host OS through 
+operations that pass through the security monitor.
 %\lois{How does this fit with Lind?}
 %
 %This approach brings many of the benefits of VM based temporal,
@@ -116,11 +123,11 @@ of operations that pass through the security monitor.
 %
 Baumann, et al. presented Bascule \cite{Bascule}, an architecture for library OS extensions
 based on Drawbridge, allows application behavior to be customized by
-extensions loaded at runtime. Later on, the same team developed Haven \cite{Haven},
+extensions loaded at runtime. The same team also developed Haven \cite{Haven},
 which uses a library OS to implement
 shielded execution of unmodified server applications
 in an untrusted cloud host.
-Tsai, et al. developed Graphene \cite{Graphene-14}, a library OS system that
+Tsai, et al. developed Graphene \cite{Graphene-14}, a library OS that
 executes both single and
 multi-process applications with low performance overheads.
 
