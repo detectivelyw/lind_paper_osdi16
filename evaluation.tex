@@ -39,6 +39,7 @@ real-world applications?}
 %To evaluate how well each virtualization system protects the Linux kernel
 %against reported zero-day bugs.
 \brendan{This is my best understanding of how the tests were conducted. Yiwen et al., please jump in and correct me if I got something wrong.} 
+\yiwen{The setup section looks good to me.}
 
 \noindent
 \textbf{Setup.}
@@ -48,7 +49,7 @@ we identified and examined a list of 69 historical bugs that were found and patc
 By analyzing security patches for those bugs,
 we identified the lines of code in the kernel that correspond to each one.
 
-In the following evaluation, we assume that a bug is potentially triggerable if the lines of code that were changed in the patch are reached (i.e., the same metric described in Section~\ref{}).
+In the following evaluation, we assume that a bug is potentially triggerable if the lines of code that were changed in the patch are reached (i.e., the same metric described in Section~\ref{sec.metric}).
 This measure may overestimate potential danger posed by a system (since simply reaching the buggy code does not mean that guest code actually has enough control to exploit the bug).
 However, this overestimate should apply equally to all of the systems we tested, which means it is still useful as a way to compare them.
 
