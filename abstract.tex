@@ -16,8 +16,8 @@ In this paper, we use a new insight about where security bugs lie to devise a de
 run in OS VMs.
   %document the development of a different type of virtual
 %machine to secure the OS kernel.
-We begin by observing that a portion of the OS kernel—the kernel paths accessed
-by popular applications in everyday use—contains fewer security bugs than less-used paths. We
+We begin by observing that a portion of the OS kernel, the kernel paths accessed
+by popular applications in everyday use, contains fewer security bugs than less-used paths. We
 leverage this observation to devise the Lock-in-Pop design, which
 locks an application, and the POSIX implementation that services it, into
 accessing only the well-used popular portion of the kernel.  Using the Lock-in-Pop model, we
